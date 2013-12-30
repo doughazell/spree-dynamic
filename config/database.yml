@@ -1,0 +1,27 @@
+development:
+  adapter: postgresql
+  encoding: utf8
+  reconnect: false
+  database: spreeBSC_v2-1-3dev
+  pool: 5
+  username: postgres
+  host: localhost
+
+test:
+  adapter: postgresql
+  encoding: utf8
+  reconnect: false
+  database: spreeBSC_test
+  pool: 5
+  username: postgres
+  host: localhost
+
+production:
+  adapter: postgresql
+  encoding: utf8
+  reconnect: false
+  database: spreeBSC_production
+  pool: 5
+  username: postgres
+  host: localhost
+  

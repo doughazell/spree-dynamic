@@ -1,0 +1,161 @@
+@import 'store/variables';
+
+$bsc_yellow: #CBCB67 !default;  /* Bespoke Silk Curtains Company yellow */
+
+body {
+  margin-top: 0px;
+  background: url(/assets/store/luxury-kashmiri-silk-shawlsDARKER.jpg) top no-repeat;
+  background-size: 100% 300px;
+  
+}
+
+#main-nav-bar a {
+  text-decoration: underline;
+  color: $bsc_yellow;
+}
+
+// --------------------- Layout for product + summary pages --------------------
+#content {
+  margin-left: 80px;
+  margin-top: 50px;
+  width: 82%;
+  
+}
+
+// ----------------------- BSC Logo -------------------------
+#logo-block li {
+  display: block;
+  height: 25px;
+}
+
+#logo-header {
+  font-size: 17px;
+  text-transform: uppercase;
+  color: white;
+  line-height: 2.3em;
+}
+
+#logo-text {
+  font-size: 20px;
+  text-transform: uppercase;
+  color: $bsc_yellow;
+}
+
+#logo-trailer {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: white;
+}
+// ------------------------------ Home page  -----------------------------------
+
+nav#taxonomies {
+  .taxonomy-root {
+    border-bottom: $default_border;
+    margin-bottom: 5px;
+    font-size: $main_navigation_header_font_size;
+  }
+
+  .taxons-list {
+    li {
+      a {
+        font-size: $main_navigation_font_size + 2;
+        line-height: 1.5em;
+      }
+    }
+  }
+}
+
+// Slight change from setting in 'screen.css.erb'
+#sidebar {
+  width: 160px;
+}
+/*
+Multiline coments
+*/
+
+// ------------------------ Curtain dynamic pricing page -------------------------
+#main-image {
+  //margin-bottom: 0px;
+}
+
+#add-sample-to-cart-button {
+  margin-bottom: 20px;
+}
+
+#price-box {
+  margin-left: 670px;
+  position: fixed;
+  
+  border: 1px solid;
+  float: left;
+  padding: 5px;
+  box-shadow: 0 0 10px #000;
+  //background: url(/assets/store/luxury-kashmiri-silk-shawlsDARKER.jpg);
+  background: $bsc_yellow;
+  line-height: 1;
+  
+  td {
+    vertical-align: bottom;
+    padding-bottom: 0px;
+    padding-top: 10px;
+  }
+  
+}
+
+#price-text {
+  //position: fixed;
+  //margin-left: 5px;
+  color: white;
+}
+
+#price-title {
+  //position: fixed;
+  margin-bottom: -3px;
+}
+
+#inside-product-cart-form {
+  margin-left: 7px;
+}
+
+#add-to-cart-button {
+  margin-top: 10px;
+}
+
+#width {
+  margin-bottom: 20px;
+}
+
+#drop {
+  margin-bottom: 20px;
+}
+
+#lining {
+  margin-bottom: 20px;
+}
+
+
+#page-link-to-cart.cart-indicator a {
+    text-decoration: underline;
+    color: $bsc_yellow;
+    font-size: 15px;
+    padding-top: 10px;
+    padding-right: 40px;
+    background: transparent url(<%= asset_path 'cart-empty_x32.png' %>) center right no-repeat;
+}
+
+#page-link-to-cart.cart-indicator a.full { background-image: url(<%= asset_path 'cart-full_x32.png' %>); }
+
+// ----------------------- Summary page before RomanCart ------------------------
+div#subtotal {
+  margin-top: 5px;
+  margin-right: 150px;
+}
+
+#product-properties {
+  .bsc-spec-category {
+    width: 350px;
+  }
+}
+
+
+

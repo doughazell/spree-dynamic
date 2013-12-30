@@ -1,0 +1,88 @@
+<% @body_id = 'cart' %>
+
+<h1>Review curtain specifications</h1>
+
+<%# debugger %>
+
+<% checkout_url = nil %>
+
+<% if @order.line_items.empty? %>
+
+  <div data-hook="empty_cart">
+    <p><%= Spree.t(:your_cart_is_empty) %></p>
+    <p><%= link_to Spree.t(:continue_shopping), products_path, :class => 'button continue' %></p>
+  </div>
+
+<% else %>
+
+  <% checkout_url = "http://www.romancart.com/cart.asp" %>
+
+<% end %> <%# END: 'if @order.line_items.empty?' %>
+
+<%# --- We don't want to get payment via RomanCart for ONLY sample orders --- %>
+<%# --- so use the normal Spree checkout mechanism for free items         --- %>
+
+<% buy_num = 0 %>
+<% @order.line_items.each do |item| %>
+  <% unless item.variant.option_value("silk") %>
+    <% buy_num += 1 %>
+  <% end %>  
+<% end %>
+<% unless buy_num > 0 or @order.line_items.empty? %>
+  <% checkout_url = update_cart_path %>
+<% end %>
+
+<%# ---------- Common code for RomanCart + Normal Spree checkout (for free samples) -------- %>
+<% if checkout_url %>
+
+  <div data-hook="outside_cart_form">
+    <%= form_for @order, :url => "#{checkout_url}", :html => {:id => 'update-cart'} do |order_form| %>
+
+      <div data-hook="inside_cart_form">
+
+        <%# ----------------------------------------------------------------------------- %>
+        <div data-hook="cart_items">
+        
+          <%= render :partial => 'form', :locals => { :order_form => order_form } %>
+          
+        </div>
+        <%# ----------------------------------------------------------------------------- %>
+
+        <div class="links columns sixteen alpha omega" data-hook="cart_buttons">
+          <div id="subtotal" data-hook>
+            <h5><%= Spree.t(:price) %>: <span class="order-total"><%= @order.display_total.to_html %></span></h5>
+          </div>
+          
+          <%= button_tag :class => 'button checkout primary', :id => 'checkout-link', :name => 'checkout' do %>
+            <%= Spree.t(:checkout) %>
+          <% end %>
+          
+          <%# --- Orig place for empty_cart form --- %>
+          <%= link_to Spree.t(:empty_cart), empty_cart_path, :method => :put, :class => 'button gray' %>
+          
+        </div>
+      </div>
+    <% end %> <%# END: 'form_for @order' %>
+
+  </div>
+
+  <%# ================================================================================ %>
+  <%# ---------- Extra bit for testing RomanCartXML before getting public URL -------- %>
+  <%# ================================================================================ %>
+  <% if checkout_url.include? "www.romancart.com" %>
+
+    <br class="clear">
+
+    <%= form_tag main_app.cart_completed_path, :method => :put do %>
+      <%= submit_tag "ROMANCARTXML to '#{main_app.cart_completed_path}'", :class => 'button gray' %>
+      <%= hidden_field_tag "checkout_complete", "true" %>
+      
+      <% file = IO.read("romancart-delivery-address.xml") %>
+      <%# file = IO.read("romancart.xml") %>
+      <%= hidden_field_tag "xml", file %>
+    <% end %>
+          
+  <% end %>
+
+<% end %> <%# END: 'if checkout_url' %>
+<%# ---------------------------------------------------------------------------------------- %>

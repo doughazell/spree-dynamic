@@ -1,0 +1,16 @@
+<header id="header" class="row" data-hook>
+  
+  <%# render :partial => 'spree/shared/logo' %>
+  <%# <figure id="logo" class="inline" data-hook>BESPOKE SILK CURTAIN COMPANY</figure> %>
+
+  <ul id="logo-block">
+    <li id="logo-header">The</li>
+    <li id="logo-text">Bespoke Silk Curtain Company</li>
+    <li id="logo-trailer">exceptional quality made to measure silk curtains</li> 
+  </ul>
+  
+  <%# 18/9/13 DH: Removing the search box not needed for BSC site %>
+  <%# render :partial => 'spree/shared/nav_bar' %>
+  
+  <%= render :partial => 'spree/shared/main_nav_bar' if store_menu? %>
+</header>

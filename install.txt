@@ -1,0 +1,62 @@
+~/src/spreeBSC-v2.1.3-branch$ spree install spreeBSC
+Would you like to install the default gateways? (Recommended) (yes/no) [yes] 
+Would you like to install the default authentication system? (yes/no) [yes] 
+Would you like to run the migrations? (yes/no) [yes] 
+Would you like to load the seed data? (yes/no) [yes] 
+Would you like to load the sample data? (yes/no) [yes] no
+     gemfile  spree
+     gemfile  spree_gateway
+     gemfile  spree_auth_devise
+         run  bundle install from "./spreeBSC"
+[WARNING] You are not setting Devise.secret_token within your application!
+You must set this in config/initializers/devise.rb. Here's an example:
+ 
+Devise.secret_token = "292acd43ba534a77c670eece57e7e98378a0e16d36474957a4313f1788b52f899bd11b465cf11865e87dbdc95b59c31e5d14"
+[deprecated] I18n.enforce_available_locales will default to true in the future. If you really want to skip validation of your locale you can set I18n.enforce_available_locales = false to avoid this message.
+      create  config/initializers/spree.rb
+      create  config/spree.yml
+      remove  public/index.html
+      append  public/robots.txt
+      create  app/assets/javascripts/store
+      create  app/assets/javascripts/admin
+      create  app/assets/stylesheets/store
+      create  app/assets/stylesheets/admin
+      create  app/assets/images/store
+      create  app/assets/images/admin
+      create  app/assets/javascripts/store/all.js
+      create  app/assets/stylesheets/store/all.css
+      create  app/assets/javascripts/admin/all.js
+      create  app/assets/stylesheets/admin/all.css
+      create  app/overrides
+      append  db/seeds.rb
+     copying  migrations
+    creating  database
+     running  migrations
+     loading  seed data
+        rake  db:seed 
+[WARNING] You are not setting Devise.secret_token within your application!
+You must set this in config/initializers/devise.rb. Here's an example:
+ 
+Devise.secret_token = "76ccfa0d37df48787420315b2a1fd91c0f52b5b83d1bb82044c75a5ce108b758cd3f554818f5a579e684f289c76b6fa505e7"
+[deprecated] I18n.enforce_available_locales will default to true in the future. If you really want to skip validation of your locale you can set I18n.enforce_available_locales = false to avoid this message.
+loading ruby /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/spree_core-2.1.3/db/default/spree/countries.rb
+loading ruby /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/spree_core-2.1.3/db/default/spree/roles.rb
+loading ruby /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/spree_core-2.1.3/db/default/spree/states.rb
+loading ruby /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/spree_core-2.1.3/db/default/spree/zones.rb
+loading ruby /Users/doug/.rvm/gems/ruby-1.9.3-p392/bundler/gems/spree_auth_devise-45a1e7aa5b23/db/default/users.rb
+Create the admin user (press enter for defaults).
+Email [spree@example.com]: doughazell@gmail.com
+Password [spree123]: 
+Done!
+    skipping  sample data (you can always run rake spree_sample:load)
+      insert  config/routes.rb
+**************************************************
+We added the following line to your application's config/routes.rb file:
+ 
+    mount Spree::Core::Engine, :at => '/'
+**************************************************
+Spree has been installed successfully. You're all ready to go!
+ 
+Enjoy!
+~/src/spreeBSC-v2.1.3-branch$ 
+

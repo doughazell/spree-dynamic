@@ -1,0 +1,13 @@
+<style type="text/css">
+.romantable2 tr:nth-child(2) {background: transparent url(https://secure.romancart.com/secure/images/6483KGK61379FGFJ1.png); background-size: 100%;}
+.romantable2 tr:nth-child(2) td {padding-top: 8px;padding-bottom: 8px;}
+.romantable2 tr:nth-child(n+4) {background-color:white;}
+.romantable2 td:first-child {width: 500px;}
+.romantable2 td {font-size: 11pt;width: 100px;}
+.romantable2 td {padding-left: 30px;padding-right: 30px;padding-top: 5px;padding-bottom: 5px;}
+
+.romantable td {font-size: 11pt;width: 100px;}
+.romantable tr:nth-child(2) {background:white;}
+.romantable td {padding-left: 0px;padding-right: 0px;padding-top: 5px;padding-bottom: 5px;}
+</style>
+

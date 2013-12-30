@@ -1,0 +1,85 @@
+<input type=hidden name=storeid value=61379>
+
+<table id="cart-detail" data-hook>
+  <tbody id="line_items" data-hook>
+    
+    <% itemnum = 0 %>
+    <% rcXnum = nil %>
+    
+    <%= order_form.fields_for :line_items do |item_form| %>
+
+      <tr class="line-item">
+        <td class="cart-item-description" data-hook="cart_item_description">
+          <h4><%= link_to item_form.object.variant.product.name, product_path(item_form.object.variant.product) %></h4>
+
+          <table id="product-properties" class="table-display" data-hook>
+            <tbody>
+
+<%# debugger %>
+            
+              <%# ----------------------------------------------------- %>
+              <%# @order.special_instructions.split(',').each do |spec| %>
+              <%# ----------------------------------------------------- %>
+              
+              <% if item_form.object.bsc_spec %>
+                <% item_form.object.bsc_spec.split(',').each do |spec| %>
+                  <% category, value = spec.split('=') %>
+                  
+                  <tr>
+                    <% if value %>
+                      
+                      <td class="bsc-spec-category"><strong><%= category.capitalize %></strong></td>
+                      
+                      <% if category == "width" || category == "drop" %>
+                        <td><%= value + " cm" %></td>
+                      <% else %>
+                        <td><%= value %></td>
+                      <% end %>
+                      
+                    <% else %>
+                      
+                      <td class="bsc-spec-category"><strong><%= item_form.object.variant.option_value("silk") %></strong></td>
+                    
+                    <% end %>
+                  </tr>
+                  
+                <% end %>
+              <% end %>
+          
+              <%= product_image(item_form.object.variant.product, :itemprop => "image") %>
+
+              <% if heading = item_form.object.variant.option_value("heading") %>
+                <img src="/assets/store/pleats/<%= heading.downcase %>.jpg" />
+              <% end %>
+                  
+            </tbody>
+          </table>
+          <br>
+          
+          <%# ----------------------------------------------------------------------------- %>
+          <%# We also need to pass the spec in brackets after the curtain name (so that the %>
+          <%# email sent to the user from RomanCart contains the details writing.)          %>
+          <%# ----------------------------------------------------------------------------- %>
+          
+          <% if itemnum > 0 %>
+            <% rcXnum = "X#{itemnum}" %>
+          <% end %>
+          
+          <% if item_form.object.bsc_spec %>
+            <input type=hidden name=<%= rcXnum %>itemname value='<%= item_form.object.variant.product.name + " (" + item_form.object.bsc_spec + ")" %>'>
+          <% else %>
+            <input type=hidden name=<%= rcXnum %>itemname value='<%= item_form.object.variant.product.name %>'>          
+          <% end %>
+          
+          <input type=hidden name=<%= rcXnum %>price value=<%= item_form.object.price %>>
+          <input type=hidden name=<%= rcXnum %>quantity value=<%= item_form.object.quantity %>>
+          <input type=hidden name=<%= rcXnum %>include value=on>
+
+          <% itemnum += 1 %>
+      </tr>
+      
+    <% end %>
+    
+  </tbody>
+  
+</table>

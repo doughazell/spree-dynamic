@@ -1,0 +1,28 @@
+<% content_for :sidebar do %>
+  <div data-hook="homepage_sidebar_navigation">
+    <%= render :partial => 'spree/shared/taxonomies' %>
+  </div>
+<% end %>
+
+<%# --- ONLY DISPLAY PRODUCTS WITH SAME NAME AS CATEGORY --- %>
+<%# --- Currently altering ":partial => 'spree/shared/products'" --- %>
+
+<div data-hook="homepage_products">
+  <%= render :partial => 'spree/shared/products', :locals => { :products => @products } %>
+</div>
+
+<%
+=begin %>
+
+<%# debugger %>
+<% if current_page?(root_url) %>
+<br> You fucking beauty... <br>
+<%= __FILE__ %>
+<br> So now just list the Taxon Category of the current product name!
+<% end %>
+
+<%
+=end %>
+
+
+

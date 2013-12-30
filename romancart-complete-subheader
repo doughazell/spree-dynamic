@@ -1,0 +1,7 @@
+<style type="text/css">
+.romantable tr:nth-child(2) {background: transparent url(https://secure.romancart.com/secure/images/6483KGK61379FGFJ1.png); background-size: 100%;}
+.romantable tr:nth-child(n+4) {background-color:white;}
+.romantable tr:nth-child(2) td {padding-left: 20px;padding-right: 20px;padding-top: 8px;padding-bottom: 8px;}
+.romantable tr td {padding-left: 20px;padding-right: 20px;font-size: 11pt;width: 1000px;}
+</style>
+

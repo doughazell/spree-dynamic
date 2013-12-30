@@ -1,0 +1,9 @@
+<style type="text/css">
+body {background: url(https://secure.romancart.com/secure/images/6480KGK61379FGFJ1.jpg) top no-repeat;background-size: 100% 300px;} 
+#logo-block li {display: block;height: 25px;}
+#logo-header {font-size: 17px;text-transform: uppercase;color: white;line-height: 2em;}
+#logo-text {font-size: 20px;text-transform: uppercase;color: #CBCB67;}
+#logo-trailer {font-size: 11px;text-transform: uppercase;color: white;}
+</style>
+<ul id="logo-block"><li id="logo-header">The</li><li id="logo-text">Bespoke Silk Curtain Company</li><li id="logo-trailer">exceptional quality made to measure silk curtains</li></ul>
+

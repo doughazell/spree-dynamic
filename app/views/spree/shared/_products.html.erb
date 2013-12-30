@@ -1,0 +1,53 @@
+<%
+  paginated_products = @searcher.retrieve_products if params.key?(:keywords)
+  paginated_products ||= products
+%>
+<% if products.empty? %>
+  <%= Spree.t(:no_products_found) %>
+<% elsif params.key?(:keywords) %>
+  <h6 class="search-results-title"><%= Spree.t(:search_results, :keywords => h(params[:keywords])) %></h6>
+<% end %>
+
+<% if controller.controller_name == "home" %>
+<% home_page = true %>
+<% else %>
+<% home_page = false %>
+<% end %>
+
+<% if products.any? %>
+
+<ul id="products" class="inline product-listing" data-hook>
+
+  <% products.each do |product| %>
+  
+    <%# --- 28/9/13 DH: Check for products with the same name as the category for the BSC home page --- %>
+    <% if home_page && (home_page_li = Spree::Taxon.find_by_name(product.name)) %>
+      
+      <li id="product_<%= product.id %>" data-hook="products_list_item">
+        <%= link_to small_image(product), seo_url(home_page_li) %>
+        <%= link_to( seo_url(home_page_li), :class => 'info') do %>
+        <%= product.name %>
+        <% end %>
+      </li>
+      
+    <% elsif !home_page && !(Spree::Taxon.find_by_name(product.name)) %>
+      
+      <li id="product_<%= product.id %>" data-hook="products_list_item">
+        <%= link_to(product, :class => 'info') do %>
+        <%= product.name %>
+        <% end %>
+        <%= link_to small_image(product), product %>
+        <span class="price selling" itemprop="price"><%= display_price(product) %></span>        
+      </li>
+            
+    <% end %>
+  <% end %>
+
+  <% reset_cycle("classes") %>
+</ul>
+
+<% end %>
+
+<% if paginated_products.respond_to?(:num_pages) %>
+  <%= paginate paginated_products %>
+<% end %>
