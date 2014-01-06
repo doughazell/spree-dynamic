@@ -141,14 +141,27 @@ pattern_repeat: patternRepeat
       <%= form_for :order, :url => populate_orders_path, :remote => true do |f| %>
 
         <%# --- Width and Drop --- %>
-        <h5 class="product-section-title">Curtain width</h5>
+        <div class="bsc-heading">
+          <h3 style="display: inline;">Curtain width</h3> 
+          <% width_help = Spree::Config[:width_help] %>
+          <%# --- <img ... Title=" %= width_help % " onClick='alert( %= width_help.dump % )' /> --- %>
+          <%= link_to image_tag("/assets/store/help-icon.png", :Title => width_help), "/assets/store/MeasuringAdvice.pdf" %>
+        </div>
         <%= number_field_tag 'width', nil, :id => 'width' %>
 
-        <h5 class="product-section-title">Curtain drop</h5>
+        <div class="bsc-heading">
+          <h3 style="display: inline;">Curtain drop</h3>
+          <% drop_help = Spree::Config[:drop_help] %>
+          <%= link_to image_tag("/assets/store/help-icon.png", :Title => drop_help), "/assets/store/MeasuringAdvice.pdf" %>
+        </div>
         <%= number_field_tag 'drop', nil, :id => 'drop' %>
         
         <%# --- Lining --- %>
-        <h5 class="product-section-title">Lining</h5>
+        <div class="bsc-heading">  
+          <h3 style="display: inline;">Lining</h3>
+          <% lining_help = Spree::Config[:lining_help] %>
+          <%= link_to image_tag("/assets/store/help-icon.png", :Title => lining_help), "/assets/store/MeasuringAdvice.pdf" %>
+        </div>
         <%= select_tag :lining, options_for_select([ ['Cotton',  1,{'data-type' => 'cotton'}], 
                                                      ['Blackout',2,{'data-type' => 'blackout'}],
                                                      ['Thermal', 3,{'data-type' => 'thermal'}] ], 1) %>
@@ -156,7 +169,11 @@ pattern_repeat: patternRepeat
         <%# --- Heading Variants --- %>
         <% if @product.variants_and_option_values(current_currency).any? %>
           <div id="product-variants" class="columns five alpha">
-            <h5 class="product-section-title"><%= Spree.t(:variants) %></h5>
+            <div class="bsc-heading">
+              <h3 style="display: inline;">Pleat Variants</h3>
+              <% pleat_help = Spree::Config[:pleat_help] %>
+              <%= link_to image_tag("/assets/store/help-icon.png", :Title => pleat_help), "/assets/store/MeasuringAdvice.pdf" %>
+            </div>
             <ul>
               <% @product.variants_and_option_values(current_currency).each_with_index do |variant, index| %>
                 <li>

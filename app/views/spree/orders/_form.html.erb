@@ -64,7 +64,7 @@
           <% if itemnum > 0 %>
             <% rcXnum = "X#{itemnum}" %>
           <% end %>
-          
+<% debugger %>
           <% if item_form.object.bsc_spec %>
             <input type=hidden name=<%= rcXnum %>itemname value='<%= item_form.object.variant.product.name + " (" + item_form.object.bsc_spec + ")" %>'>
           <% else %>

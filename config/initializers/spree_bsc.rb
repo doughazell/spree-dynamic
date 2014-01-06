@@ -28,6 +28,11 @@ Spree::AppConfiguration.class_eval do
   
   preference :curtain_maker_email, :string
   
+  preference :width_help, :string
+  preference :drop_help, :string
+  preference :lining_help, :string
+  preference :pleat_help, :string
+  
 end
 
 # These values get automatically put into the 'spree_preferences' table in the DB on startup...nice!
@@ -57,3 +62,20 @@ Spree::Config[:thermal_lining_labour]  = 4
 
 #Spree::Config[:mails_from] = "sales@bespokesilkcurtains.com"
 Spree::Config[:curtain_maker_email] = "doughazell@gmail.com"
+
+Spree::Config[:width_help] =
+"Enter the length of the curtain pole or track in centimetres. 
+Click for measuring advice."
+
+Spree::Config[:drop_help] =
+"Enter the drop of the curtain in centimetres.
+Click for measuring advice."
+
+Spree::Config[:lining_help] =
+"Choose cotton lined if you want a classic \"full\" curtain.
+Use blackout lining for bedrooms. 
+Use thermal lining if you want to minimise your energy bills. 
+Thermal lining lets in as much light as a standard cotton lining and is not a blackout lining option."
+
+Spree::Config[:pleat_help] =
+"Choose a pencil pleat for a more informal look and a single, double or triple pleat for a formal look."
