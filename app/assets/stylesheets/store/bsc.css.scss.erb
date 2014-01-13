@@ -9,9 +9,25 @@ body {
   
 }
 
-#main-nav-bar a {
-  text-decoration: underline;
-  color: $bsc_yellow;
+#bsc-main-nav-bar {
+  a {
+    //text-decoration: underline;
+    text-decoration: none;
+    color: $bsc_yellow;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  //width: 750px;
+  //margin-top: 30px;
+  //float: right;
+}
+
+#bsc-css-anchor {
+  color: #0c0f58;
+  //color: white;
 }
 
 // --------------------- Layout for product + summary pages --------------------
@@ -70,15 +86,25 @@ nav#taxonomies {
   width: 160px;
 }
 
-footer {
-  #nav {
-    margin: 13px 0 0 0;
-  }
-   
+#footer {
+  //background: url(http://lorempixum.com/296/100/nature/2) bottom no-repeat;
+  //background: url(/assets/store/sunset-on-the-beach.jpg) bottom no-repeat;
+  background-color: $bsc_yellow;
+  
+  background-size: 100% 100%;
+// "box-shadow: h-shadown v-shadow blur(opt) spread(opt) color(opt) inset(opt)"
+  // ie No 'spread' and not "inset"
+  box-shadow: 0 0 10px #000;
+  margin-left: 2%;
+  width: 96%;
+
   #nav ul li {
-      display: inline;
-      margin: 0 20px 0 0;
-      margin-bottom: 130px;
+      //display: inline;
+      list-style-type: none;
+      text-align: center;
+// "margin: top right bottom left"      
+      margin: 0 0px 0 0;
+      //margin-bottom: 130px;
   }
    
   #nav a {
@@ -89,16 +115,26 @@ footer {
       text-decoration: underline;
   }
   
+  #footer-one {
+    width: 250px;
+  }
+  #footer-two {
+    width: 320px;
+  }
+  #footer-three {
+    width: 250px;
+  }
+  h4 {
+    text-align:center;
+    color: white;
+  }
+
+  // Stuff left in from "http://designshack.net/articles/css/build-a-responsive-mobile-friendly-web-page-with-skeleton/"
   #headerImage img {
     margin-bottom: 50px;
     max-width: 100%;
     height: auto;
   }
-  
-  #welcome {
-    margin-bottom: 20px;
-  }
-  
   .feature img {
     margin-bottom: 15px;
     max-width: 100%;
