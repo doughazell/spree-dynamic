@@ -11,8 +11,8 @@ body {
 
 #bsc-main-nav-bar {
   a {
-    //text-decoration: underline;
-    text-decoration: none;
+    text-decoration: underline;
+    //text-decoration: none;
     color: $bsc_yellow;
   }
   
@@ -86,6 +86,14 @@ nav#taxonomies {
   width: 160px;
 }
 
+#bsc-spree-link {
+  margin-left: 20px;
+  a {
+    margin-left: 2px;
+  }
+}
+
+// ------------------------------ Footer  -----------------------------------
 #footer {
   //background: url(http://lorempixum.com/296/100/nature/2) bottom no-repeat;
   //background: url(/assets/store/sunset-on-the-beach.jpg) bottom no-repeat;
@@ -149,6 +157,10 @@ nav#taxonomies {
 */
 
 // ------------------------ Curtain dynamic pricing page -------------------------
+[data-hook="product_show"] {
+  margin-top: -35px;
+}
+
 #main-image {
   //margin-bottom: 0px;
 }
@@ -194,6 +206,7 @@ nav#taxonomies {
 
 #add-to-cart-button {
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #width {
@@ -208,22 +221,31 @@ nav#taxonomies {
   margin-bottom: 20px;
 }
 
+#measurements_text {
+  margin-left: 5px;
+}
+
+#link-to-cart.cart-indicator a:focus {
+  outline:0;
+}
 
 #page-link-to-cart.cart-indicator a {
-    text-decoration: underline;
-    color: $bsc_yellow;
-    font-size: 15px;
-    padding-top: 10px;
-    padding-right: 40px;
-    background: transparent url(<%= asset_path 'cart-empty_x32.png' %>) center right no-repeat;
+  text-decoration: underline;
+  color: $bsc_yellow;
+  font-size: 15px;
+  padding-top: 12px;
+  padding-right: 40px;
+      
+  background: transparent url(<%= asset_path 'cart-empty_x32.png' %>) center right no-repeat;
 }
 
 #page-link-to-cart.cart-indicator a.full { background-image: url(<%= asset_path 'cart-full_x32.png' %>); }
 
 // ----------------------- Summary page before RomanCart ------------------------
-div#subtotal {
+div#bsc-subtotal {
   margin-top: 5px;
   margin-right: 150px;
+  float: right;
 }
 
 #product-properties {

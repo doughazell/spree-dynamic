@@ -2,8 +2,6 @@
 
 <h1>Review curtain specifications</h1>
 
-<%# debugger %>
-
 <% checkout_url = nil %>
 
 <% if @order.line_items.empty? %>
@@ -48,11 +46,8 @@
         </div>
         <%# ----------------------------------------------------------------------------- %>
 
-        <div class="links columns sixteen alpha omega" data-hook="cart_buttons">
-          <div id="subtotal" data-hook>
-            <h5><%= Spree.t(:price) %>: <span class="order-total"><%= @order.display_total.to_html %></span></h5>
-          </div>
-          
+        <div class="columns eight alpha" data-hook="cart_buttons">
+        
           <%= button_tag :class => 'button checkout primary', :id => 'checkout-link', :name => 'checkout' do %>
             <%= Spree.t(:checkout) %>
           <% end %>
@@ -61,6 +56,11 @@
           <%= link_to Spree.t(:empty_cart), empty_cart_path, :method => :put, :class => 'button gray' %>
           
         </div>
+        
+        <div id="bsc-subtotal" class="eight columns" data-hook>
+          <h2><%= Spree.t(:price) %>: <span class="order-total"><%= @order.display_total.to_html %></span></h2>
+        </div>        
+        
       </div>
     <% end %> <%# END: 'form_for @order' %>
 

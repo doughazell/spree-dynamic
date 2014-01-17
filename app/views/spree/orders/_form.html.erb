@@ -14,8 +14,6 @@
 
           <table id="product-properties" class="table-display" data-hook>
             <tbody>
-
-<%# debugger %>
             
               <%# ----------------------------------------------------- %>
               <%# @order.special_instructions.split(',').each do |spec| %>
@@ -64,11 +62,11 @@
           <% if itemnum > 0 %>
             <% rcXnum = "X#{itemnum}" %>
           <% end %>
-<% debugger %>
+
           <% if item_form.object.bsc_spec %>
-            <input type=hidden name=<%= rcXnum %>itemname value='<%= item_form.object.variant.product.name + " (" + item_form.object.bsc_spec + ")" %>'>
+            <input type=hidden name=<%= rcXnum %>itemname value='<%= item_form.object.variant.product.name + "-" + item_form.object.variant.sku + "(" + item_form.object.bsc_spec + ")" %>'>
           <% else %>
-            <input type=hidden name=<%= rcXnum %>itemname value='<%= item_form.object.variant.product.name %>'>          
+            <input type=hidden name=<%= rcXnum %>itemname value='<%= item_form.object.variant.product.name + "-" + item_form.object.variant.sku %>'>          
           <% end %>
           
           <input type=hidden name=<%= rcXnum %>price value=<%= item_form.object.price %>>

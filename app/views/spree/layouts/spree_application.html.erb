@@ -27,7 +27,11 @@
         <%= yield :templates %>
 
       </div>
-
+      
+      <div id="bsc-spree-link">
+        <%= Spree.t :powered_by %> <%= link_to 'Spree', 'http://spreecommerce.com/' %>
+      </div>
+      
       <%= render :partial => 'spree/shared/footer' %>
 
     </div>
