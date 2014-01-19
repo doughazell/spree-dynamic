@@ -7,6 +7,17 @@ namespace :spree_bsc do
   task :load => :environment do
 
     #SpreeSample::Engine.load_samples
+
+    puts "\nCurrent Spree Products"
+    puts "----------------------"
+    products = Spree::Product.find(:all)
+    products.each do |product|
+      puts product.name
+    end
+    puts
+    
+    #abort("\nWTF???\n\n")
+    # ----------------------------------------
     
     domain = "www.pongees.co.uk"
     path = "/fabrics/interiors/productcatalogue/690"
@@ -15,7 +26,7 @@ namespace :spree_bsc do
     next_page = nil
     begin
       unless next_page.nil?
-        puts next_page.class 
+        #puts "Nokogiri next_page class: " + next_page.class.to_s 
         path = next_page[0]["href"]
       end
       
@@ -24,16 +35,28 @@ namespace :spree_bsc do
       silk_names = page.css('div.views-field-field-product-colour a')
       silk_codes = page.css('div.views-field-field-product-code a')
       
-      puts "--------"
+      puts "--- START ---"
+      # The number of products is the size of the 'silk_names' array
       puts silk_names.length
       total += silk_names.length
       
+      products.each do |product|
+      
+        # Uses 'find' from the Ruby Enumerable mixin (since 'silk_names' is a 'Nokogiri::XML::NodeSet' which is an array)
+        if silk_names.find{ |node| node.text =~ /#{product.name.upcase}/ }
+#debugger
+          puts "Found " + product.name
+        end
+      end
+      
+=begin
       while !silk_names.empty?
         puts silk_names.shift.text
         puts silk_codes.shift.text
       end
+=end
       
-      puts "========"      
+      puts "=== END ==="      
       
     end while !(next_page = page.css('div.item-list ul.pager li.pager-next a')).empty?
     

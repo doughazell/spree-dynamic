@@ -8,6 +8,7 @@
 
       <br><br>
       
+      <%# --- Very similar to 'app/views/spree/orders/_form.html.erb' so maybe move to helper (but this version all in same <td>) --- %>
       <% if line_item.bsc_spec %>
         <% line_item.bsc_spec.split(',').each do |spec| %>
           <% category, value = spec.split('=') %>
