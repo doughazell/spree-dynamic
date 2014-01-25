@@ -30,11 +30,27 @@ body {
   //color: white;
 }
 
+.product-listing li {
+  height: 150px;
+  a.info {
+    //margin-bottom: 0px;
+    //padding-bottom: 20px;
+    min-height: 30px;
+  }
+}
+
+
 // --------------------- Layout for product + summary pages --------------------
+
+// Currently used for both the listing pages and the dynamic price page
 #content {
   margin-left: 80px;
   margin-top: 50px;
   width: 82%;
+  
+  //.columns.twelve.omega {
+  //  margin-top: 100px;
+  //}
 }
 
 #order_summary {
@@ -98,7 +114,7 @@ nav#taxonomies {
 
 // Slight change from setting in 'screen.css.erb'
 #sidebar {
-  width: 160px;
+  width: 152px;
 }
 
 #bsc-spree-link {
@@ -172,6 +188,10 @@ nav#taxonomies {
 */
 
 // ------------------------ Curtain dynamic pricing page -------------------------
+#product-description {
+  border-right: none;
+}
+
 [data-hook="product_show"] {
   margin-top: -35px;
 }
