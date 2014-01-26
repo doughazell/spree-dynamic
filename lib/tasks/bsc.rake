@@ -25,7 +25,7 @@ namespace :spree_bsc do
     total = 0
     next_page = nil
     
-    $first_time = true
+    $first_time = false
     
     begin
       unless next_page.nil?
@@ -48,13 +48,19 @@ namespace :spree_bsc do
       products.each do |product|
       
         # Uses 'find' from the Ruby Enumerable mixin (since 'silk_names' is a 'Nokogiri::XML::NodeSet' which is an array)
-        if index = silk_names.find_index { |node| node.text =~ /#{product.name.upcase}/ }
+        #if index = silk_names.find_index { |node| node.text =~ /#{product.name.upcase}/ }
+        if index = silk_names.find_index { |node| node.text.eql?(product.name.upcase) }
 
           puts "Found " + product.name + " at index: " + index.to_s
           
           # If we already have it then don't add it again.
           puts silk_names[index].text
           puts silk_codes[index].text
+#debugger
+          # *** While testing the description + properties then use products ALREADY PRESENT ***
+          silk_path = silk_names[index].attr("href")
+          url = domain + silk_path
+          addDetails(product,url)
           
           silk_names.delete(silk_names[index])
           silk_codes.delete(silk_codes[index])
@@ -193,8 +199,6 @@ namespace :spree_bsc do
     taxons << Spree::Taxon.find_by_name!(img_colour)
     taxons << Spree::Taxon.find_by_name!("Indian Douppion")
 
-#debugger
-
     product.taxons << taxons
     
     heading = Spree::OptionType.find_by_presentation!("Heading")
@@ -255,8 +259,36 @@ namespace :spree_bsc do
     end
     product.master.update_attributes!(:sku => sku)
     
-    #product.set_property("Type", "Indian Douppion")
+  end
+  
+  def addDetails(product, url)
+    puts
+    puts "Product: " + product.name
+    puts "URL: " + url
+    
+    page = Nokogiri::HTML(open("http://#{url}"))
+
+    desc = page.css('div.product_desc').text
+    puts "Description: " + desc
+    
+    product.description = desc
+    product.save!
+
+    page.css('table.silkDetails tr').each do |row|
+#debugger
       
+      label = row.css('td.detailsLabel')
+      value = row.css('div.field-item')
+      
+      puts label.text + ": " + value.text
+      
+      #product.set_property("Type", "Indian Douppion")
+      product.set_property(label.text, value.text)
+    end
+    
+    
+    
+    puts
   end
 
 end
