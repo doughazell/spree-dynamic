@@ -1,0 +1,69 @@
+Adding a new product
+--------------------
+1) Add the Category (if not already present) as a product with no taxon + £0
+   admin-Products-New Product
+
+1a) Add the Colour Taxon (if not already present)
+    admin-Configuration-Taxonomies-New Taxonomy-
+      Colour
+        Red
+        Blue
+        Green
+        Yellow
+        Cyan
+        Magenta
+        Dark
+        Light
+
+2) Add the Taxon with the same name as the Category product
+   admin-Configuration-Taxonomies-Edit "Type" taxonomy
+   Type
+    Indian Douppion
+    ...
+
+2a) Add Option Types (if first product)
+    admin-Products-Option Types-
+      Name:heading, Presentation:Heading
+        Name:pencil pleat, Display:Pencil Pleat
+        Name:deep pencil pleat, Display:Deep Pencil Pleat
+        Name:double pleat, Display:Double Pleat
+        Name:triple pleat, Display:Triple Pleat
+        Name:eyelet pleat, Display:Eyelet Pleat
+
+      (Heading images added via 'views/spree/products/show.html.erb' from 'assets/store/pleats' images)
+
+      Name:silk, Presentation: Silk
+        Name:sample, Display:Sample
+
+3) Add the Curtain
+   admin-Products-New Product-
+     Taxons:"Type->Indian Douppion" (added above)
+            "Colour->Blue"
+            [FOR EXAMPLE]
+     Option Types:"Heading(heading)", "Silk(silk)" (added above)
+     Master Price:(£/m)
+     Shipping Categories:Default 
+
+4) Set Pattern Repeat (if necessary)
+   admin-Products-Edit(button)-Product Properties-
+     Property,"Pattern Repeat",Value,"48"(cm)
+
+5) Add image for product
+   admin-Products-Edit(button)-Images-New Image-Browse...,Variant "All"
+
+6) Add heading variants for curtain
+   admin-Product-Edit(button)-Variants-New Variant(button)-Heading-SKU (Based on suppliers SKU + n)
+   n=1,Pencil Pleat
+   n=2,Deep Pencil Pleat
+   n=3,Double Pleat
+   n=4,Triple Pleat
+   n=5,Eyelet Pleat
+
+   admin-Product-Edit(button)-Variants-New Variant(button)-Silk-SKU (Based on suppliers SKU + n)
+   n=S,Sample
+
+   OLD IDEA BEFORE USING SUPPLIERS SKU:
+   ("BSC-xyz-n") 
+   x=Curtain Category (ie 0=Solid Colour,1=Country Cottage Collection,...) so up to 0xff products per category.
+
+
