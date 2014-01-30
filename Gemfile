@@ -40,8 +40,13 @@ end
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
-# Use debugger
-gem 'debugger', group: [:development, :test]
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0.0.beta'
+  #gem 'debugger', group: [:development, :test]
+  gem 'debugger'
+end
+
+
 
 # 18/12/13 DH: https://github.com/spree/spree/issues/4101 - "undefined method `content_tag' for Spree:Module" error
 #gem 'spree', '2.1.3'
