@@ -275,7 +275,6 @@ namespace :spree_bsc do
     product.save!
 
     page.css('table.silkDetails tr').each do |row|
-#debugger
       
       label = row.css('td.detailsLabel')
       value = row.css('div.field-item')
@@ -285,8 +284,6 @@ namespace :spree_bsc do
       #product.set_property("Type", "Indian Douppion")
       product.set_property(label.text, value.text)
     end
-    
-    
     
     puts
   end
