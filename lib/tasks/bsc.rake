@@ -25,6 +25,7 @@ namespace :spree_bsc do
     total = 0
     next_page = nil
     
+    # DEV: Setting '$first_time' to 'true' only adds 1 PRODUCT per rake task run
     $first_time = false
     
     begin
@@ -44,7 +45,7 @@ namespace :spree_bsc do
       puts silk_names.length
       total += silk_names.length
       
-      # Find products already in the DB
+      # --- Find products already in the DB ---
       products.each do |product|
       
         # Uses 'find' from the Ruby Enumerable mixin (since 'silk_names' is a 'Nokogiri::XML::NodeSet' which is an array)
@@ -69,7 +70,7 @@ namespace :spree_bsc do
         end
       end
 
-      # Now add the unadded silks into our system
+      # --- Now add the unadded silks into our system ---
       puts silk_names.length.to_s + ", " + silk_codes.length.to_s
 
       # --- Dev: Taking first element of each page  ---
