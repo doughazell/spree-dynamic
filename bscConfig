@@ -21,6 +21,7 @@ Adding a new product
         Name:double pleat, Display:Double Pleat
         Name:triple pleat, Display:Triple Pleat
         Name:eyelet pleat, Display:Eyelet Pleat
+        [DRAG AND DROP THEM IN THAT ORDER IF DIFF AFTER THE UPDATE]
 
       (Heading images added via 'views/spree/products/show.html.erb' from 'assets/store/pleats' images)
 
