@@ -1,9 +1,7 @@
 Adding a new product
 --------------------
-1) Add the Category (if not already present) as a product with no taxon + £0
-   admin-Products-New Product
 
-1a) Add the Colour Taxon (if not already present)
+1a) Add the Colour Taxons (if not already present)
     admin-Configuration-Taxonomies-New Taxonomy-
       Colour
         Red
@@ -15,13 +13,7 @@ Adding a new product
         Dark
         Light
 
-2) Add the Taxon with the same name as the Category product
-   admin-Configuration-Taxonomies-Edit "Type" taxonomy
-   Type
-    Indian Douppion
-    ...
-
-2a) Add Option Types (if first product)
+1b) Add Option Types (if first product)
     admin-Products-Option Types-
       Name:heading, Presentation:Heading
         Name:pencil pleat, Display:Pencil Pleat
@@ -34,6 +26,15 @@ Adding a new product
 
       Name:silk, Presentation: Silk
         Name:sample, Display:Sample
+
+2a) Add the Category (if not already present) as a product with no taxon + £0
+   admin-Products-New Product
+
+2b) Add the Taxon with the same name as the Category product
+   admin-Configuration-Taxonomies-Edit "Type" taxonomy
+   Type
+    Indian Douppion
+    ...
 
 3) Add the Curtain
    admin-Products-New Product-

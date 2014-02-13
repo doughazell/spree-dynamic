@@ -1,5 +1,17 @@
 # spreeBSC adaptions to Spree #
 
+### Technologies employed in this project ###
+
+1. Sassy CSS with ERB
+2. Skeleton collection of CSS files, based on a variation of the 960 grid system
+3. Passing parameters to the webpage using HTML data- attributes populated from the 'spree_preferences' DB table
+4. Adapted the Spree system with Deface for the Views, Decorator for the Controller + Mailer and Monkey-patching
+   the Spree config with the pricing algorithm parameters
+5. CoffeeScript to generate the Javascript used for the dynamic pricing
+6. AJAX to pass the required spec back to the DB order
+7. Rake task using Nokogiri to obtain the silk details from the supplier + colour ID heuristics based on the 
+   Colour Cube
+
 ### Dynamic pricing parameters ###
 
 1. Monkey-patch 'Spree::AppConfiguration' in 'config/initializers/spree_bsc.rb' to add the dynamic pricing params 
