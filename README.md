@@ -2,7 +2,7 @@
 
 ### Technologies employed in this project ###
 
-1. Sassy CSS with ERB
+1. Sass CSS with ERB
 2. Skeleton collection of CSS files, based on a variation of the 960 grid system
 3. Passing parameters to the webpage using HTML data- attributes populated from the 'spree_preferences' DB table
 4. Adapted the Spree system with Deface for the Views, Decorator for the Controller + Mailer and Monkey-patching

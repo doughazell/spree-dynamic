@@ -14,18 +14,21 @@ Adding a new product
         Light
 
 1b) Add Option Types (if first product)
-    admin-Products-Option Types-
-      Name:heading, Presentation:Heading
-        Name:pencil pleat, Display:Pencil Pleat
-        Name:deep pencil pleat, Display:Deep Pencil Pleat
-        Name:double pleat, Display:Double Pleat
-        Name:triple pleat, Display:Triple Pleat
-        Name:eyelet pleat, Display:Eyelet Pleat
+    admin-Products-Option Types-New Option Type
+     i) Name:heading, Presentation:Heading
+         Option Values:
+         Name:pencil pleat, Display:Pencil Pleat
+         Name:deep pencil pleat, Display:Deep Pencil Pleat
+         Name:double pleat, Display:Double Pleat
+         Name:triple pleat, Display:Triple Pleat
+         Name:eyelet pleat, Display:Eyelet Pleat
+        [DRAG AND DROP THEM IN THAT ORDER IF DIFF AFTER THE UPDATE]
 
       (Heading images added via 'views/spree/products/show.html.erb' from 'assets/store/pleats' images)
 
-      Name:silk, Presentation: Silk
-        Name:sample, Display:Sample
+     ii) Name:silk, Presentation: Silk
+          Option Values:
+          Name:sample, Display:Sample
 
 2a) Add the Category (if not already present) as a product with no taxon + £0
    admin-Products-New Product
