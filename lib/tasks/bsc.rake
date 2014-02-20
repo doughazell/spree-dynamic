@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
+require 'RMagick'
 
 namespace :spree_bsc do
   desc 'Loads BSC stock data' 
@@ -25,7 +26,8 @@ namespace :spree_bsc do
     total = 0
     next_page = nil
     
-    # DEV: Setting '$first_time' to 'true' only adds 1 PRODUCT per rake task run
+    # DEV: Setting '$first_time' to 'true' allows 1 PRODUCT to be added per rake task run
+    #      Setting '$first_time' to 'false' means NO PRODUCTS get added.
     $first_time = false
     
     begin
@@ -259,6 +261,8 @@ namespace :spree_bsc do
       product.master.update_attributes!(variant)
     end
     product.master.update_attributes!(:sku => sku)
+    
+    addDetails(product,)
     
   end
   
