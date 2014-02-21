@@ -61,9 +61,9 @@ namespace :spree_bsc do
           puts silk_codes[index].text
 #debugger
           # *** While testing the description + properties then use products ALREADY PRESENT ***
-          silk_path = silk_names[index].attr("href")
-          url = domain + silk_path
-          addDetails(product,url)
+          #silk_path = silk_names[index].attr("href")
+          #url = domain + silk_path
+          #addDetails(product,url)
           
           silk_names.delete(silk_names[index])
           silk_codes.delete(silk_codes[index])
@@ -90,7 +90,8 @@ namespace :spree_bsc do
         
         img_colour = getImageColour(img_url)
         
-        addProduct(silk.text, sku.text, img_url, img_colour)
+        silk_url = domain + silk.attr("href")
+        addProduct(silk.text, sku.text, img_url, img_colour, silk_url)
         
       end
 
@@ -164,7 +165,7 @@ namespace :spree_bsc do
      
   end
           
-  def addProduct(name,sku,img_url,img_colour)
+  def addProduct(name,sku,img_url,img_colour,silk_url)
     puts
     puts name
     puts sku
@@ -262,7 +263,7 @@ namespace :spree_bsc do
     end
     product.master.update_attributes!(:sku => sku)
     
-    addDetails(product,)
+    addDetails(product,silk_url)
     
   end
   
