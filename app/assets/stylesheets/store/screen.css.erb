@@ -1033,7 +1033,8 @@ div#checkout { position: relative; }
 div#checkout .progress-steps {
   position: absolute;
   top: 0.5em;
-  right: 0;
+  /* 23/2/14 DH: Silk sample checkout page has progress + summary off the 3-D area */
+  /* right: 0; */
 }
 div#checkout form {
   background-position: top right;
@@ -1114,7 +1115,8 @@ div#checkout #checkout-summary {
   width: 180px;
   position: absolute;
   top: 50px;
-  right: 0;
+  /* 23/2/14 DH: */
+  right: 130px;
 }
 h6.taxonomy-root, .product-section-title,
 #existing-customer h6, #new-customer h6,
@@ -1192,4 +1194,9 @@ form#checkout_form_address {
 #order_summary .steps-data .payment-info .cc-type img{
   float: left;
   padding-right: 5px;
+}
+
+/* 23/2/14 DH: */
+fieldset#order_summary {
+  margin-left: -45px;
 }
