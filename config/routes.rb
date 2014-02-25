@@ -1,6 +1,6 @@
 SpreeBSC::Application.routes.draw do
   # 20/10/13 DH: Adding a order complete route after return from Romancart
-  match 'cart/completed' => 'spree/orders#completed', :via => :put
+  match 'cart/completed' => 'spree/orders#completed', :via => :post
   
   # This line mounts Spree's routes at the root of your application.
   # This means, any requests to URLs such as /products, will go to Spree::ProductsController.

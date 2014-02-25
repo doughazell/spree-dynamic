@@ -7,6 +7,9 @@ module Spree
     helper 'spree/products', 'spree/orders'
 
     respond_to :html
+    
+    # 25/2/14 DH: Allow ROMANCARTXML feedback (but check romancart 'storeid' + 'order-items' match 'views/spree/orders/_form.html.erb')
+    protect_from_forgery :except => :completed
 
     def show
       @order = Order.find_by_number!(params[:id])
@@ -71,12 +74,12 @@ module Spree
 
     # ------------------------- BSC additions ---------------------------
     # 28/12/13 DH: Creating a method to be called by Romancart with 'ROMANCARTXML' to indicate a completed order
-    #              '/config/routes.rb':- "match 'cart/completed' => 'spree/orders#completed', :via => :put"        
+    #              '/config/routes.rb':- "match 'cart/completed' => 'spree/orders#completed', :via => :post"        
     def completed
 
       @order = current_order
       
-      posted_xml = params[:xml]
+      posted_xml = params[:ROMANCARTXML]
 
       # Remove XHTML character encoding (hopefully won't need to do this when we receive XML message from RomanCart!)
       xml = posted_xml.sub("<?xml version='1.0' encoding='UTF-8'?>", "")
