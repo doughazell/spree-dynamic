@@ -77,7 +77,7 @@ module Spree
     #              '/config/routes.rb':- "match 'cart/completed' => 'spree/orders#completed', :via => :post"        
     def completed
 
-      @order = current_order
+      #@order = current_order
       
       posted_xml = params[:ROMANCARTXML]
 
@@ -85,8 +85,16 @@ module Spree
       xml = posted_xml.sub("<?xml version='1.0' encoding='UTF-8'?>", "")
       
       xml_doc  = Nokogiri::XML(xml)   
+     
+      total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
+      orders = Spree::Order.where("state = ? AND total = ?", "cart",total_price)
+      Rails.logger.info "#{orders.count} orders in 'cart' state with a price of #{total_price}"
       
-      if @order = current_order
+      @order = orders.last
+ 
+      Rails.logger.info "Order number selected: #{@order.number}"
+
+      if @order
         
         @order.email = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/email").first.content
         
@@ -141,6 +149,8 @@ module Spree
           end
         end
 
+      else # No current order (prob because of the CSRF error preventing Devise access the current order session)
+        Rails.logger.info "Well that's what Devise does since there's no CSRF authenticy...doh!"
       end
 
     end
@@ -148,8 +158,10 @@ module Spree
     def romancartAddress(xml_doc, delivery = "")
         rc_xml_country = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}country").first.content
         rc_xml_county  = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}county").first.content
-        
-        country = Spree::Country.find_by_name(rc_xml_country.titleize)
+       
+        if rc_xml_country.upcase.eql?("UNITED KINGDOM")
+          country = Spree::Country.find_by_name("UK")
+	end
         if country.nil?
           #country = Spree::Country.create(...)
         end

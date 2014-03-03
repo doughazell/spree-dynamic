@@ -12,9 +12,19 @@ module Spree
       line_item = order.find_line_item_by_variant(variant)
      
       # 29/12/13 DH: Only allow 1 variant sample per order
-      unless variant.option_value("silk") == "Sample" and line_item
+      #unless variant.option_value("silk") == "Sample" and line_item
+      #  line_item = add_to_line_item(line_item, variant, quantity, currency, shipment)
+      #end
+      
+      # 3/3/14 DH: Previously only allowing 1 sample variant per order but since the BSC spec is per variant
+      #            line_item then can only allow 1 variant per order 
+      #            (diff variants, eg pencil pleat and deep pencil pleat, of same silk still allowed)
+      if line_item
+        return line_item
+      else
         line_item = add_to_line_item(line_item, variant, quantity, currency, shipment)
       end
+      
       line_item
       
     end
