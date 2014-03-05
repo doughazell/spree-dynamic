@@ -28,7 +28,7 @@ namespace :spree_bsc do
     
     # DEV: Setting '$first_time' to 'true' allows 1 PRODUCT to be added per rake task run
     #      Setting '$first_time' to 'false' means NO PRODUCTS get added.
-    $first_time = false
+    $first_time = true
     
     begin
       unless next_page.nil?

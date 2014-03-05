@@ -90,8 +90,12 @@ module Spree
       orders = Spree::Order.where("state = ? AND total = ?", "cart",total_price)
       Rails.logger.info "#{orders.count} orders in 'cart' state with a price of #{total_price}"
       
+      if orders.count == 0
+        # 5/3/14 DH: Testing ROMANCARTXML feedback locally so price is fixed
+        orders = Spree::Order.where("state = ? AND total = ?", "cart","8.40")
+      end
+
       @order = orders.last
- 
       Rails.logger.info "Order number selected: #{@order.number}"
 
       if @order
@@ -101,8 +105,8 @@ module Spree
         @order.user_id = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
         
         @order.number = xml_doc.xpath("/romancart-transaction-data/orderid").first.content        
-        flash[:message] = "Order number taken from current time!"
-        @order.number = Time.now.to_i.to_s
+        #flash[:message] = "Order number taken from current time!"
+        #@order.number = Time.now.to_i.to_s
         
         # ----------------------- Billing Address -------------------------------
         @order.bill_address = romancartAddress(xml_doc)
@@ -127,13 +131,30 @@ module Spree
           
           while @order.state != "payment"
             @order.next!
+            Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}" 
           end
           
           if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("True")
+          #if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("False")
+            Rails.logger.info "Testing ROMANCARTXML feedback using cheque payment so '<paid-flag>False</paid-flag>'"
 
             unless @order.payments.exists?
-              @order.payments.create!(:amount => @order.total)
-              @order.payments.last.payment_method = Spree::PaymentMethod.find_by_name("RomanCart")
+              # 5/3/14 DH: Previously this worked for 'spree-2.0.4' but the payments system was changed in 'spree-2.1'
+              #@order.payments.create!(:amount => @order.total)
+              #@order.payments.last.payment_method = Spree::PaymentMethod.find_by_name("RomanCart")
+            
+              # 5/3/14 DH: Taken this from 'spree/2-1-stable/api/app/models/spree/order_decorator.rb'              
+              payment = @order.payments.build
+              payment.amount = @order.total
+              payment.state = "completed"
+              payment.payment_method = Spree::PaymentMethod.find_by_name("RomanCart")
+              payment.save!
+	      
+              if @order.payments.last.payment_method
+                Rails.logger.info "Creating #{@order.payments.last.payment_method.name} payment of #{@order.total}"
+              else
+                Rails.logger.info "RomanCart payment method not found!"
+              end
             end
             
             # '@order.payments' is an array so need to get last one entered to access 'Spree::Payment' methods
@@ -144,8 +165,8 @@ module Spree
             # To 6 - Complete
             @order.state = "complete"
             @order.completed_at = Time.now
-             
             @order.save!
+	          Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}"
           end
         end
 
