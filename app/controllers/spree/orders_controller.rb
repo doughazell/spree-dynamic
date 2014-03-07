@@ -91,20 +91,23 @@ module Spree
       Rails.logger.info "#{orders.count} orders in 'cart' state with a price of #{total_price}"
       
       if orders.count == 0
-        # 5/3/14 DH: Testing ROMANCARTXML feedback locally so price is fixed
-        orders = Spree::Order.where("state = ? AND total = ?", "cart","8.40")
+        # 5/3/14 DH: Testing ROMANCARTXML feedback locally so price is something...
+        orders = Spree::Order.where("state = ? AND total > ?", "cart","0.00")
       end
 
       @order = orders.last
-      Rails.logger.info "Order number selected: #{@order.number}"
-
-      if @order
+      
+      # 6/3/14 DH: Since CSRF checking is removed for ROMANCARTXML feedback then need to check 'storeid' + items match
+      if @order and feedbackValid(xml_doc,@order)
+        Rails.logger.info "Order number selected: #{@order.number}"
         
         @order.email = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/email").first.content
         
         @order.user_id = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
         
-        @order.number = xml_doc.xpath("/romancart-transaction-data/orderid").first.content        
+        #@order.number = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
+        Rails.logger.info "Keeping Spree Order number rather than taking RomanCart one"
+        
         #flash[:message] = "Order number taken from current time!"
         #@order.number = Time.now.to_i.to_s
         
@@ -136,17 +139,18 @@ module Spree
           
           if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("True")
           #if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("False")
-            Rails.logger.info "Testing ROMANCARTXML feedback using cheque payment so '<paid-flag>False</paid-flag>'"
+            #Rails.logger.info "Testing ROMANCARTXML feedback using cheque payment so '<paid-flag>False</paid-flag>'"
 
             unless @order.payments.exists?
               # 5/3/14 DH: Previously this worked for 'spree-2.0.4' but the payments system was changed in 'spree-2.1'
               #@order.payments.create!(:amount => @order.total)
               #@order.payments.last.payment_method = Spree::PaymentMethod.find_by_name("RomanCart")
-            
+              #@order.payments.last.complete
+	      
               # 5/3/14 DH: Taken this from 'spree/2-1-stable/api/app/models/spree/order_decorator.rb'              
               payment = @order.payments.build
               payment.amount = @order.total
-              payment.state = "completed"
+              payment.complete
               payment.payment_method = Spree::PaymentMethod.find_by_name("RomanCart")
               payment.save!
 	      
@@ -157,16 +161,18 @@ module Spree
               end
             end
             
-            # '@order.payments' is an array so need to get last one entered to access 'Spree::Payment' methods
-            @order.payments.last.complete
             
             @order.payment_total = @order.total
 
             # To 6 - Complete
+            #@order.payment_state = "paid"
+            updater = Spree::OrderUpdater.new(@order)
+            updater.update_payment_state
+            
             @order.state = "complete"
             @order.completed_at = Time.now
             @order.save!
-	          Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}"
+            Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}"
           end
         end
 
@@ -176,29 +182,72 @@ module Spree
 
     end
     
-    def romancartAddress(xml_doc, delivery = "")
-        rc_xml_country = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}country").first.content
-        rc_xml_county  = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}county").first.content
-       
-        if rc_xml_country.upcase.eql?("UNITED KINGDOM")
-          country = Spree::Country.find_by_name("UK")
-	end
-        if country.nil?
-          #country = Spree::Country.create(...)
-        end
-        state = Spree::State.find_by_name(rc_xml_county.titleize)
+    def feedbackValid(xml_doc, order)
+
+      storeid = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/storeid").first.content
+      if storeid.to_i != Spree::Config[:romancart_storeid]
+        return false
+      end
+
+      #order_items = xml_doc.xpath("/romancart-transaction-data/order-items")
+      #order_items.xpath("order-item").children.each do |child| 
+      #  if child.name.eql?("item-name")
+      #    puts "#{child.name}: #{child.text}"
+      #  end
+      #end
+      
+      rc_items = xml_doc.xpath("/romancart-transaction-data/order-items/order-item/item-name")
+      
+      #rc_items.children.each do |item|
+      #  puts item.text
+      #end
+
+      if order.line_items.count != rc_items.count
+        return false
+      end
+      
+      num = 0
+      order.line_items.each do |item| 
+        spec = item.bsc_spec
+        silk_name = Spree::Variant.find_by_id(item.variant_id).name
+        silk_sku  = Spree::Variant.find_by_id(item.variant_id).sku
+        order_item = "#{silk_name}-#{silk_sku}(#{spec})"
         
-        order_address = Spree::Address.create!(
-          :firstname => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}first-name").first.content,
-          :lastname  => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}last-name").first.content,
-          :address1  => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}address1").first.content,
-          :address2  => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}address2").first.content,
-          :city      => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}town").first.content,
-          :state     => state,
-          :zipcode   => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}postcode").first.content,
-          :country   => country,
-          :phone     => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}phone").first.content
-        )
+        rc_item = rc_items[num].text
+        if !rc_item.eql?(order_item)
+          Rails.logger.info "'#{order_item}' is not the same as '#{rc_item}'"
+          return false
+        end
+        
+        num += 1
+      end
+#debugger      
+      return true
+    end
+    
+    def romancartAddress(xml_doc, delivery = "")
+      rc_xml_country = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}country").first.content
+      rc_xml_county  = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}county").first.content
+     
+      if rc_xml_country.upcase.eql?("UNITED KINGDOM")
+        country = Spree::Country.find_by_name("UK")
+      end
+      if country.nil?
+        #country = Spree::Country.create(...)
+      end
+      state = Spree::State.find_by_name(rc_xml_county.titleize)
+      
+      order_address = Spree::Address.create!(
+        :firstname => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}first-name").first.content,
+        :lastname  => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}last-name").first.content,
+        :address1  => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}address1").first.content,
+        :address2  => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}address2").first.content,
+        :city      => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}town").first.content,
+        :state     => state,
+        :zipcode   => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}postcode").first.content,
+        :country   => country,
+        :phone     => xml_doc.xpath("/romancart-transaction-data/sales-record-fields/#{delivery}phone").first.content
+      )
         
     end
     # ------------------------- END BSC additions ---------------------------
