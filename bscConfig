@@ -1,20 +1,59 @@
-Adding a new product
---------------------
+"EY$" indicates the Engine Yard login shell prompt
 
-1a) Add the Colour Taxons (if not already present)
-    admin-Configuration-Taxonomies-New Taxonomy-
-      Colour
-        Red
-        Blue
-        Green
-        Yellow
-        Cyan
-        Magenta
-        Dark
-        Light
+Admin
+-----
+1) Add new admin user
+  EY$ cd /data/spreebsc/current ; bundle exec rake spree_auth:admin:create
 
-1b) Add Option Types (if first product)
-    admin-Products-Option Types-New Option Type
+2) Signal Phusion Passenger for Nginx to restart rails app to collect any change to code in '/data/spreebsc/current'
+  EY$ touch /data/spreebsc/current/tmp/restart.txt
+
+General Spree settings
+----------------------
+1) General settings in Spree-Configuration
+  Set currency to "British Pound(GBP)" + untick "Display Currency" + Update
+  Need to change General Settings re Meta Keywords + Description etc
+  
+2) Spree-Configuration-Countries-NEW COUNTRY
+  UK,GBR,No States required
+
+3) Spree-Configuration-Shipping Category-NEW SHIPPING CATEGORY
+  Name:"Default",UPDATE
+
+4) Spree-Configuration-Zones-NEW ZONE
+  Name:"Default",Type:Country Based,Countries:UK
+
+5) Spree-Configuration-Shipping Methods-NEW SHIPPING METHOD
+  Name:"Standard Shipping",Display:Both,Categories:Default,Zones:Default
+  Calculator:Flat Rate,Amount:0.0
+
+6) Spree-Configuration-Stock Locations-Edit
+  Name:"UK"
+
+7) Spree-Configuration-Payment Methods-NEW PAYMENT METHOD
+  Provider:Spree::PaymentMethod::Check
+  Environment:Production
+  Display:Backend
+  Active:Yes
+  Name:RomanCart
+
+8) Add the Taxons (if not already present)
+
+  Spree-Configuration-Taxonomies-NEW TAXONOMY
+    Name:Type
+      Add "Indian Douppion" as child taxonomy of "Type"
+    Name:Colour
+      Red
+      Blue
+      Green
+      Yellow
+      Cyan
+      Magenta
+      Dark
+      Light
+
+9) Add Option Types (if first product)
+    Spree-Products-Option Types-New Option Type
      i) Name:heading, Presentation:Heading
          Option Values:
          Name:pencil pleat, Display:Pencil Pleat
@@ -30,44 +69,65 @@ Adding a new product
           Option Values:
           Name:sample, Display:Sample
 
-2a) Add the Category (if not already present) as a product with no taxon + £0
-   admin-Products-New Product
-
-2b) Add the Taxon with the same name as the Category product
-   admin-Configuration-Taxonomies-Edit "Type" taxonomy
+10) Add the Category (if not already present) as a product with no taxon + £0
+   Spree-Products-New Product
+      Name: Indian Douppion
+      SKU: 845
+      Master Price: 0.00
+      Available On: Today
+      Shipping Categories: Default
+      [CREATE]
+      IMAGES-NEW IMAGE-Browse...UPDATE
+   
+11) Add the Taxon with the same name as the Category product
+   Spree-Configuration-Taxonomies-Edit "Type" taxonomy
    Type
     Indian Douppion
     ...
 
-3) Add the Curtain
-   admin-Products-New Product-
-     Taxons:"Type->Indian Douppion" (added above)
-            "Colour->Blue"
-            [FOR EXAMPLE]
-     Option Types:"Heading(heading)", "Silk(silk)" (added above)
-     Master Price:(£/m)
-     Shipping Categories:Default 
+Adding a new product
+--------------------
+1) Manually add 1 Product
+  Save Pongess image to 'src/spreeBSC-dump'
+  Spree New Product
+    Master Price:(£/m)
+    Shipping Categories:Default
+  Spree Taxons
+    Colour->Yellow,Type->Indian Douppion
+  Spree Option Types
+    Heading,Silk
+  Update
+  Spree Images-NEW IMAGE-Browse...
+    'src/spreeBSC-dump'
+    Update
+  Spree-Product X-VARIANTS-NEW VARIANT
+    Heading-Pencil Pleat-     SKU:845-0200-1
+    Heading-Deep Pencil Pleat-SKU:845-0200-2
+    Heading-Double Pleat-     SKU:845-0200-3
+    Heading-Triple Pleat-     SKU:845-0200-4
+    Heading-Eyelet Pleat-     SKU:845-0200-5
+   
+    Silk-Sample-              SKU:845-0200-S
+  Spree-Product X-Product Properties
+    Width
+    Composition
+    Weight
+  Spree-Product X-Description
 
-4) Set Pattern Repeat (if necessary)
-   admin-Products-Edit(button)-Product Properties-
+2) Use auto upload script
+  EY$ cd /data/spreebsc/current ; bundle exec rake spree_bsc:load
+
+3) Set Pattern Repeat (if necessary)
+   Spree-Products-Edit(button)-Product Properties-
      Property,"Pattern Repeat",Value,"48"(cm)
 
-5) Add image for product
-   admin-Products-Edit(button)-Images-New Image-Browse...,Variant "All"
+Configure RomanCart
+-------------------
+RomanCart:Tools-Options-General
+  Posting Back to your Website
+  Post data ... √
+  Invisibly Post ... as ROMANCARTXML: "http://ec2-54-84-29-34.compute-1.amazonaws.com/cart/completed"
 
-6) Add heading variants for curtain
-   admin-Product-Edit(button)-Variants-New Variant(button)-Heading-SKU (Based on suppliers SKU + n)
-   n=1,Pencil Pleat
-   n=2,Deep Pencil Pleat
-   n=3,Double Pleat
-   n=4,Triple Pleat
-   n=5,Eyelet Pleat
-
-   admin-Product-Edit(button)-Variants-New Variant(button)-Silk-SKU (Based on suppliers SKU + n)
-   n=S,Sample
-
-   OLD IDEA BEFORE USING SUPPLIERS SKU:
-   ("BSC-xyz-n") 
-   x=Curtain Category (ie 0=Solid Colour,1=Country Cottage Collection,...) so up to 0xff products per category.
-
-
+RomanCart:Tools-Options-Checkout
+  Telephone Field is Mandatory √
+  Delivery Telephone Field is Mandatory √
