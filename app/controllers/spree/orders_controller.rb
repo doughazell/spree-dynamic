@@ -105,8 +105,8 @@ module Spree
         
         @order.user_id = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
         
-        #@order.number = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
-        Rails.logger.info "Keeping Spree Order number rather than taking RomanCart one"
+        @order.number = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
+        #Rails.logger.info "Keeping Spree Order number rather than taking RomanCart one"
         
         #flash[:message] = "Order number taken from current time!"
         #@order.number = Time.now.to_i.to_s
@@ -137,9 +137,9 @@ module Spree
             Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}" 
           end
           
-          if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("True")
-          #if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("False")
-            #Rails.logger.info "Testing ROMANCARTXML feedback using cheque payment so '<paid-flag>False</paid-flag>'"
+          #if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("True")
+          if xml_doc.xpath("/romancart-transaction-data/paid-flag").first.content.eql?("False")
+            Rails.logger.info "Testing ROMANCARTXML feedback using cheque payment so '<paid-flag>False</paid-flag>'"
 
             unless @order.payments.exists?
               # 5/3/14 DH: Previously this worked for 'spree-2.0.4' but the payments system was changed in 'spree-2.1'

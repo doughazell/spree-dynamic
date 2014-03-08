@@ -48,6 +48,6 @@
 
 <% end %>
 
-<% if paginated_products.respond_to?(:num_pages) %>
+<% !home_page && if paginated_products.respond_to?(:num_pages) %>
   <%= paginate paginated_products %>
 <% end %>
