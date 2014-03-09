@@ -47,7 +47,9 @@
               <%= product_image(item_form.object.variant.product, :itemprop => "image") %>
 
               <% if heading = item_form.object.variant.option_value("heading") %>
-                <img src="/assets/store/pleats/<%= heading.downcase %>.jpg" />
+                
+                <img src="<%= image_path("store/pleats/#{heading.downcase}.jpg") %>" />
+                
               <% end %>
                   
             </tbody>

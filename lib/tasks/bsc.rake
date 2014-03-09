@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
+require 'RMagick'
 
 namespace :spree_bsc do
   desc 'Loads BSC stock data' 
@@ -25,8 +26,9 @@ namespace :spree_bsc do
     total = 0
     next_page = nil
     
-    # DEV: Setting '$first_time' to 'true' only adds 1 PRODUCT per rake task run
-    $first_time = false
+    # DEV: Setting '$first_time' to 'true' allows 1 PRODUCT to be added per rake task run
+    #      Setting '$first_time' to 'false' means NO PRODUCTS get added.
+    $first_time = true
     
     begin
       unless next_page.nil?
@@ -59,9 +61,9 @@ namespace :spree_bsc do
           puts silk_codes[index].text
 #debugger
           # *** While testing the description + properties then use products ALREADY PRESENT ***
-          silk_path = silk_names[index].attr("href")
-          url = domain + silk_path
-          addDetails(product,url)
+          #silk_path = silk_names[index].attr("href")
+          #url = domain + silk_path
+          #addDetails(product,url)
           
           silk_names.delete(silk_names[index])
           silk_codes.delete(silk_codes[index])
@@ -88,7 +90,8 @@ namespace :spree_bsc do
         
         img_colour = getImageColour(img_url)
         
-        addProduct(silk.text, sku.text, img_url, img_colour)
+        silk_url = domain + silk.attr("href")
+        addProduct(silk.text, sku.text, img_url, img_colour, silk_url)
         
       end
 
@@ -162,7 +165,7 @@ namespace :spree_bsc do
      
   end
           
-  def addProduct(name,sku,img_url,img_colour)
+  def addProduct(name,sku,img_url,img_colour,silk_url)
     puts
     puts name
     puts sku
@@ -259,6 +262,8 @@ namespace :spree_bsc do
       product.master.update_attributes!(variant)
     end
     product.master.update_attributes!(:sku => sku)
+    
+    addDetails(product,silk_url)
     
   end
   

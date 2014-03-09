@@ -33,6 +33,8 @@ Spree::AppConfiguration.class_eval do
   preference :lining_help, :string
   preference :pleat_help, :string
   
+  preference :romancart_storeid, :integer
+  
 end
 
 # These values get automatically put into the 'spree_preferences' table in the DB on startup...nice!
@@ -79,3 +81,5 @@ Thermal lining lets in as much light as a standard cotton lining and is not a bl
 
 Spree::Config[:pleat_help] =
 "Choose a pencil pleat for a more informal look and a single, double or triple pleat for a formal look."
+
+Spree::Config[:romancart_storeid] = 61379

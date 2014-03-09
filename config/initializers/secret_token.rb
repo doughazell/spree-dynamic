@@ -9,4 +9,12 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-SpreeBSC::Application.config.secret_key_base = '439106a61b3633fb72c83aecbfc9ffd8ced3f936093587007cdfb4bbfb2f0c3c47bd04edada04a453514aef88b8cd4c8f44232c3f0749bae0bdc01c19540ae2b'
+#SpreeBSC::Application.config.secret_key_base = '439106a61b3633fb72c83aecbfc9ffd8ced3f936093587007cdfb4bbfb2f0c3c47bd04edada04a453514aef88b8cd4c8f44232c3f0749bae0bdc01c19540ae2b'
+
+#puts "SpreeBSC::Application.config.secret_key_base.length:" + SpreeBSC::Application.config.secret_key_base.length.to_s
+#puts "SpreeBSC::Application.config.secret_key_base:" + SpreeBSC::Application.config.secret_key_base.to_s
+
+SpreeBSC::Application.config.secret_key_base = SecureRandom.hex(64)
+
+#puts "SpreeBSC::Application.config.secret_key_base.length:" + SpreeBSC::Application.config.secret_key_base.length.to_s
+#puts "SpreeBSC::Application.config.secret_key_base:" + SpreeBSC::Application.config.secret_key_base.to_s

@@ -147,14 +147,18 @@ pattern_repeat: patternRepeat
           <h4 style="display: inline;">Curtain width</h4> 
           <% width_help = Spree::Config[:width_help] %>
           <%# --- <img ... Title=" %= width_help % " onClick='alert( %= width_help.dump % )' /> --- %>
-          <%= link_to image_tag("/assets/store/help-icon.png", :Title => width_help), "/assets/store/MeasuringAdvice.pdf" %>
+          
+          <%= link_to image_tag("store/help-icon.png", :Title => width_help), image_path("store/MeasuringAdvice.pdf") %>
+          
         </div>
         <%= number_field_tag 'width', nil, :id => 'width' %>
 
         <div class="bsc-heading">
           <h4 style="display: inline;">Curtain drop</h4>
           <% drop_help = Spree::Config[:drop_help] %>
-          <%= link_to image_tag("/assets/store/help-icon.png", :Title => drop_help), "/assets/store/MeasuringAdvice.pdf" %>
+          
+          <%= link_to image_tag("store/help-icon.png", :Title => drop_help), image_path("store/MeasuringAdvice.pdf") %>
+          
         </div>
         <%= number_field_tag 'drop', nil, :id => 'drop' %>
         
@@ -162,7 +166,9 @@ pattern_repeat: patternRepeat
         <div class="bsc-heading">  
           <h4 style="display: inline;">Lining</h4>
           <% lining_help = Spree::Config[:lining_help] %>
-          <%= link_to image_tag("/assets/store/help-icon.png", :Title => lining_help), "/assets/store/MeasuringAdvice.pdf" %>
+          
+          <%= link_to image_tag("store/help-icon.png", :Title => lining_help), image_path("store/MeasuringAdvice.pdf") %>
+          
         </div>
         
         
@@ -178,7 +184,9 @@ pattern_repeat: patternRepeat
             <div class="bsc-heading">
               <h4 style="display: inline;">Pleat Variants</h4>
               <% pleat_help = Spree::Config[:pleat_help] %>
-              <%= link_to image_tag("/assets/store/help-icon.png", :Title => pleat_help), "/assets/store/MeasuringAdvice.pdf" %>
+          
+              <%= link_to image_tag("store/help-icon.png", :Title => pleat_help), image_path("store/MeasuringAdvice.pdf") %>
+              
             </div>
             <ul>
               <% @product.variants_and_option_values(current_currency).each_with_index do |variant, index| %>
@@ -189,7 +197,7 @@ pattern_repeat: patternRepeat
                     
                     <label for="<%= ['products', @product.id, variant.id].join('_') %>">
 
-                      <img src="/assets/store/pleats/<%= heading.downcase %>.jpg" />
+                      <img src="<%= image_path("store/pleats/#{heading.downcase}.jpg") %>" />
 
                       <span class="variant-description">
                         <%= variant_options variant %>

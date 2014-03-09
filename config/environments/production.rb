@@ -23,7 +23,7 @@ SpreeBSC::Application.configure do
   #config.serve_static_assets = false
   
   # 9/2/14 DH: Getting production running locally before migrating to Engine Yard.
-  config.serve_static_assets = true
+  #config.serve_static_assets = true
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
