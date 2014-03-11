@@ -7,6 +7,8 @@
 <%# --- ONLY DISPLAY PRODUCTS WITH SAME NAME AS CATEGORY --- %>
 <%# --- Currently altering ":partial => 'spree/shared/products'" --- %>
 
+<% Rails.logger.info "Home index: #{@products.count} of #{Spree::Product.all.count} products" %>
+
 <div data-hook="homepage_products">
   <%= render :partial => 'spree/shared/products', :locals => { :products => @products } %>
 </div>
