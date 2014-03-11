@@ -8,6 +8,9 @@ Admin
 2) Signal Phusion Passenger for Nginx to restart rails app to collect any change to code in '/data/spreebsc/current'
   EY$ touch /data/spreebsc/current/tmp/restart.txt
 
+3) Ensure that 'config.products_per_page' in 'config/initializers/spree.rb' is greater than the total number of products
+  Entry added to log file '/data/spreebsc/current/log/production.log' to specify total product number.
+
 General Spree settings
 ----------------------
 1) General settings in Spree-Configuration
