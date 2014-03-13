@@ -8,6 +8,15 @@ Admin
 2) Signal Phusion Passenger for Nginx to restart rails app to collect any change to code in '/data/spreebsc/current'
   EY$ touch /data/spreebsc/current/tmp/restart.txt
 
+3) Ensure that 'config.products_per_page' in 'config/initializers/spree.rb' is greater than the total number of products
+  Entry added to log file '/data/spreebsc/current/log/production.log' to specify total product number.
+
+4) Engine Yard creates a new directory in '/data/spreebsc/releases' for each deploy with the name YYYYMMDDHHMMSS.
+  The current one is pointed to by '/data/spreebsc/current'.
+  The Postgres DB remains constant if 'config/database.yml' is not changed (and the appropriate migrations run) 
+  HOWEVER SPREE PUTS PRODUCT IMAGES IN '/public/spree' THEREFORE THE WHOLE DIRECTORY NEEDS TO BE COPIED WITH A RECURSIVE
+  SHELL COMMAND AFTER A REDPLOY
+
 General Spree settings
 ----------------------
 1) General settings in Spree-Configuration
