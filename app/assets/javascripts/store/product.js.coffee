@@ -166,7 +166,7 @@ $ ->
     curtain_width = width = (Number) @value
     Spree.calcNumberOfWidths (width)
     drop  = (Number) ($ '#drop').val()
-    #console.log("Drop:" + drop)
+    console.log("Drop:" + drop)
     if drop > 0
       Spree.calcPrice (drop)
     # ---

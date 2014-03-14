@@ -11,7 +11,7 @@ Spree.config do |config|
   # config.site_name = "Spree Demo Site"
   config.site_name = "Bespoke Silk Curtains Company"
   config.logo = "store/BSCCoy-logo.jpg"
-  config.products_per_page = 8
+  config.products_per_page = 200
   
 end
 
