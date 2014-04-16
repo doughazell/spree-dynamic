@@ -176,7 +176,8 @@ namespace :spree_bsc do
     
     puts img_colour
     puts
-    
+
+=begin
     if $first_time
       puts "--- DOING THIS ONE TIME ONLY... ---"
       $first_time = false
@@ -184,7 +185,7 @@ namespace :spree_bsc do
       puts "Not adding product"
       return
     end
-    
+=end
     product_attrs = {
       :name              => name,
       :sku               => sku,
