@@ -4,6 +4,8 @@ module Spree
     belongs_to :order, class_name: "Spree::Order"
     belongs_to :variant, class_name: "Spree::Variant"
     belongs_to :tax_category, class_name: "Spree::TaxCategory"
+    # 28/4/14 DH: Converting 'bsc_spec' column in 'spree_line_items' to separate table 'spree_bsc_specs'
+    belongs_to :bsc_req, class_name: "Spree::BscReq"
 
     has_one :product, through: :variant
     has_many :adjustments, as: :adjustable, dependent: :destroy

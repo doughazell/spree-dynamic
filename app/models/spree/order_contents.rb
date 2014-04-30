@@ -62,7 +62,24 @@ module Spree
       # 29/12/13 DH: If a dynamic price was returned from the Products Show then use it to populate the line item
       if @bscDynamicPrice
         line_item.price    = @bscDynamicPrice
-        line_item.bsc_spec = @bscSpec          
+        line_item.bsc_spec = @bscSpec
+        
+        # 29/4/14 DH: Checkout the date diff from the old spec population doode!
+        #             Anyway, now populating a separate table rather than just storing an unparsed string
+        #             The string is used for the RomanCart integration until the order has "Status Complete",
+        #             otherwise it would lead to "data redundancy" and risk "data anomalies"!
+        
+        #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
+        
+        if line_item.bsc_spec
+          reqs = Hash.new
+          line_item.bsc_spec.split(',').each do |req|
+            category, value = req.split('=')
+            reqs[category] = value
+          end
+          line_item.create_bsc_req!(width: reqs["width"], drop: reqs["drop"], lining: reqs["lining"], heading: reqs["heading"])
+        end
+        
       end  
 
       line_item.save

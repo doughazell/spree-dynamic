@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131223220833) do
+ActiveRecord::Schema.define(version: 20140430121530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,13 @@ ActiveRecord::Schema.define(version: 20131223220833) do
 
   add_index "spree_assets", ["viewable_id"], name: "index_assets_on_viewable_id", using: :btree
   add_index "spree_assets", ["viewable_type", "type"], name: "index_assets_on_viewable_type_and_type", using: :btree
+
+  create_table "spree_bsc_reqs", force: true do |t|
+    t.integer "width"
+    t.integer "drop"
+    t.string  "lining"
+    t.string  "heading"
+  end
 
   create_table "spree_calculators", force: true do |t|
     t.string   "type"
@@ -169,8 +176,10 @@ ActiveRecord::Schema.define(version: 20131223220833) do
     t.decimal  "cost_price",      precision: 8, scale: 2
     t.integer  "tax_category_id"
     t.string   "bsc_spec"
+    t.integer  "bsc_req_id"
   end
 
+  add_index "spree_line_items", ["bsc_req_id"], name: "index_spree_line_items_on_bsc_req_id", using: :btree
   add_index "spree_line_items", ["order_id"], name: "index_spree_line_items_on_order_id", using: :btree
   add_index "spree_line_items", ["variant_id"], name: "index_spree_line_items_on_variant_id", using: :btree
 

@@ -44,6 +44,9 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   #gem 'debugger', group: [:development, :test]
   gem 'debugger'
+  
+  # 22/4/14 DH: Attempting to visualise Spree DB
+  gem 'railroady'
 end
 
 
