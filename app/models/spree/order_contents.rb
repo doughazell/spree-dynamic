@@ -72,12 +72,15 @@ module Spree
         #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
         
         if line_item.bsc_spec
+          line_item.create_bsc_req!(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
+=begin
           reqs = Hash.new
           line_item.bsc_spec.split(',').each do |req|
             category, value = req.split('=')
             reqs[category] = value
           end
           line_item.create_bsc_req!(width: reqs["width"], drop: reqs["drop"], lining: reqs["lining"], heading: reqs["heading"])
+=end
         end
         
       end  

@@ -7,22 +7,33 @@
       <%= item.variant.product.name %><br><%= "(" + variant_options(item.variant) + ")" unless item.variant.option_values.empty? %>
 
       <br><br>
+
+<%# --- Now get 'value' from 'line_item.bsc_req.[width|drop|lining|heading]' --- %>
+<%# --- OR 'category/value' from 'line_item.bsc_req.attributes' hash key=>value --- %>
+      <% if line_item.bsc_req %>
+      
+        <span class="bsc-spec-category"><strong>Width</strong></span>   <%= line_item.bsc_req.width %> cm <br>
+        <span class="bsc-spec-category"><strong>Drop</strong></span>    <%= line_item.bsc_req.drop %> cm  <br>
+        <span class="bsc-spec-category"><strong>Lining</strong></span>  <%= line_item.bsc_req.lining %>   <br>
+        <span class="bsc-spec-category"><strong>Heading</strong></span> <%= line_item.bsc_req.heading %>  <br>
       
       <%# --- Very similar to 'app/views/spree/orders/_form.html.erb' so maybe move to helper (but this version all in same <td>) --- %>
-      <% if line_item.bsc_spec %>
+      <% elsif line_item.bsc_spec %>
+        Taking BSC req from 'bsc_spec' in transition to 'spree_bsc_reqs' for Complete Orders:
+        <br><br>
         <% line_item.bsc_spec.split(',').each do |spec| %>
           <% category, value = spec.split('=') %>
           
-            <% if value %>
-              <span class="bsc-spec-category"><strong><%= category.capitalize %></strong></span>
-              <% if category == "width" || category == "drop" %>
-                <%= value + " cm" %>
-              <% else %>
-                <%= value %>
-              <% end %>
+          <% if value %>
+            <span class="bsc-spec-category"><strong><%= category.capitalize %></strong></span>
+            <% if category == "width" || category == "drop" %>
+              <%= value + " cm" %>
+            <% else %>
+              <%= value %>
             <% end %>
+          <% end %>
           
-            <br>
+          <br>
           
         <% end %>
       <% end %>
