@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140430121530) do
+ActiveRecord::Schema.define(version: 20140503161133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,10 +91,10 @@ ActiveRecord::Schema.define(version: 20140430121530) do
   add_index "spree_assets", ["viewable_type", "type"], name: "index_assets_on_viewable_type_and_type", using: :btree
 
   create_table "spree_bsc_reqs", force: true do |t|
-    t.integer "width"
-    t.integer "drop"
-    t.string  "lining"
-    t.string  "heading"
+    t.integer "width",   null: false
+    t.integer "drop",    null: false
+    t.string  "lining",  null: false
+    t.string  "heading", null: false
   end
 
   create_table "spree_calculators", force: true do |t|

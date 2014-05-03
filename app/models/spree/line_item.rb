@@ -8,6 +8,8 @@ module Spree
     # 28/4/14 DH: Converting 'bsc_spec' column in 'spree_line_items' to separate table 'spree_bsc_reqs'
     # 1/5/14 DH: Matching 'has_one :line_item, ...' in 'Spree::BscReq' but 'spree_line_items' contains FK 'bsc_req_id'
     belongs_to :bsc_req, class_name: "Spree::BscReq"
+    # 3/5/14 DH: Try preventing incomplete req set with ':null => false' migration first
+    #validates :bsc_req, presence: true, if: Spree::BscReq.valid?
 
     has_one :product, through: :variant
     has_many :adjustments, as: :adjustable, dependent: :destroy

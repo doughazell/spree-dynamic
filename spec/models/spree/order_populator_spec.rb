@@ -43,9 +43,10 @@ describe Spree::OrderPopulator do
         subject.populate(:products => { 1 => 2 }, :quantity => 2_147_483_648)
         subject.should_not be_valid
         output = "Please enter a reasonable quantity.WTF???"
+        #output = "Please enter a reasonable quantity."
         subject.errors.full_messages.join("").should == output
       end
-    end
+    end # END: context "with products parameters"
 
     context "with variant parameters" do
       it "can take a list of variants with quantites and add them to the order" do
