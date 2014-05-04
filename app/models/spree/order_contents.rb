@@ -72,7 +72,12 @@ module Spree
         #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
         
         if line_item.bsc_spec
-          line_item.create_bsc_req!(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
+          line_item.create_bsc_req(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
+
+          if line_item.bsc_req.invalid?
+            raise "The BSC requirement set is missing a value"
+          end
+
 =begin
           reqs = Hash.new
           line_item.bsc_spec.split(',').each do |req|
@@ -82,10 +87,11 @@ module Spree
           line_item.create_bsc_req!(width: reqs["width"], drop: reqs["drop"], lining: reqs["lining"], heading: reqs["heading"])
 =end
         end
-        
-      end  
+      
+      end
 
       line_item.save
+            
       order.reload
       line_item
     end
