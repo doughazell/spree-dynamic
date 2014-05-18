@@ -1,4 +1,7 @@
 <% shipment.manifest.each do |item| %>
+
+<%# debugger %>
+
   <% line_item = order.find_line_item_by_variant(item.variant) %>
 
   <tr class="stock-item" data-item-quantity="<%= item.quantity %>">

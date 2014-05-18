@@ -12,7 +12,14 @@ class Spree::UserSessionsController < Devise::SessionsController
   ssl_required :new, :create, :destroy, :update
   ssl_allowed :login_bar
 
+# 14/5/14 DH: Trying to get around the 'ActionController::InvalidAuthenticityToken' during Integration tests
+#skip_before_action :verify_authenticity_token
+#protect_from_forgery except: :create
+
   def create
+    puts "Well we're now back in Devise again folks..."
+    puts __FILE__ + " : " + __method__.to_s
+#debugger
     authenticate_spree_user!
 
     if spree_user_signed_in?

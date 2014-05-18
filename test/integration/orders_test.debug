@@ -1,0 +1,466 @@
+[339, 348] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   339        %w(get post patch put head delete cookies assigns
+   340           xml_http_request xhr get_via_redirect post_via_redirect).each do |method|
+   341          define_method(method) do |*args|
+   342            reset! unless integration_session
+   343            # reset the html_document variable, but only for new get/post calls
+=> 344            @html_document = nil unless method == 'cookies' || method == 'assigns'
+   345            integration_session.__send__(method, *args).tap do
+   346              copy_session_variables!
+   347            end
+   348          end
+(rdb:1) method
+"post_via_redirect"
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:345
+integration_session.__send__(method, *args).tap do
+
+[340, 349] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   340           xml_http_request xhr get_via_redirect post_via_redirect).each do |method|
+   341          define_method(method) do |*args|
+   342            reset! unless integration_session
+   343            # reset the html_document variable, but only for new get/post calls
+   344            @html_document = nil unless method == 'cookies' || method == 'assigns'
+=> 345            integration_session.__send__(method, *args).tap do
+   346              copy_session_variables!
+   347            end
+   348          end
+   349        end
+(rdb:1) s
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:404
+@integration_session ||= nil
+
+[399, 408] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   399          end
+   400        end
+   401  
+   402        private
+   403          def integration_session
+=> 404            @integration_session ||= nil
+   405          end
+   406      end
+   407    end
+   408  
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:107
+request_via_redirect(:post, path, parameters, headers_or_env)
+
+[102, 111] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   102        end
+   103  
+   104        # Performs a POST request, following any subsequent redirect.
+   105        # See +request_via_redirect+ for more information.
+   106        def post_via_redirect(path, parameters = nil, headers_or_env = nil)
+=> 107          request_via_redirect(:post, path, parameters, headers_or_env)
+   108        end
+   109  
+   110        # Performs a PATCH request, following any subsequent redirect.
+   111        # See +request_via_redirect+ for more information.
+(rdb:1) path
+"/login"
+(rdb:1) parameters
+{"spree_user[email]"=>"spree@example.com", "spree_user[password]"=>"spree123", "authenticity_token"=>"mbfY2N1ouE38SxZnQX7DH5RLrD//h8B6fiyOFYThg4o=", "commit"=>"Login"}
+(rdb:1) s
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:93
+process(http_method, path, parameters, headers_or_env)
+
+[88, 97] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   88        # Performs a request using the specified method, following any subsequent
+   89        # redirect. Note that the redirects are followed until the response is
+   90        # not a redirect--this means you may run into an infinite loop if your
+   91        # redirect loops back to itself.
+   92        def request_via_redirect(http_method, path, parameters = nil, headers_or_env = nil)
+=> 93          process(http_method, path, parameters, headers_or_env)
+   94          follow_redirect! while redirect?
+   95          status
+   96        end
+   97  
+(rdb:1) s
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:266
+if path =~ %r{://}
+
+[261, 270] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   261            @_mock_session ||= Rack::MockSession.new(@app, host)
+   262          end
+   263  
+   264          # Performs the actual request.
+   265          def process(method, path, parameters = nil, headers_or_env = nil)
+=> 266            if path =~ %r{://}
+   267              location = URI.parse(path)
+   268              https! URI::HTTPS === location if location.scheme
+   269              host! "#{location.host}:#{location.port}" if location.host
+   270              path = location.query ? "#{location.path}?#{location.query}" : location.path
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:273
+unless ActionController::Base < ActionController::Testing
+
+[268, 277] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   268              https! URI::HTTPS === location if location.scheme
+   269              host! "#{location.host}:#{location.port}" if location.host
+   270              path = location.query ? "#{location.path}?#{location.query}" : location.path
+   271            end
+   272  
+=> 273            unless ActionController::Base < ActionController::Testing
+   274              ActionController::Base.class_eval do
+   275                include ActionController::Testing
+   276              end
+   277            end
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:279
+hostname, port = host.split(':')
+
+[274, 283] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   274              ActionController::Base.class_eval do
+   275                include ActionController::Testing
+   276              end
+   277            end
+   278  
+=> 279            hostname, port = host.split(':')
+   280  
+   281            env = {
+   282              :method => method,
+   283              :params => parameters,
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:281
+env = {
+
+[276, 285] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   276              end
+   277            end
+   278  
+   279            hostname, port = host.split(':')
+   280  
+=> 281            env = {
+   282              :method => method,
+   283              :params => parameters,
+   284  
+   285              "SERVER_NAME"     => hostname,
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:286
+"SERVER_PORT"     => port || (https? ? "443" : "80"),
+
+[281, 290] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   281            env = {
+   282              :method => method,
+   283              :params => parameters,
+   284  
+   285              "SERVER_NAME"     => hostname,
+=> 286              "SERVER_PORT"     => port || (https? ? "443" : "80"),
+   287              "HTTPS"           => https? ? "on" : "off",
+   288              "rack.url_scheme" => https? ? "https" : "http",
+   289  
+   290              "REQUEST_URI"    => path,
+(rdb:1) hostname
+"hazelltree.co.uk"
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:297
+Http::Headers.new(env).merge!(headers_or_env || {})
+
+[292, 301] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   292              "REMOTE_ADDR"    => remote_addr,
+   293              "CONTENT_TYPE"   => "application/x-www-form-urlencoded",
+   294              "HTTP_ACCEPT"    => accept
+   295            }
+   296            # this modifies the passed env directly
+=> 297            Http::Headers.new(env).merge!(headers_or_env || {})
+   298  
+   299            session = Rack::Test::Session.new(_mock_session)
+   300  
+   301            env.merge!(env)
+(rdb:1) session
+nil
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:299
+session = Rack::Test::Session.new(_mock_session)
+
+[294, 303] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   294              "HTTP_ACCEPT"    => accept
+   295            }
+   296            # this modifies the passed env directly
+   297            Http::Headers.new(env).merge!(headers_or_env || {})
+   298  
+=> 299            session = Rack::Test::Session.new(_mock_session)
+   300  
+   301            env.merge!(env)
+   302  
+   303            # NOTE: rack-test v0.5 doesn't build a default uri correctly
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:301
+env.merge!(env)
+
+[296, 305] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   296            # this modifies the passed env directly
+   297            Http::Headers.new(env).merge!(headers_or_env || {})
+   298  
+   299            session = Rack::Test::Session.new(_mock_session)
+   300  
+=> 301            env.merge!(env)
+   302  
+   303            # NOTE: rack-test v0.5 doesn't build a default uri correctly
+   304            # Make sure requested path is always a full uri
+   305            uri = URI.parse('/')
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:305
+uri = URI.parse('/')
+
+[300, 309] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   300  
+   301            env.merge!(env)
+   302  
+   303            # NOTE: rack-test v0.5 doesn't build a default uri correctly
+   304            # Make sure requested path is always a full uri
+=> 305            uri = URI.parse('/')
+   306            uri.scheme ||= env['rack.url_scheme']
+   307            uri.host   ||= env['SERVER_NAME']
+   308            uri.port   ||= env['SERVER_PORT'].try(:to_i)
+   309            uri += path
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:306
+uri.scheme ||= env['rack.url_scheme']
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:307
+uri.host   ||= env['SERVER_NAME']
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:308
+uri.port   ||= env['SERVER_PORT'].try(:to_i)
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:309
+uri += path
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb:311
+session.request(uri.to_s, env)
+
+[306, 315] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/actionpack-4.0.2/lib/action_dispatch/testing/integration.rb
+   306            uri.scheme ||= env['rack.url_scheme']
+   307            uri.host   ||= env['SERVER_NAME']
+   308            uri.port   ||= env['SERVER_PORT'].try(:to_i)
+   309            uri += path
+   310  
+=> 311            session.request(uri.to_s, env)
+   312  
+   313            @request_count += 1
+   314            @request  = ActionDispatch::Request.new(session.last_request.env)
+   315            response = _mock_session.last_response
+(rdb:1) uri
+#<URI::Generic:0x000001089827c8 URL:http://hazelltree.co.uk:80/login>
+(rdb:1) s
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1454
+str = ''
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1455
+if @scheme
+
+[1450, 1459] in /Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb
+   1450      #
+   1451      # Constructs String from URI
+   1452      #
+   1453      def to_s
+   1454        str = ''
+=> 1455        if @scheme
+   1456          str << @scheme
+   1457          str << ':'
+   1458        end
+   1459  
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1456
+str << @scheme
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1457
+str << ':'
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1460
+if @opaque
+
+[1455, 1464] in /Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb
+   1455        if @scheme
+   1456          str << @scheme
+   1457          str << ':'
+   1458        end
+   1459  
+=> 1460        if @opaque
+   1461          str << @opaque
+   1462  
+   1463        else
+   1464          if @registry
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1464
+if @registry
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1467
+if @host
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1468
+str << '//'
+
+[1463, 1472] in /Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb
+   1463        else
+   1464          if @registry
+   1465            str << @registry
+   1466          else
+   1467            if @host
+=> 1468              str << '//'
+   1469            end
+   1470            if self.userinfo
+   1471              str << self.userinfo
+   1472              str << '@'
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1470
+if self.userinfo
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1474
+if @host
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1475
+str << @host
+
+[1470, 1479] in /Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb
+   1470            if self.userinfo
+   1471              str << self.userinfo
+   1472              str << '@'
+   1473            end
+   1474            if @host
+=> 1475              str << @host
+   1476            end
+   1477            if @port && @port != self.default_port
+   1478              str << ':'
+   1479              str << @port.to_s
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1477
+if @port && @port != self.default_port
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1478
+str << ':'
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1479
+str << @port.to_s
+
+[1474, 1483] in /Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb
+   1474            if @host
+   1475              str << @host
+   1476            end
+   1477            if @port && @port != self.default_port
+   1478              str << ':'
+=> 1479              str << @port.to_s
+   1480            end
+   1481          end
+   1482  
+   1483          str << path_query
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1483
+str << path_query
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1486
+if @fragment
+
+[1481, 1490] in /Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb
+   1481          end
+   1482  
+   1483          str << path_query
+   1484        end
+   1485  
+=> 1486        if @fragment
+   1487          str << '#'
+   1488          str << @fragment
+   1489        end
+   1490  
+(rdb:1) n
+/Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb:1491
+str
+
+[1486, 1495] in /Users/doug/.rvm/rubies/ruby-1.9.3-p392/lib/ruby/1.9.1/uri/generic.rb
+   1486        if @fragment
+   1487          str << '#'
+   1488          str << @fragment
+   1489        end
+   1490  
+=> 1491        str
+   1492      end
+   1493  
+   1494      #
+   1495      # Compares to URI's
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb:122
+env = env_for(uri, env)
+
+[117, 126] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb
+   117        # if given.
+   118        #
+   119        # Example:
+   120        #   request "/"
+   121        def request(uri, env = {}, &block)
+=> 122          env = env_for(uri, env)
+   123          process_request(uri, env, &block)
+   124        end
+   125  
+   126        # Set a header to be included on all subsequent requests through the
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb:123
+process_request(uri, env, &block)
+
+[118, 127] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb
+   118        #
+   119        # Example:
+   120        #   request "/"
+   121        def request(uri, env = {}, &block)
+   122          env = env_for(uri, env)
+=> 123          process_request(uri, env, &block)
+   124        end
+   125  
+   126        # Set a header to be included on all subsequent requests through the
+   127        # session. Use a value of nil to remove a previously configured header.
+(rdb:1) env
+{"rack.version"=>[1, 2], "rack.input"=>#<StringIO:0x00000108f7da38>, "rack.errors"=>#<StringIO:0x00000108f7db78>, "rack.multithread"=>true, "rack.multiprocess"=>true, "rack.run_once"=>false, "REQUEST_METHOD"=>"POST", "SERVER_NAME"=>"hazelltree.co.uk", "SERVER_PORT"=>"80", "QUERY_STRING"=>"", "PATH_INFO"=>"/login", "rack.url_scheme"=>"http", "HTTPS"=>"off", "SCRIPT_NAME"=>"", "CONTENT_LENGTH"=>"158", "rack.test"=>true, "REMOTE_ADDR"=>"127.0.0.1", "REQUEST_URI"=>"/login", "HTTP_HOST"=>"hazelltree.co.uk", "CONTENT_TYPE"=>"application/x-www-form-urlencoded", "HTTP_ACCEPT"=>"text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"}
+(rdb:1) s
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb:227
+uri = URI.parse(uri)
+
+[222, 231] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb
+   222  
+   223          Rack::MockRequest.env_for(uri.to_s, env)
+   224        end
+   225  
+   226        def process_request(uri, env)
+=> 227          uri = URI.parse(uri)
+   228          uri.host ||= @default_host
+   229  
+   230          @rack_mock_session.request(uri, env)
+   231  
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb:228
+uri.host ||= @default_host
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb:230
+@rack_mock_session.request(uri, env)
+
+[225, 234] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/rack-test-0.6.2/lib/rack/test.rb
+   225  
+   226        def process_request(uri, env)
+   227          uri = URI.parse(uri)
+   228          uri.host ||= @default_host
+   229  
+=> 230          @rack_mock_session.request(uri, env)
+   231  
+   232          if retry_with_digest_auth?(env)
+   233            auth_env = env.merge({
+   234              "HTTP_AUTHORIZATION"          => digest_auth_header,
+(rdb:1) n
+/Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/minitest-4.7.5/lib/minitest/unit.rb:1266
+@passed = Skip === e
+
+[1261, 1270] in /Users/doug/.rvm/gems/ruby-1.9.3-p392/gems/minitest-4.7.5/lib/minitest/unit.rb
+   1261            runner.record self.class, self.__name__, self._assertions, time, nil
+   1262            @passed = true
+   1263          rescue *PASSTHROUGH_EXCEPTIONS
+   1264            raise
+   1265          rescue Exception => e
+=> 1266            @passed = Skip === e
+   1267            time = Time.now - start_time
+   1268            runner.record self.class, self.__name__, self._assertions, time, e
+   1269            result = runner.puke self.class, self.__name__, e
+   1270          ensure
+(rdb:1) e
+#<ActionController::InvalidAuthenticityToken: ActionController::InvalidAuthenticityToken>
+(rdb:1) quit
+Really quit? (y/n) 
+y
+~/src/spree-dynamic$ 

@@ -59,36 +59,47 @@ module Spree
         end
       end
       
-      # 29/12/13 DH: If a dynamic price was returned from the Products Show then use it to populate the line item
-      if @bscDynamicPrice
-        line_item.price    = @bscDynamicPrice
-        line_item.bsc_spec = @bscSpec
-        
-        # 29/4/14 DH: Checkout the date diff from the old spec population doode!
-        #             Anyway, now populating a separate table rather than just storing an unparsed string
-        #             The string is used for the RomanCart integration until the order has "Status Complete",
-        #             otherwise it would lead to "data redundancy" and risk "data anomalies"!
-        
-        #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
-        
-        if line_item.bsc_spec
-          line_item.create_bsc_req(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
+      catch(:sample) {
+        # 29/12/13 DH: If a dynamic price was returned from the Products Show then use it to populate the line item
+        if @bscDynamicPrice
+          line_item.price    = @bscDynamicPrice
+          line_item.bsc_spec = @bscSpec
+          
+          # 29/4/14 DH: Checkout the date diff from the old spec population doode!
+          #             Anyway, now populating a separate table rather than just storing an unparsed string
+          #             The string is used for the RomanCart integration until the order has "Status Complete",
+          #             otherwise it would lead to "data redundancy" and risk "data anomalies"!
+          
+          #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
+          
+          if line_item.bsc_spec
+            begin
+              line_item.create_bsc_req(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
+            rescue ActiveRecord::UnknownAttributeError # To catch the default "spec"=>"N/A" for samples
+              if line_item.bsc_spec.eql?("N/A")
+                throw :sample
+              else
+                raise "Unknown BSC spec of: #{line_item.bsc_spec}"
+              end
+            end
 
-          if line_item.bsc_req.invalid?
-            raise "The BSC requirement set is missing a value"
-          end
+            if line_item.bsc_req.invalid?
+              raise "The BSC requirement set is missing a value"
+            end
 
 =begin
-          reqs = Hash.new
-          line_item.bsc_spec.split(',').each do |req|
-            category, value = req.split('=')
-            reqs[category] = value
-          end
-          line_item.create_bsc_req!(width: reqs["width"], drop: reqs["drop"], lining: reqs["lining"], heading: reqs["heading"])
+            reqs = Hash.new
+            line_item.bsc_spec.split(',').each do |req|
+              category, value = req.split('=')
+              reqs[category] = value
+            end
+            line_item.create_bsc_req!(width: reqs["width"], drop: reqs["drop"], lining: reqs["lining"], heading: reqs["heading"])
 =end
+          end
+        
         end
-      
-      end
+      } # END: 'catch(:sample)'
+
 
       line_item.save
             

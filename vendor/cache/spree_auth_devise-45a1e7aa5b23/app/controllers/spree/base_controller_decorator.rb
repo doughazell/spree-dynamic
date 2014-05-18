@@ -13,6 +13,8 @@ Spree::BaseController.class_eval do
   end
 
   def spree_current_user
+    puts
+    puts __FILE__ + " : " + __method__.to_s
     current_spree_user
   end
 end

@@ -1,3 +1,7 @@
+<%# 8/5/14 DH: Getting Rails IntegrationTest working as step to RSpec Request test %>
+<%#            Initially accessing "http://localhost:3000/orders/R573230467" from browser %>
+<% return if address.nil? %>
+
 <div class="address vcard">
   <div class="fn"><%= address.full_name %></div>
   <% unless address.company.blank? %>

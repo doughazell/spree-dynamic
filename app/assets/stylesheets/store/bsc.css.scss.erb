@@ -1,3 +1,11 @@
+/* 
+----------------------------------------------------------
+***   Also remember CSS changes in 'screen.css.erb' like:
+***    div#checkout .progress-steps #checkout-summary
+***    fieldset#order_summary
+----------------------------------------------------------
+*/
+
 @import 'store/variables';
 
 $bsc_yellow: #CBCB67 !default;  /* Bespoke Silk Curtains Company yellow */
@@ -291,5 +299,16 @@ div#bsc-subtotal {
   }
 }
 
+// ----------------------- 'GET /orders/:id' Summary page ------------------------
+div#order {
+  //margin-left: -15px;
+  margin-right: 50px;
+}
 
+//div#order_summary .steps-data div.columns.four {
+//  padding-right: -20px;
+//}
 
+#order_summary h1 {
+  //margin-left: -10px;
+}

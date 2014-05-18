@@ -8,6 +8,7 @@ module Spree
 
     class_option :lib_name, :default => ''
     class_option :database, :default => ''
+    class_option :doug, :default => 'cool'
 
     def self.source_paths
       paths = self.superclass.source_paths
@@ -33,6 +34,11 @@ module Spree
       opts[:old_style_hash] = true
 
       puts "Generating dummy Rails application..."
+debugger
+      puts "dummy_path: " + dummy_path
+      puts "destination_root: " + destination_root
+      puts File.expand_path(dummy_path, destination_root)
+
       invoke Rails::Generators::AppGenerator,
         [ File.expand_path(dummy_path, destination_root) ], opts
     end
