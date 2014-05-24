@@ -216,7 +216,7 @@ GEM
     pg (0.16.0)
     polyamorous (0.6.4)
       activerecord (>= 3.0)
-    polyglot (0.3.3)
+    polyglot (0.3.4)
     rabl (0.8.4)
       activesupport (>= 2.3.14)
     rack (1.5.2)

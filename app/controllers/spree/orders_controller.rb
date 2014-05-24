@@ -176,8 +176,13 @@ module Spree
           end
         end
 
-      else # No current order (prob because of the CSRF error preventing Devise access the current order session)
-        Rails.logger.info "Well that's what Devise does since there's no CSRF authenticy...doh!"
+      else # 'if @order and feedbackValid(xml_doc,@order)'
+        # 19/5/14 DH: RSpec Controller testing for '/cart/completed?ROMANCARTXML=' needs to check log output 
+        #             amongst Spree error/info sent to 'Rails.logger' for the appropriate tag 
+        #             since different tags during the same RSpec test cause problems with test readability!
+        
+        #logger.tagged("BSC:ERROR") { logger.error "No matching order found for ROMANCARTXML" }
+        logger.warn "No matching order found for ROMANCARTXML" 
       end
 
     end
@@ -186,6 +191,11 @@ module Spree
 
       storeid = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/storeid").first.content
       if storeid.to_i != Spree::Config[:romancart_storeid]
+
+        logger.tagged("BSC:WRONG-STOREID") {
+          logger.error "Wrong stored id! #{storeid} does not match that configured as #{Spree::Config[:romancart_storeid]}"
+        }
+
         return false
       end
 
@@ -203,6 +213,9 @@ module Spree
       #end
 
       if order.line_items.count != rc_items.count
+        logger.tagged("BSC:INCORRECT-ITEM-NUMBER") {
+          logger.error "The ROMANCARTXML item number of #{rc_items.count} does not match the order line item number of #{order.line_items.count}"
+        }
         return false
       end
       
@@ -215,7 +228,9 @@ module Spree
         
         rc_item = rc_items[num].text
         if !rc_item.eql?(order_item)
-          Rails.logger.info "'#{order_item}' is not the same as '#{rc_item}'"
+          logger.tagged("BSC:INCORRECT-ITEM") {
+            logger.error "'#{order_item}' is not the same as '#{rc_item}'"
+          }
           return false
         end
         
