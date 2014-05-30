@@ -5,6 +5,16 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rails'
 
+# 27/5/14 DH: Atempting to get Spree FactoryGirl++ working
+#require 'spree/testing_support/authorization_helpers'
+#require 'spree/testing_support/capybara_ext'
+require 'spree/testing_support/factories'
+#require 'spree/testing_support/preferences'
+#require 'spree/testing_support/controller_requests'
+#require 'spree/testing_support/flash'
+#require 'spree/testing_support/url_helpers'
+require 'spree/testing_support/order_walkthrough'
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -33,7 +43,10 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
+  
+  # 29/5/14 DH: DB transactions prevent DB permanent row creation
   config.use_transactional_fixtures = true
+  #config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -45,4 +58,7 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+  
+  # 27/5/14 DH: Atempting to get Spree FactoryGirl++ working
+  config.include FactoryGirl::Syntax::Methods
 end

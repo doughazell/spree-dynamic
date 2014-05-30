@@ -188,17 +188,26 @@ module Spree
     end
     
     def feedbackValid(xml_doc, order)
-
+      # --- STORE ID ---
       storeid = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/storeid").first.content
       if storeid.to_i != Spree::Config[:romancart_storeid]
-
         logger.tagged("BSC:WRONG-STOREID") {
           logger.error "Wrong stored id! #{storeid} does not match that configured as #{Spree::Config[:romancart_storeid]}"
         }
-
+        return false
+      end
+      
+      # --- PRICE ---
+      total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
+      if total_price.to_f != order.total.to_f
+        logger.tagged("BSC:WRONG-PRICE") {
+          logger.error "Wrong price! #{total_price} does not match the order total of #{order.total}"
+        }
         return false
       end
 
+      # --- ITEM NUMBER ---
+      
       #order_items = xml_doc.xpath("/romancart-transaction-data/order-items")
       #order_items.xpath("order-item").children.each do |child| 
       #  if child.name.eql?("item-name")
@@ -218,7 +227,8 @@ module Spree
         }
         return false
       end
-      
+
+      # --- ITEMS ---
       num = 0
       order.line_items.each do |item| 
         spec = item.bsc_spec

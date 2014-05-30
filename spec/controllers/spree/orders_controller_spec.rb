@@ -1,10 +1,22 @@
 require 'spec_helper'
 
 describe Spree::OrdersController do
-  let(:user) { Spree::User.find_by_email("spree@example.com") }
-  let(:order) {Spree::Order.find_by_user_id(user.id)}
+  user = Spree::User.find_by_email("spree@example.com")
+  #let(:user) { user }
+  
+  order = Spree::Order.find_by_user_id(user.id)
+  #let(:order) { order }
+  
   let(:the_description) do |example|
     example.description
+  end
+  
+  itemNum = 0
+  itemTotal = order.line_items.count
+  puts
+  order.line_items.each do |item|
+    itemNum += 1
+    puts "Order: #{order.number} - (#{itemNum}/#{itemTotal} items) #{Spree::Variant.find_by_id(item.variant_id).name}, bsc_req_id: #{item.bsc_req_id}"
   end
 
   before do
@@ -15,16 +27,7 @@ describe Spree::OrdersController do
     
     #user = Spree::OrdersController.new.try_spree_current_user
     #order = Spree::Order.find_by_user_id(user.id)
-    
-    itemNum = 0
-    itemTotal = order.line_items.count
-    puts
-    order.line_items.each do |item|
-      itemNum += 1
-      puts "Order: #{order.number} - (#{itemNum}/#{itemTotal} items) #{Spree::Variant.find_by_id(item.variant_id).name}, bsc_req_id: #{item.bsc_req_id}"
-    end
   end
-
 
   context "POST #completed" do
 
@@ -63,7 +66,7 @@ describe Spree::OrdersController do
     end
     
     it "rejects ROMANCARTXML with the wrong number of items" do
-      puts "Loading ROMANCARTXML with 2 items in \"#{the_description}\"."
+      puts "\nLoading ROMANCARTXML with 2 items in \"#{the_description}\"."
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-2-items.xml", __FILE__))
       
       expect(Rails.logger).to receive(:tagged).with("BSC:INCORRECT-ITEM-NUMBER")
@@ -73,7 +76,6 @@ describe Spree::OrdersController do
     end
     
     it "rejects ROMANCARTXML with the wrong item" do
-      puts "Loading ROMANCARTXML with 1 item in \"#{the_description}\"."
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-1-item.xml", __FILE__))
       
       expect(Rails.logger).to receive(:tagged).with("BSC:INCORRECT-ITEM")
@@ -83,7 +85,6 @@ describe Spree::OrdersController do
     end
 
     it "accepts valid ROMANCARTXML and completes order from cheque payment" do
-      puts "Loading ROMANCARTXML with 1 item in \"#{the_description}\"."
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-burgundy-bsc_req_id-5.xml", __FILE__))
       
       post :completed, :ROMANCARTXML => romancartxml
@@ -94,6 +95,17 @@ describe Spree::OrdersController do
       expect(order.payment_state).to eq("paid")
       # 24/5/14 DH: Since 'config.use_transactional_fixtures = true' is set in 'spec_helper.rb'
       #             then the DB state change will be rolled back at test completion...sweet!
+    end
+
+    it "rejects ROMANCARTXML with the wrong price" do
+      romancartxml = File.read(File.expand_path("../../../fixtures/romancart-burgundy-wrong-price.xml", __FILE__))
+      
+      expect(Rails.logger).to receive(:tagged).with("BSC:WRONG-PRICE")
+      
+      post :completed, :ROMANCARTXML => romancartxml
+      
+      #expect(Rails.logger).to receive(:tagged).with("BSC:WRONG-PRICE")
+
     end
 
   end # END: 'context "POST #completed"'

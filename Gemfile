@@ -44,6 +44,10 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'capybara', '2.2.0'
   
+  # 27/5/14 DH: Getting spree 'frontend/spec/features/order_spec.rb' working locally
+  gem 'faker'
+  gem 'factory_girl'
+  
   #gem 'debugger', group: [:development, :test]
   gem 'debugger'
   
