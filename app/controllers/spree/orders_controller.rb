@@ -1,3 +1,5 @@
+include Spree::DynamicHelper
+
 module Spree
   class OrdersController < Spree::StoreController
     ssl_required :show
@@ -182,7 +184,8 @@ module Spree
         #             since different tags during the same RSpec test cause problems with test readability!
         
         #logger.tagged("BSC:ERROR") { logger.error "No matching order found for ROMANCARTXML" }
-        logger.warn "No matching order found for ROMANCARTXML" 
+        logger.warn "No matching order found for ROMANCARTXML"
+        flash.now.alert = "No matching order found for ROMANCARTXML"
       end
 
     end
@@ -194,6 +197,7 @@ module Spree
         logger.tagged("BSC:WRONG-STOREID") {
           logger.error "Wrong stored id! #{storeid} does not match that configured as #{Spree::Config[:romancart_storeid]}"
         }
+        flash.now[:BscWrongStoreid] = "Wrong stored id! #{storeid} does not match that configured as #{Spree::Config[:romancart_storeid]}"
         return false
       end
       
@@ -203,6 +207,7 @@ module Spree
         logger.tagged("BSC:WRONG-PRICE") {
           logger.error "Wrong price! #{total_price} does not match the order total of #{order.total}"
         }
+        flash.now[:BscWrongPrice] = "Wrong price! #{total_price} does not match the order total of #{order.total}"
         return false
       end
 
@@ -225,22 +230,29 @@ module Spree
         logger.tagged("BSC:INCORRECT-ITEM-NUMBER") {
           logger.error "The ROMANCARTXML item number of #{rc_items.count} does not match the order line item number of #{order.line_items.count}"
         }
+        flash.now[:BscIncorrectItemnumber] = "The ROMANCARTXML item number of #{rc_items.count} does not match the order line item number of #{order.line_items.count}"
         return false
       end
 
       # --- ITEMS ---
+      # 14/6/14 DH: The item order needs to match which is not necessarily an invalid feedback (so permutation not combination match)
       num = 0
       order.line_items.each do |item| 
+=begin
         spec = item.bsc_spec
         silk_name = Spree::Variant.find_by_id(item.variant_id).name
         silk_sku  = Spree::Variant.find_by_id(item.variant_id).sku
         order_item = "#{silk_name}-#{silk_sku}(#{spec})"
+=end
+        #order_item = Spree::DynamicHelper.lineItemToOrderItem(item)
+        order_item = lineItemToOrderItem(item)
         
         rc_item = rc_items[num].text
         if !rc_item.eql?(order_item)
           logger.tagged("BSC:INCORRECT-ITEM") {
             logger.error "'#{order_item}' is not the same as '#{rc_item}'"
           }
+          flash.now[:BscIncorrectItem] = "'#{order_item}' is not the same as '#{rc_item}'"
           return false
         end
         

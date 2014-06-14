@@ -85,7 +85,10 @@
       <%= submit_tag "ROMANCARTXML to '#{main_app.cart_completed_path}'", :class => 'button gray' %>
       <%= hidden_field_tag "checkout_complete", "true" %>
       
-      <% file = IO.read("romancart-delivery-address.xml") %>
+      <% file = createRomancartXML %>
+      <%= file %>
+      
+      <%# file = IO.read("romancart-delivery-address.xml") %>
       <%# file = IO.read("romancart.xml") %>
       <%= hidden_field_tag "ROMANCARTXML", file %>
     <% end %>

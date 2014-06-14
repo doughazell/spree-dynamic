@@ -2,28 +2,39 @@
   ($('#link-to-cart')).text("");
 <% end %>
 
-<fieldset id="order_summary" data-hook>
-  <legend align="center"><%= Spree.t(:order) + " #" + @order.number %></legend>
-  <h1><%= accurate_title %></h1>
+<% if @order.complete? %>
 
-  <div id="order" data-hook>
-    <% if params.has_key? :checkout_complete %>
-      <h1><%= Spree.t(:thank_you_for_your_order) %></h1>
-    <% end %>
-    
-    <%# 22/10/13 DH: My simulated order complete from Romancart success response doesn't populated address and hence %>
-    <%# 'spree_core-2.0.4/app/views/spree/shared/_address.html.erb' has problem with 'address.full_name' for 'nil' %>
-    <%# render :partial => 'spree/shared/order_details', :locals => { :order => @order } %>
+  <fieldset id="order_summary" data-hook>
+    <legend align="center"><%= Spree.t(:order) + " #" + @order.number %></legend>
+    <h1><%= accurate_title %></h1>
 
-    <br class="clear" />
+    <div id="order" data-hook>
 
-    <p data-hook="links">
-      <%= link_to Spree.t(:back_to_store), spree.root_path, :class => "button" %>
-      <% unless params.has_key? :checkout_complete %>
-        <% if try_spree_current_user && respond_to?(:spree_account_path) %>
-          <%= link_to Spree.t(:my_account), spree_account_path, :class => "button" %>
-        <% end %>
+      <% if params.has_key? :checkout_complete %>
+        <h1><%= Spree.t(:thank_you_for_your_order) %></h1>
       <% end %>
-    </p>
-  </div>
-</fieldset>
+        
+      <%# 22/10/13 DH: My simulated order complete from Romancart success response doesn't populate   address and hence %>
+      <%# 'spree_core-2.0.4/app/views/spree/shared/_address.html.erb' has problem with 'address.full_name' for 'nil' %>
+      <%# render :partial => 'spree/shared/order_details', :locals => { :order => @order } %>
+
+      <br class="clear" />
+
+      <p data-hook="links">
+        <%= link_to Spree.t(:back_to_store), spree.root_path, :class => "button" %>
+        <% unless params.has_key? :checkout_complete %>
+          <% if try_spree_current_user && respond_to?(:spree_account_path) %>
+            <%= link_to Spree.t(:my_account), spree_account_path, :class => "button" %>
+          <% end %>
+        <% end %>
+      </p>
+    </div>
+  </fieldset>
+
+<% else %>
+  
+  <p data-hook="links">
+    <span id="page-link-to-cart" data-hook class="cart-indicator"><%= link_to_cart %></span>
+  </p>
+
+<% end %> <%# END: 'if @order.complete?' %>
