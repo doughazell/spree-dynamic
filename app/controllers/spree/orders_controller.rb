@@ -237,14 +237,9 @@ module Spree
       # --- ITEMS ---
       # 14/6/14 DH: The item order needs to match which is not necessarily an invalid feedback (so permutation not combination match)
       num = 0
-      order.line_items.each do |item| 
-=begin
-        spec = item.bsc_spec
-        silk_name = Spree::Variant.find_by_id(item.variant_id).name
-        silk_sku  = Spree::Variant.find_by_id(item.variant_id).sku
-        order_item = "#{silk_name}-#{silk_sku}(#{spec})"
-=end
-        #order_item = Spree::DynamicHelper.lineItemToOrderItem(item)
+      order.line_items.each do |item|
+      
+        # 14/6/14 DH: Spree::DynamicHelper method
         order_item = lineItemToOrderItem(item)
         
         rc_item = rc_items[num].text

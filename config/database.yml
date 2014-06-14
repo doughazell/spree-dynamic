@@ -11,7 +11,7 @@ test:
   adapter: postgresql
   encoding: utf8
   reconnect: false
-  database: spreeBSC_test
+  database: spree_dynamic_test
   pool: 5
   username: postgres
   host: localhost
@@ -20,7 +20,7 @@ production:
   adapter: postgresql
   encoding: utf8
   reconnect: false
-  database: spreeBSC_production
+  database: spree_dynamic_production
   pool: 5
   username: postgres
   host: localhost
