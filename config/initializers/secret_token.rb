@@ -14,7 +14,7 @@
 #puts "SpreeBSC::Application.config.secret_key_base.length:" + SpreeBSC::Application.config.secret_key_base.length.to_s
 #puts "SpreeBSC::Application.config.secret_key_base:" + SpreeBSC::Application.config.secret_key_base.to_s
 
-SpreeBSC::Application.config.secret_key_base = SecureRandom.hex(64)
+SpreeDynamic::Application.config.secret_key_base = SecureRandom.hex(64)
 
 #puts "SpreeBSC::Application.config.secret_key_base.length:" + SpreeBSC::Application.config.secret_key_base.length.to_s
 #puts "SpreeBSC::Application.config.secret_key_base:" + SpreeBSC::Application.config.secret_key_base.to_s

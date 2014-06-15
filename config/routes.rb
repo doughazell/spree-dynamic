@@ -1,4 +1,4 @@
-SpreeBSC::Application.routes.draw do
+SpreeDynamic::Application.routes.draw do
   # 20/10/13 DH: Adding a order complete route after return from Romancart
   match 'cart/completed' => 'spree/orders#completed', :via => :post
   

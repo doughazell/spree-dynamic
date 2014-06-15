@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-SpreeBSC::Application.load_tasks
+SpreeDynamic::Application.load_tasks
