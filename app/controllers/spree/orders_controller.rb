@@ -1,4 +1,4 @@
-# 14/6/14 DH: Adding a helper for common code in 'spree/orders#completed' and 'ApplicationHelper#createRomancartXML'
+# 14/6/14 DH: Adding a helper for common code in 'spree/orders#completed' and 'ApplicationHelper::createRomancartXML'
 include Spree::DynamicHelper
 
 module Spree

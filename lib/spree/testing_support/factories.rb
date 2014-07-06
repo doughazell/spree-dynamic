@@ -1,4 +1,5 @@
 require 'factory_girl'
+require 'ffaker'
 
 Spree::Zone.class_eval do
   def self.global

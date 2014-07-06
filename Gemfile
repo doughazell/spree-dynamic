@@ -45,7 +45,8 @@ group :development, :test do
   gem 'capybara', '2.2.0'
   
   # 27/5/14 DH: Getting spree 'frontend/spec/features/order_spec.rb' working locally
-  gem 'faker'
+  # 6/7/14 DH: gem 'ffaker' is included from 'spree_core' so not need to be included here to be "require"d in 
+  #            'lib/spree/testing_support/factories.rb'
   gem 'factory_girl'
   
   #gem 'debugger', group: [:development, :test]
