@@ -1,3 +1,7 @@
+# 8/7/14 DH: This is mostly the Spree Frontend 'spec/features/order_spec.rb' with the user an actual Spree
+#            user in the DB (rather than created by FactoryGirl) AND accessing a valid order 
+#            (rather than just using the 'OrderWalkthrough' in 'lib/spree/testing_support/order_walkthrough.rb'
+#             WHICH IS A FORM OF 'STUB' SINCE JUST REPLICATES THE ORDER CODE FOR THE FEATURES BEING TESTED)
 require 'spec_helper'
 
 describe 'orders' do
@@ -39,6 +43,7 @@ describe 'orders' do
     
     lambda { visit spree.order_path(order) }.should_not raise_error
     
+    # 8/7/14 DH: My additions to play with features testing
     visit spree.order_path(order)
     #expect(page).to have_content "Order #R667240416"
     

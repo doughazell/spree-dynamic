@@ -127,6 +127,8 @@ module Spree
         # Spree StateMachine = 1)cart -> 2)address -> 3)delivery -> 4)payment -> 5)confirm -> 6)complete
 
         # If the order is just for samples then it'll be free so no payment is required
+        # (this will go through the Spree cart system rather than via Romancart, hence this method, so this is 
+        #  just dev step that could now be removed)
         if @order.item_total == 0
           
           while @order.state != "complete"
@@ -175,6 +177,10 @@ module Spree
             @order.state = "complete"
             @order.completed_at = Time.now
             @order.save!
+            
+            # 10/7/14 DH: Copying Spree Checkout to reduce stock quantity
+            reduceStock(@order)
+            
             Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}"
           end
         end
@@ -189,6 +195,20 @@ module Spree
         flash.now.alert = "No matching order found for ROMANCARTXML"
       end
 
+    end
+    
+    def reduceStock(order)
+
+      order.line_items.each do |item|
+        # 10/7/14 DH: Currently only 1 stock location for each variant
+        stock_location = item.variant.stock_locations[0]
+        
+        #stock_location.count_on_hand(item.variant)
+        
+        #Spree::StockLocation.unstock(variant, quantity, originator = nil)
+        stock_location.unstock(item.variant, item.quantity)
+      end
+      
     end
     
     def feedbackValid(xml_doc, order)

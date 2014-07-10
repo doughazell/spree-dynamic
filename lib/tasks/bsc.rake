@@ -214,6 +214,8 @@ namespace :spree_bsc do
     
     variant = product.master
     
+    # 9/7/14 DH: Auto-populating the development ('spreeBSC_v2-1-3dev') + production ('spreeBSC_production') DB's
+    #            resulted in no duplicate images in 'RAILS_ROOT/public/spree/products' prob due to same silk permutation set 
     variant.images.create!( :attachment => open(img_url) )
 
     pencilPleat     = Spree::OptionValue.find_by_name!("pencil pleat")
