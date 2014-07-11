@@ -54,11 +54,10 @@ namespace :spree_bsc do
         #if index = silk_names.find_index { |node| node.text =~ /#{product.name.upcase}/ }
         if index = silk_names.find_index { |node| node.text.eql?(product.name.upcase) }
 
-          puts "Found " + product.name + " at index: " + index.to_s
+          #puts "Found " + product.name + " at index: " + index.to_s + " of the downloaded silks"
           
           # If we already have it then don't add it again.
-          puts silk_names[index].text
-          puts silk_codes[index].text
+          puts "Silk already populated: #{silk_names[index].text}, #{silk_codes[index].text}"
 #debugger
           # *** While testing the description + properties then use products ALREADY PRESENT ***
           #silk_path = silk_names[index].attr("href")
@@ -73,7 +72,7 @@ namespace :spree_bsc do
       end
 
       # --- Now add the unadded silks into our system ---
-      puts silk_names.length.to_s + ", " + silk_codes.length.to_s
+      puts "Adding: #{silk_names.length.to_s} names, #{silk_codes.length.to_s} sku's"
 
       # --- Dev: Taking first element of each page  ---
       

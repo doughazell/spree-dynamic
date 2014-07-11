@@ -134,7 +134,8 @@ module Spree
           while @order.state != "complete"
             @order.next!
           end
-          
+        
+        # NOW the normal (non-dev) option...
         else
           
           while @order.state != "payment"
@@ -182,16 +183,19 @@ module Spree
             reduceStock(@order)
             
             Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}"
-          end
+          end # END: if ... "/romancart-transaction-data/paid-flag" is "True" ["False" for dev chq payments!]
         end
 
       else # 'if @order and feedbackValid(xml_doc,@order)'
+      
         # 19/5/14 DH: RSpec Controller testing for '/cart/completed?ROMANCARTXML=' needs to check log output 
         #             amongst Spree error/info sent to 'Rails.logger' for the appropriate tag 
         #             since different tags during the same RSpec test cause problems with test readability!
         
         #logger.tagged("BSC:ERROR") { logger.error "No matching order found for ROMANCARTXML" }
         logger.warn "No matching order found for ROMANCARTXML"
+        
+        # "now" "Sets a flash that will not be available to the next action, only to the current."
         flash.now.alert = "No matching order found for ROMANCARTXML"
       end
 
@@ -199,6 +203,11 @@ module Spree
     
     def reduceStock(order)
 
+      # 11/7/14 DH: Suhhweeeet!  So easy when you know the key, the secret 
+      #                       (as the Urban Cookie Collective would tell you)!
+      #             The succinctness of this just demonstrates Spree/Ruby on Rails 
+      #                      but finding the solution can be the hard part.
+      
       order.line_items.each do |item|
         # 10/7/14 DH: Currently only 1 stock location for each variant
         stock_location = item.variant.stock_locations[0]
