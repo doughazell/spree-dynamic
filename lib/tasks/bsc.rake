@@ -42,7 +42,7 @@ namespace :spree_bsc do
       silk_codes = page.css('div.views-field-field-product-code a')
       silk_images = page.css('div.views-field-field-product-image a img')
       
-      puts "--- START PAGE ---"
+      puts "--- START OF PAGE ---"
       # The number of products is the size of the 'silk_names' array
       puts silk_names.length
       total += silk_names.length
@@ -72,7 +72,7 @@ namespace :spree_bsc do
       end
 
       # --- Now add the unadded silks into our system ---
-      puts "Adding: #{silk_names.length.to_s} names, #{silk_codes.length.to_s} sku's"
+      puts "\nAdding: #{silk_names.length.to_s} names, #{silk_codes.length.to_s} sku's\n\n"
 
       # --- Dev: Taking first element of each page  ---
       
@@ -94,7 +94,7 @@ namespace :spree_bsc do
         
       end
 
-      puts "=== END PAGE ===\n\n"      
+      puts "=== END OF PAGE ===\n\n"      
       
     end while !(next_page = page.css('div.item-list ul.pager li.pager-next a')).empty?
     
