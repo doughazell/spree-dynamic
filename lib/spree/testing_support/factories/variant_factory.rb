@@ -12,7 +12,7 @@ FactoryGirl.define do
     is_master 0
     track_inventory true
     
-    IO.try_convert(STDOUT).puts "#{__FILE__}" 
+    IO.try_convert(STDOUT).puts "\n#{__FILE__}" 
     
     product { |p| p.association(:base_product) }
     option_values { [create(:option_value)] }

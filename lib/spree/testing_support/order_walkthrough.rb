@@ -20,7 +20,7 @@ class OrderWalkthrough
       end
     end
 
-    puts "\nCalling 'Spree::Order.create!()' in #{__FILE__}"
+    puts "Calling 'Spree::Order.create!()' in #{__FILE__}\n\n"
     order = Spree::Order.create!(:email => "spree@example.com")
     add_line_item!(order)
     order.next!

@@ -45,7 +45,7 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   
-  # 29/5/14 DH: DB transactions prevent DB permanent row creation
+  # 29/5/14 DH: DB transactions prevent DB permanent row creation (and roll-back after a test)
   config.use_transactional_fixtures = true
   #config.use_transactional_fixtures = false
 

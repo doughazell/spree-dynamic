@@ -11,7 +11,7 @@ FactoryGirl.define do
     authentication_token { generate(:user_authentication_token) } if Spree.user_class.attribute_method? :authentication_token
 
     after(:create) do |u|
-      puts "#{__FILE__} : #{u.email}\n\n"
+      puts "#{__FILE__} : #{u.email}\n"
     end
 
     factory :admin_user do

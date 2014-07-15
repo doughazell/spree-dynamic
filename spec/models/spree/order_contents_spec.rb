@@ -35,7 +35,7 @@ describe Spree::OrderContents do
 
     # [BSC spec Integration Testing]
 
-    it "should give an error message on incomplete BSC req set" do
+    it "should give an error message on adding an incomplete BSC req set" do
       subject.bscDynamicPrice = 69
       #subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
       subject.bscSpec = "drop=7,lining=cotton,heading=pencil pleat"
@@ -43,6 +43,10 @@ describe Spree::OrderContents do
       message = "The BSC requirement set is missing a value"
       expect { line_item = subject.add(variant) }.to raise_error(message)
     end
+
+    # -----------------------------------------------------
+    # Spree 'core/spec/models/spree/order_contents_spec.rb'
+    # -----------------------------------------------------
 
     context "given quantity is not explicitly provided" do
       it "should add one line item" do
