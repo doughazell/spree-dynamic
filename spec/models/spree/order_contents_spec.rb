@@ -22,11 +22,14 @@ describe Spree::OrderContents do
       
       reqs.delete("width")
       
+      # 16/7/14 DH: "PG::NotNullViolation: ERROR:  null value in column "width" violates not-null constraint" due to 'AddNotNullToSpreeBscReq'
+      #             if not have 'validates_presence_of :width, :drop, :lining, :heading' in 'Spree::BscReq'
       expect { line_item.create_bsc_req(reqs) }.to_not raise_error
-      #expect { line_item.create_bsc_req(reqs) }.to raise_error
+      
+      # 16/7/14 DH: "Does the same as create_association above, but raises ActiveRecord::RecordInvalid if the record is invalid."
+      #expect { line_item.create_bsc_req!(reqs) }.to raise_error
 
       line_item.bsc_req.should_not be_valid
-      #line_item.bsc_req.should be_valid
     end
     
     # 4/5/14 DH: This simulates 'orders#populate' being called with an incomplete BSC Spec string
@@ -38,7 +41,7 @@ describe Spree::OrderContents do
     it "should give an error message on adding an incomplete BSC req set" do
       subject.bscDynamicPrice = 69
       #subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
-      subject.bscSpec = "drop=7,lining=cotton,heading=pencil pleat"
+      subject.bscSpec =           "drop=7,lining=cotton,heading=pencil pleat"
       
       message = "The BSC requirement set is missing a value"
       expect { line_item = subject.add(variant) }.to raise_error(message)
@@ -81,6 +84,7 @@ describe Spree::OrderContents do
     end
     
   end
+
   
 =begin
   context "#remove" do

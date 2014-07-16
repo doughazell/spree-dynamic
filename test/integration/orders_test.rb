@@ -56,15 +56,18 @@ class OrdersTest < ActionDispatch::IntegrationTest
     
     get "/login"
     #puts response.body_parts
-    puts response.body
+    #puts response.body
+    puts "\n*** 'response.body' removed ***\n\n"
     puts "===================================================================================="
     
     # Get 'authenticity_token' 'input' of the sent 'form'
     input = response.body.scan(/<input name="authenticity_token".*\/>/)
     if input.first
       parts = input.first.split("\"")
+      puts "parts: " + parts.to_s
       auth_token_value = parts[5]
-      puts auth_token_value
+      #auth_token_value = parts[5] + "X"
+      puts "auth_token_value: " + auth_token_value
     end
     
     puts "===================================================================================="
@@ -76,7 +79,9 @@ class OrdersTest < ActionDispatch::IntegrationTest
 #debugger
     post_via_redirect "/login", "spree_user[email]" => "spree@example.com", "spree_user[password]" => "spree123", "authenticity_token" => auth_token_value
     #post "/login", "spree_user[email]" => "spree@example.com", "spree_user[password]" => "spree123", "authenticity_token" => auth_token_value, "commit" => "Login"
-    puts response.body_parts
+    
+    #puts response.body_parts
+    puts "\n*** 'response.body_parts' removed ***\n\n"
     puts "===================================================================================="
     puts "===================================================================================="
     puts flash[:error]
@@ -85,8 +90,9 @@ class OrdersTest < ActionDispatch::IntegrationTest
     
     puts "#####################################################################################"
     
-    get "/orders/R667240416"
-    puts response.body_parts
+    get "/orders/R043377643"
+    #puts response.body_parts
+    puts "\n*** 'response.body_parts' removed ***\n\n"
     assert_response 200
   end
  

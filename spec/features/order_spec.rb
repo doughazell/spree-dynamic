@@ -42,6 +42,7 @@ describe 'orders' do
   #end
 
   it "can visit a FactoryGirl order" do |example|
+    # Add 'heredoc' character to start of test output
     puts "\n\n--TEST-- <<."
     
     # Regression test for current_user call on orders/show
@@ -77,6 +78,7 @@ describe 'orders' do
     Spree::OrdersController.any_instance.stub(:try_spree_current_user => user)
     
     puts "#{self.class.description} - \"#{example.description}\": '/orders/#{order_id}' for '#{user.email}'"
+    
     visit "/orders/#{order_id}"
     expect(page).to_not have_content "Order ##{order_id}"
 
