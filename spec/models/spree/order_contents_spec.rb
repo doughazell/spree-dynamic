@@ -47,6 +47,29 @@ describe Spree::OrderContents do
       expect { line_item = subject.add(variant) }.to raise_error(message)
     end
 
+    # 17/7/14 DH: TDD to prevent price hacking
+    it "should give an error message on adding a 'hacked' price" do |example|
+      subject.bscDynamicPrice = 69
+      subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
+      
+      message = "The dynamic price is incorrect"
+      expect { line_item = subject.add(variant) }.to raise_error(message)
+    end
+
+    it "should accept correct dynamic price (to validate 'hacked' price checking code)" do |example|
+      subject.bscDynamicPrice = 144
+      subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
+      
+      expect { line_item = subject.add(variant) }.to_not raise_error
+    end
+    
+    it "should not update line item if one exists due to BSC spec per line item" do
+      subject.add(variant, 1)
+      line_item = subject.add(variant, 1)
+      line_item.quantity.should == 1
+      order.line_items.size.should == 1
+    end
+
     # -----------------------------------------------------
     # Spree 'core/spec/models/spree/order_contents_spec.rb'
     # -----------------------------------------------------
@@ -66,12 +89,7 @@ describe Spree::OrderContents do
       order.line_items.size.should == 1
     end
 
-    it "should not update line item if one exists due to BSC spec per line item" do
-      subject.add(variant, 1)
-      line_item = subject.add(variant, 1)
-      line_item.quantity.should == 1
-      order.line_items.size.should == 1
-    end
+    # Removed "it 'should update line item if one exists'"
 
     it "should update order totals" do
       order.item_total.to_f.should == 0.00
