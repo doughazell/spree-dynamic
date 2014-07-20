@@ -46,7 +46,7 @@ module Spree
       #  Spree.calcNumberOfWidths ( width )
       #  Spree.calcPrice ( drop )
       #   Spree.recalcPriceOnLining (lining)
-    
+
       calc_width = width + params[:returns_addition]
       
       #heading = "pencil pleat"
@@ -64,19 +64,28 @@ module Spree
       end
       
       # Convert to meters to calc price based on "£/m"
-      required_fabric_len = cutting_len * number_of_widths / 100
+      required_fabric_len = Float(cutting_len * number_of_widths)/100
       
       # Multiply by 100 to convert to pence, round to nearest penny, then convert back to pounds by dividing by 100, simples...
-      price = (required_fabric_len * params[:price_p_m] * 100).round / 100
+      price = Float((required_fabric_len * params[:price_p_m] * 100).round) / 100
       
       #lining = "cotton"
       #params[:cotton_lining]
       #params[:cotton_lining_labour]
-      lining_cost        = required_fabric_len * params["#{lining}_lining".to_sym]
-      lining_labour_cost = required_fabric_len * params["#{lining}_lining_labour".to_sym]
+      lining_cost        = Float(required_fabric_len * params["#{lining}_lining".to_sym])
+      lining_labour_cost = Float(required_fabric_len * params["#{lining}_lining_labour".to_sym])
       
       total_price = price + lining_cost + lining_labour_cost
-      total_price = ((total_price * 100).round / 100).round(2)
+      total_price = Float((total_price * 100).round) / 100
+
+
+=begin
+      # 20/7/14 DH: Adding in check to see what happens if price hacked from browser
+      #             (with price that browser displays)
+      if line_item.price == 53.40
+        return true # ie invalid
+      end
+=end
 
       if line_item.price == total_price
         return false # ie OK
