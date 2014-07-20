@@ -29,7 +29,9 @@ describe Spree::OrderContents do
       # 16/7/14 DH: "Does the same as create_association above, but raises ActiveRecord::RecordInvalid if the record is invalid."
       #expect { line_item.create_bsc_req!(reqs) }.to raise_error
 
-      line_item.bsc_req.should_not be_valid
+      # 18/7/14 DH: Old 'should' syntax
+      #line_item.bsc_req.should_not be_valid
+      expect(line_item.bsc_req).to_not be_valid
     end
     
     # 4/5/14 DH: This simulates 'orders#populate' being called with an incomplete BSC Spec string
@@ -56,18 +58,35 @@ describe Spree::OrderContents do
       expect { line_item = subject.add(variant) }.to raise_error(message)
     end
 
-    it "should accept correct dynamic price (to validate 'hacked' price checking code)" do |example|
+=begin
+    it "should accept a 'test' ENV 'correct' dynamic price (to validate price checking code)" do |example|
       subject.bscDynamicPrice = 144
       subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
       
       expect { line_item = subject.add(variant) }.to_not raise_error
     end
+=end
+
+    it "should accept a valid dynamic price from an order added via the web" do |example|
+      order = Spree::Order.find_by_number("R043377643")
+      line_item = order.line_items.first
+
+      subject.bscDynamicPrice = line_item.price
+      subject.bscSpec         = line_item.bsc_spec
+
+      expect { subject.add(line_item.variant) }.to_not raise_error
+    end
     
     it "should not update line item if one exists due to BSC spec per line item" do
       subject.add(variant, 1)
       line_item = subject.add(variant, 1)
-      line_item.quantity.should == 1
-      order.line_items.size.should == 1
+
+      # 18/7/14 DH: Old 'should' syntax
+      #line_item.quantity.should == 1
+      #order.line_items.size.should == 1
+      expect line_item.quantity == 1
+      expect order.line_items.size == 1
+
     end
 
     # -----------------------------------------------------

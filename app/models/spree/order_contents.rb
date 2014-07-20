@@ -77,7 +77,7 @@ module Spree
               line_item.create_bsc_req(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
             rescue ActiveRecord::UnknownAttributeError # To catch the default "spec"=>"N/A" for samples
               if line_item.bsc_spec.eql?("N/A")
-                throw :sample # Which is caught above to allow adding a sample without errors
+                throw :sample # Which is caught above to allow adding a sample without later inevitable errors
               else
                 raise "Unknown BSC spec of: #{line_item.bsc_spec}"
               end
@@ -92,6 +92,7 @@ module Spree
             # 17/7/14 DH: Need to save the line item to be able to access it via the Active Record association 
             #             (via the inverse of the FK entry in 'spree_line_items')
             line_item.save
+            
             if line_item.bsc_req.dynamic_price_invalid?
               raise "The dynamic price is incorrect"
             end
