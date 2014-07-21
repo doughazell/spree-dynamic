@@ -92,7 +92,7 @@ describe Spree::OrderContents do
     # -----------------------------------------------------
     # Spree 'core/spec/models/spree/order_contents_spec.rb'
     # -----------------------------------------------------
-
+=begin
     context "given quantity is not explicitly provided" do
       it "should add one line item" do
         line_item = subject.add(variant)
@@ -119,10 +119,10 @@ describe Spree::OrderContents do
       order.item_total.to_f.should == variant.price
       order.total.to_f.should == variant.price
     end
-    
+=end
+
   end
 
-  
 =begin
   context "#remove" do
     #let(:variant) { create(:variant) }

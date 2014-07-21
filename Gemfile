@@ -43,6 +43,8 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'capybara', '2.2.0'
+  gem 'selenium-webdriver'
+  gem 'capybara-webkit'
   
   # 27/5/14 DH: Getting spree 'frontend/spec/features/order_spec.rb' working locally
   # 6/7/14 DH: gem 'ffaker' is included from 'spree_core' so not need to be included here to be "require"d in 

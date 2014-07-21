@@ -78,16 +78,8 @@ module Spree
       total_price = price + lining_cost + lining_labour_cost
       total_price = Float((total_price * 100).round) / 100
 
-
-=begin
-      # 20/7/14 DH: Adding in check to see what happens if price hacked from browser
-      #             (with price that browser displays)
-      if line_item.price == 53.40
-        return true # ie invalid
-      end
-=end
-
-      if line_item.price == total_price
+      # 21/7/14 DH: Match the prices to the nearest pound
+      if ( (line_item.price.floor == total_price.floor) || (line_item.price.floor == total_price.ceil) || (line_item.price.ceil  == total_price.floor) )
         return false # ie OK
       else
         return true # ie invalid
