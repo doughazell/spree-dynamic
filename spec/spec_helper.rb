@@ -62,4 +62,7 @@ RSpec.configure do |config|
   
   # 27/5/14 DH: Atempting to get Spree FactoryGirl++ working
   config.include FactoryGirl::Syntax::Methods
+  
+  # 22/7/14 DH: Adding helper methods in files under 'spec/support'
+  config.include Helpers
 end
