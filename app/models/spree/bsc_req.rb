@@ -13,6 +13,21 @@ module Spree
       reqs
     end
     
+    # 22/7/14 DH: Created to simulate a "hacked" dynamic price in an RSpec features test
+    def self.alterDynamicPrice(alteration)
+      if ENV['RAILS_ENV'] == 'test'
+        cattr_accessor :price_alteration
+        @@price_alteration = alteration
+      end
+    end
+    
+    def self.clearDynamicPriceAlteration
+      if ENV['RAILS_ENV'] == 'test'
+        cattr_accessor :price_alteration, instance_accessor: false
+        @@price_alteration = 0
+      end
+    end
+    
     # 17/7/14 DH: Creating a check to catch dynamic price hacking
     def dynamic_price_invalid?
 
@@ -78,8 +93,17 @@ module Spree
       total_price = price + lining_cost + lining_labour_cost
       total_price = Float((total_price * 100).round) / 100
 
+=begin
+      # 22/7/14 DH: Created to simulate a "hacked" dynamic price in a browser test
+      if ENV['RAILS_ENV'] == 'test'        
+        if line_item.price == 53.40
+          return true # ie don't fink so...boooard's don't fight back...
+        end
+      end # END: if ENV['RAILS_ENV'] == 'test'
+=end
+
       # 21/7/14 DH: Match the prices to the nearest pound
-      if ( (line_item.price.floor == total_price.floor) || (line_item.price.floor == total_price.ceil) || (line_item.price.ceil  == total_price.floor) )
+      if (line_item.price.floor == total_price.floor)
         return false # ie OK
       else
         return true # ie invalid

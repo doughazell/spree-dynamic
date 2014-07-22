@@ -84,7 +84,19 @@ module Spree
             end
 
             if line_item.bsc_req.invalid?
-              raise "The BSC requirement set is missing a value"
+              #raise "The BSC requirement set is missing a value"
+              
+              message = "The BSC requirement set is missing a value"
+              line_item.errors.add(:base,message)
+              Rails.logger.error "\n*** #{message} ***\n\n"
+              
+              line_item.bsc_req_id = -1 # ie Error
+              return line_item
+            end
+
+            # 22/7/14 DH: Adding in mechanism to simulate a "hacked" dynamic price in RSpec features test
+            if ENV['RAILS_ENV'] == 'test' && line_item.bsc_req.respond_to?(:price_alteration)
+              line_item.price += line_item.bsc_req.price_alteration
             end
             
             # 17/7/14 DH: Now check that the price is valid for the spec and that we haven't been hacked!
@@ -92,9 +104,15 @@ module Spree
             # 17/7/14 DH: Need to save the line item to be able to access it via the Active Record association 
             #             (via the inverse of the FK entry in 'spree_line_items')
             line_item.save
-            
             if line_item.bsc_req.dynamic_price_invalid?
-              raise "The dynamic price is incorrect"
+              #raise "The dynamic price is incorrect"
+              
+              message = "The dynamic price is incorrect"
+              line_item.errors.add(:base,message)
+              Rails.logger.error "\n*** #{message} ***\n\n"
+              
+              line_item.bsc_req_id = -1 # ie Error
+              return line_item
             end
 
 =begin
@@ -110,9 +128,8 @@ module Spree
         end # END: 'if @bscDynamicPrice'
       } # END: 'catch(:sample)'
 
-
       line_item.save
-            
+      
       order.reload
       line_item
     end

@@ -107,6 +107,7 @@ $ ->
     total_price = ((Math.round(total_price * 100)) / 100).toFixed(2)
     
     ($ '#price-text').text("£" + total_price)
+        
     # ---
   
   Spree.calcPrice = (drop) ->
@@ -224,7 +225,7 @@ $ ->
   # ---
 
   # ----------------- On-load ------------------
-  #<% debugger %> - Needs '.erb' appended onto filename extension
+  #<%# debugger %> - Needs '.erb' appended onto filename extension
   # Gets current state of asset pipeline when this file is compiled (which is based on filename extension stack)
   #
   #erbText = <% "product ID: #{@product.master.id} = #{ @product.price }"  %>
