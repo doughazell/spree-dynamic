@@ -70,8 +70,21 @@ module Spree
           format.html { redirect_to cart_path }
         end
       else
+        # 23/7/14 DH: Flash notice is displayed more artistically in 'spree/frontend'
         flash[:error] = populator.errors.full_messages.join(" ")
-        redirect_to :back
+        flash[:notice] = "FLASH NOTICE: #{flash[:error]}"
+        
+        #flash[:error] = populator.errors.full_messages.join(" ")
+        #redirect_to :back
+        
+        # 22/7/14 DH: Attempting to display flash message after BSC error when submit via AJAX
+        respond_with(@order) do |format|
+          format.html { redirect_to :back }
+          
+          # 23/7/14 DH: Since 'format.js' has no overriding block then it uses the default for the 
+          #             'Controller#Action' of 'views/spree/orders/populate.js.coffee'
+          format.js
+        end
       end
     end
 

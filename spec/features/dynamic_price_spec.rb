@@ -40,6 +40,7 @@ describe 'order_content' do
     puts "\n\n--TEST--\n\"#{example.description}\" <<."
 
     Capybara.current_driver = :webkit
+    #Capybara.current_driver = :selenium
 
     visit "/products/oasis"
     
@@ -57,6 +58,15 @@ describe 'order_content' do
     showSpecPrice
     
     check_alert("You need to accept that measurements are 'cm'") {find(:id, 'add-to-cart-button').click}
+    
+    # 'capybara-webkit' depends on 'capybara (< 2.4.0, >= 2.0.2)' but 'accept_alert' added in 2.4.0!
+=begin
+    message = accept_alert do
+      find(:id, 'add-to-cart-button').click
+    end
+    expect(message).to eq("You need to accept that measurements are 'cm'")
+=end
+    
     check('cm_measurements')
     
     
@@ -69,7 +79,8 @@ describe 'order_content' do
     # 21/7/14 DH: Need to sleep for 3 secs to allow AJAX to alter link text
     sleep 3
       
-    expect(find(:id, 'page-link-to-cart').text).to eq("Cart: (Empty)")
+    #expect(find(:id, 'page-link-to-cart').text).to eq("Cart: (Empty)")
+    expect(find(:id, 'page-link-to-cart').text).to eq("The dynamic price is incorrect")
   
     Spree::BscReq.clearDynamicPriceAlteration
 

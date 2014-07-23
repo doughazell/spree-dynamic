@@ -43,6 +43,10 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'capybara', '2.2.0'
+  
+  # 23/7/14 DH: 'capybara-webkit' depends on 'capybara (< 2.4.0, >= 2.0.2)' (but 'accept_alert' in '2.4.0'...hmmm!)
+  #gem 'capybara', '2.4.0'
+  
   gem 'selenium-webdriver'
   gem 'capybara-webkit'
   

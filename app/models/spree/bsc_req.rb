@@ -93,14 +93,14 @@ module Spree
       total_price = price + lining_cost + lining_labour_cost
       total_price = Float((total_price * 100).round) / 100
 
-=begin
+
       # 22/7/14 DH: Created to simulate a "hacked" dynamic price in a browser test
-      if ENV['RAILS_ENV'] == 'test'        
+      if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'
         if line_item.price == 53.40
           return true # ie don't fink so...boooard's don't fight back...
         end
       end # END: if ENV['RAILS_ENV'] == 'test'
-=end
+
 
       # 21/7/14 DH: Match the prices to the nearest pound
       if (line_item.price.floor == total_price.floor)
