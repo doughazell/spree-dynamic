@@ -45,17 +45,23 @@ describe Spree::OrderContents do
       #subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
       subject.bscSpec =           "drop=7,lining=cotton,heading=pencil pleat"
       
+      line_item = subject.add(variant)
+      expect line_item.bsc_req_id == -1
+      
       message = "The BSC requirement set is missing a value"
-      expect { line_item = subject.add(variant) }.to raise_error(message)
+      expect(line_item.errors.full_messages.join).to eq(message)
     end
 
     # 17/7/14 DH: TDD to prevent price hacking
     it "should give an error message on adding a 'hacked' price" do |example|
-      subject.bscDynamicPrice = 69
-      subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
+      subject.bscDynamicPrice = 53.40
+      subject.bscSpec = "width=144,drop=69,lining=cotton,heading=pencil pleat"
+      
+      line_item = subject.add(variant)
+      expect line_item.bsc_req_id == -1
       
       message = "The dynamic price is incorrect"
-      expect { line_item = subject.add(variant) }.to raise_error(message)
+      expect(line_item.errors.full_messages.join).to eq(message)
     end
 
 =begin
