@@ -51,8 +51,11 @@ describe 'orders' do
     Spree::OrdersController.any_instance.stub(:try_spree_current_user => user)
 
     puts "#{self.class.description} - \"#{example.description}\": '#{spree.order_path(order)}' for '#{user.email}'"
-    lambda { visit spree.order_path(order) }.should_not raise_error
-
+    
+    #lambda { visit spree.order_path(order) }.should_not raise_error
+    visit spree.order_path(order)
+    expect(current_path).to eq(spree.order_path(order))
+    
   end
 
   it "can visit a valid order for the current user" do |example|
