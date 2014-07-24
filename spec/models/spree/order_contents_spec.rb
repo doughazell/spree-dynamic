@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Spree::OrderContents do
   let(:order) { Spree::Order.create }
+  
   subject { described_class.new(order) }
 
   context "#add" do
