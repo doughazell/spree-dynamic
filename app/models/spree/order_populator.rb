@@ -79,9 +79,14 @@ module Spree
       if quantity > 0
 
         line_item = @order.contents.add(variant, quantity, currency)
+
+        bsc_req_id = 0
+        if (line_item.respond_to?(:bsc_req_id))
+          bsc_req_id = line_item.bsc_req_id
+        end
         
         #unless line_item.valid?
-        unless line_item.bsc_req_id > 0 && line_item.valid?
+        unless bsc_req_id > 0 && line_item.valid?
           errors.add(:base, line_item.errors.messages.values.join(" "))
           @order.contents.remove(variant)
           return false
