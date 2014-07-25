@@ -1,0 +1,13 @@
+controllers
+  spree
+    orders_controller_spec.rb
+
+features
+  dynamic_price_spec.rb
+  order_spec.rb
+
+models
+  spree
+    order_contents_spec.rb
+    order_populator_spec.rb
+

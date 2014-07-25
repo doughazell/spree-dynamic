@@ -19,9 +19,11 @@ describe Spree::OrderPopulator do
     context "uses temp order found from DB" do
       before do
         temp_order = order.class.find_by_number("R043377643")
+        
         # "let and subject declarations are not intended to be called in a before(:all) hook, as they exist 
         #  to define state that is reset between each example, while before(:all) exists to define state that 
         #  is shared across examples in an example group."
+        
         @line_item = temp_order.line_items.first
       end
       
@@ -41,7 +43,7 @@ describe Spree::OrderPopulator do
 
   end # END: context "normal Spree objects"
 
-  context "with stubbed out find_variant" do
+  context "with stubbed out 'order.contents'" do
     let(:order) { double('Order') }
     subject { Spree::OrderPopulator.new(order, "GBP") }
 
@@ -49,7 +51,7 @@ describe Spree::OrderPopulator do
     #let(:variant) { Spree::Variant.find_by_sku("845-0167-1") }
     
     before do
-      # 24/7/14 DH: Old syntax for double (mock) messages
+      # 24/7/14 DH: Old syntax for stub messages
       #Spree::Variant.stub(:find).and_return(variant)
       allow(Spree::Variant).to receive_messages(:find => variant)
       
@@ -65,7 +67,7 @@ describe Spree::OrderPopulator do
         subject.populate(:products => { 1 => 2 }, :quantity => 1)
       end
 
-      context "variant out of stock" do
+      context "incorrect (hacked) dynamic price" do
         before do
           #line_item = double("LineItem", valid?: false)
           #line_item = double("LineItem", :valid? => false)
@@ -101,7 +103,7 @@ describe Spree::OrderPopulator do
           expect(subject.errors.full_messages.join).to eql "error message"
         end
         
-      end # END: context "variant out of stock"
+      end # END: context "incorrect (hacked) dynamic price"
 
     end # END: context "with products parameters"
 
@@ -114,5 +116,5 @@ describe Spree::OrderPopulator do
       end
     end
     
-  end # END: context "with stubbed out find_variant"
+  end # END: context "with stubbed out 'order.contents'"
 end
