@@ -110,16 +110,4 @@ describe Spree::OrdersController do
 
   end # END: 'context "POST #completed"'
 
-=begin
-  # From 'github.com/rspec/rspec-rails' Controller Specs
-  describe "GET #index" do
-    it "loads all of the posts into @posts" do
-      post1, post2 = Post.create!, Post.create!
-      get :index
-
-      expect(assigns(:posts)).to match_array([post1, post2])
-    end
-  end
-=end
-
 end
