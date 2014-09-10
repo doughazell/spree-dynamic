@@ -56,7 +56,7 @@ module Spree
     # Adds a new item to the order (creating a new order if none already exists)
     def populate
       populator = Spree::OrderPopulator.new(current_order(true), current_currency)
-      
+
       # 28/12/13 DH: Allow LineItem.bsc_spec to be populated with Rails 4 'strong_parameters'
       params.permit(:bsc_spec)
       

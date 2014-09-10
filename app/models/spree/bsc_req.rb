@@ -36,36 +36,19 @@ module Spree
       #puts
       #params.each {|key, value| puts "#{key}: #{value}"}
 
-=begin
-      # ------------------------------- TEST ENV --------------------------------
-      if ENV['RAILS_ENV'] == 'test'
-
-        # 17/7/14 DH: Put in during development of dynamic price hack check as a "invalid" dynamic price 
-        #             returning "valid" (so that the RSpec model test fails!)    
-        if line_item.price == 69
-          return false # ie OK
-        end
-        
-        # 17/7/14 DH: Put in during development of dynamic price hack check as a "valid" dynamic price 
-        #             returning "invalid" (so that the RSpec model test fails!)
-        if line_item.price == 144
-          return true # ie don't fink so...boooard's don't fight back...
-        end
-      end # END: if ENV['RAILS_ENV'] == 'test'
-      # ------------------------------ END: TEST ENV -----------------------------
-=end
-      
-      # Put in dynamic curtain pricing algorithm here...
-
+      # ----------------------------------------------
       # product.js.coffee:
       #  Spree.calcNumberOfWidths ( width )
       #  Spree.calcPrice ( drop )
       #   Spree.recalcPriceOnLining (lining)
+      # ----------------------------------------------
 
       calc_width = width + params[:returns_addition]
       
-      #heading = "pencil pleat"
-      #params[:pencil_pleat_multiple]
+      # -------------------------------
+      # heading = "pencil pleat"
+      # params[:pencil_pleat_multiple]
+      # -------------------------------
       multiple = params["#{heading.gsub(/ /,'_')}_multiple".to_sym]
       
       calc_width *= multiple
@@ -84,18 +67,16 @@ module Spree
       # Multiply by 100 to convert to pence, round to nearest penny, then convert back to pounds by dividing by 100, simples...
       price = Float((required_fabric_len * params[:price_p_m] * 100).round) / 100
       
-      #lining = "cotton"
-      #params[:cotton_lining]
-      #params[:cotton_lining_labour]
+      # ------------------------------
+      # lining = "cotton"
+      # params[:cotton_lining]
+      # params[:cotton_lining_labour]
+      # ------------------------------
       lining_cost        = Float(required_fabric_len * params["#{lining}_lining".to_sym])
       lining_labour_cost = Float(required_fabric_len * params["#{lining}_lining_labour".to_sym])
       
       total_price = price + lining_cost + lining_labour_cost
       total_price = Float((total_price * 100).round) / 100
-
-
-      # 22/7/14 DH: Created to simulate a "hacked" dynamic price in a browser test
-      #if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'
       
       # 8/8/14 DH: The RSpec 'features/dynamic_price_spec.rb' uses 'self.alterDynamicPrice(alteration)'
       #            and runs under the 'test' env so doesn't need this "trap"
@@ -107,6 +88,10 @@ module Spree
 
 
       # 21/7/14 DH: Match the prices to the nearest pound
+      
+      # 8/8/14 DH: Potentially this could reject a valid price due to rounding error since £52.99 would be 
+      #            considered valid for £53.00 by a human!
+      #   (Anyway the dynamic price algorithm is only valid in Kendall-land so potential bug just noted!)
       if (line_item.price.floor == total_price.floor)
         return false # ie OK
       else

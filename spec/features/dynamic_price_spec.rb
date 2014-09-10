@@ -45,8 +45,13 @@ describe 'order_content' do
     visit "/products/oasis"
     
     #expect(page).to have_content "OASIS"
-    string = "oasis"
-    expect(page.body).to match(%r{#{string}}i)
+    string = "Oasis"
+    
+    # "%r{...}" creates a regular expression (normally specified by "/.../")
+    # The "i" after the closing delimiter is used to ignore the case when matching text
+    
+    #expect(page.body).to match( %r{#{string}}i )
+    expect(page.body).to match( /#{string}/i )
     
     fill_in('width', :with => '144')
     fill_in('drop', :with => '69')
@@ -69,9 +74,9 @@ describe 'order_content' do
     
     check('cm_measurements')
     
-    
     # Alter the correct dynamic price
-    Spree::BscReq.alterDynamicPrice(-2.00)
+    # (Correct price for this spec is "£53.40" and 'Spree::BscReq.dynamic_price_invalid?' uses 'Float.floor')
+    Spree::BscReq.alterDynamicPrice(-0.41)
   
     #expect(find(:id, 'add-to-cart-button').click).to raise_error "The dynamic price is incorrect"
     find(:id, 'add-to-cart-button').click

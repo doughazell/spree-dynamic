@@ -1,0 +1,26 @@
+<html>
+<body>
+
+<p id=myText>Click the button to demonstrate line-breaks in a new alert box.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script>
+window.origAlert = window.alert;
+window.alert = function(msg) { window.lastAlertMsg = msg; }
+window.lastAlertMsg = "Don't fink so...";
+
+function myFunction() {
+  alert("Hello\nHow are you?");
+  
+  // Change element text using just javascript (not coffeescript + jQuery)
+  document.getElementById('myText').innerHTML = window.lastAlertMsg;
+  //document.getElementById('myText').innerHTML = window.alert;
+  
+  window.alert = window.origAlert;
+  alert("Hello\nHow are you NOW?");  
+}
+</script>
+
+</body>
+</html>
