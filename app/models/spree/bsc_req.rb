@@ -23,8 +23,10 @@ module Spree
     
     def self.clearDynamicPriceAlteration
       if ENV['RAILS_ENV'] == 'test'
-        cattr_accessor :price_alteration, instance_accessor: false
-        @@price_alteration = 0
+        # 30/9/14 DH: Use a Ruby method to make Ruby method 'bsc_req.respond_to?(:price_alteration)' return false
+        undef :price_alteration
+        
+        #@@price_alteration = 0
       end
     end
     
