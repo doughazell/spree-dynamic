@@ -1,0 +1,319 @@
+/* 
+----------------------------------------------------------
+***   Also remember CSS changes in 'screen.css.erb' like:
+***    div#checkout .progress-steps #checkout-summary
+***    fieldset#order_summary
+----------------------------------------------------------
+*/
+
+// 5/2/15 DH: Upgrade to Spree 2-2
+//@import 'store/variables';
+@import 'spree/frontend/variables';
+
+$bsc_yellow: #CBCB67 !default;  /* Bespoke Silk Curtains Company yellow */
+
+body {
+  margin-top: 0px;
+  //background: url(/assets/store/luxury-kashmiri-silk-shawlsDARKER.jpg) top no-repeat;
+  
+  // 5/2/15 DH: Upgrade to Spree 2-2
+  //background: image-url("store/luxury-kashmiri-silk-shawlsDARKER.jpg") top no-repeat;
+  background: image-url("spree/frontend/store/luxury-kashmiri-silk-shawlsDARKER.jpg") top no-repeat;
+  
+  background-size: 100% 300px;
+}
+
+#bsc-main-nav-bar {
+  a {
+    text-decoration: underline;
+    //text-decoration: none;
+    color: $bsc_yellow;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  //width: 750px;
+  //margin-top: 30px;
+  //float: right;
+}
+
+#bsc-css-anchor {
+  color: #0c0f58;
+  //color: white;
+}
+
+.product-listing li {
+  height: 150px;
+  a.info {
+    //margin-bottom: 0px;
+    //padding-bottom: 20px;
+    min-height: 30px;
+  }
+}
+
+
+// --------------------- Layout for product + summary pages --------------------
+
+// Currently used for both the listing pages and the dynamic price page
+#content {
+  margin-left: 80px;
+  margin-top: 50px;
+  width: 82%;
+  
+  //.columns.twelve.omega {
+  //  margin-top: 100px;
+  //}
+}
+
+#order_summary {
+  hr {
+    //margin-right: 50px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    // "margin: top right bottom left"
+    //margin: 0 10em 2em 0;
+    
+    width: 84%;
+  }
+}
+
+.flash {
+  margin-right: 150px;
+}
+
+// ----------------------- BSC Logo -------------------------
+#logo-block li {
+  display: block;
+  height: 25px;
+}
+
+#logo-header {
+  font-size: 17px;
+  text-transform: uppercase;
+  color: white;
+  line-height: 2.3em;
+}
+
+#logo-text {
+  font-size: 20px;
+  text-transform: uppercase;
+  color: $bsc_yellow;
+}
+
+#logo-trailer {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: white;
+}
+// ------------------------------ Home page  -----------------------------------
+
+nav#taxonomies {
+  .taxonomy-root {
+    border-bottom: $default_border;
+    margin-bottom: 5px;
+    font-size: $main_navigation_header_font_size;
+  }
+
+  .taxons-list {
+    li {
+      a {
+        font-size: $main_navigation_font_size + 2;
+        line-height: 1.5em;
+      }
+    }
+  }
+}
+
+// Slight change from setting in 'screen.css.erb'
+#sidebar {
+  width: 152px;
+}
+
+#bsc-spree-link {
+  margin-left: 20px;
+  a {
+    margin-left: 2px;
+  }
+}
+
+// ------------------------------ Footer  -----------------------------------
+#footer {
+  //background: url(http://lorempixum.com/296/100/nature/2) bottom no-repeat;
+  //background: url(/assets/store/sunset-on-the-beach.jpg) bottom no-repeat;
+  background-color: $bsc_yellow;
+  
+  background-size: 100% 100%;
+// "box-shadow: h-shadown v-shadow blur(opt) spread(opt) color(opt) inset(opt)"
+  // ie No 'spread' and not "inset"
+  box-shadow: 0 0 10px #000;
+  margin-left: 2%;
+  width: 96%;
+
+  #nav ul li {
+      //display: inline;
+      list-style-type: none;
+      text-align: center;
+// "margin: top right bottom left"      
+      margin: 0 0px 0 0;
+      //margin-bottom: 130px;
+  }
+   
+  #nav a {
+      text-decoration: none;
+  }
+   
+  #nav a:hover {
+      text-decoration: underline;
+  }
+  
+  #footer-one {
+    width: 250px;
+  }
+  #footer-two {
+    width: 320px;
+  }
+  #footer-three {
+    width: 250px;
+  }
+  h4 {
+    text-align:center;
+    color: white;
+  }
+
+  // Stuff left in from "http://designshack.net/articles/css/build-a-responsive-mobile-friendly-web-page-with-skeleton/"
+  #headerImage img {
+    margin-bottom: 50px;
+    max-width: 100%;
+    height: auto;
+  }
+  .feature img {
+    margin-bottom: 15px;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* 
+-----------------------------
+***   Multiline coments   ***
+----------------------------- 
+*/
+
+// ------------------------ Curtain dynamic pricing page -------------------------
+#product-description {
+  border-right: none;
+}
+
+[data-hook="product_show"] {
+  margin-top: -35px;
+}
+
+#main-image {
+  //margin-bottom: 0px;
+}
+
+#add-sample-to-cart-button {
+  margin-bottom: 20px;
+}
+
+#price-box {
+  margin-top: -100px;
+  margin-left: 670px;
+  position: fixed;
+  
+  border: 1px solid;
+  float: left;
+  padding: 5px;
+  box-shadow: 0 0 10px #000;
+  //background: url(/assets/store/luxury-kashmiri-silk-shawlsDARKER.jpg);
+  background: $bsc_yellow;
+  line-height: 1;
+  
+  td {
+    vertical-align: bottom;
+    padding-bottom: 0px;
+    padding-top: 10px;
+  }
+  
+}
+
+#price-text {
+  //position: fixed;
+  //margin-left: 5px;
+  color: white;
+}
+
+#price-title {
+  //position: fixed;
+  margin-bottom: -3px;
+}
+
+#inside-product-cart-form {
+  margin-left: 7px;
+}
+
+#add-to-cart-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#width {
+  margin-bottom: 20px;
+}
+
+#drop {
+  margin-bottom: 20px;
+}
+
+#lining {
+  margin-bottom: 20px;
+}
+
+#measurements_text {
+  margin-left: 5px;
+}
+
+#link-to-cart.cart-indicator a:focus {
+  outline:0;
+}
+
+#page-link-to-cart.cart-indicator a {
+  text-decoration: underline;
+  color: $bsc_yellow;
+  font-size: 15px;
+  padding-top: 12px;
+  padding-right: 40px;
+      
+  background: transparent url(<%= asset_path 'spree/frontend/cart-empty_x32.png' %>) center right no-repeat;
+}
+
+#page-link-to-cart.cart-indicator a.full { background-image: url(<%= asset_path 'spree/frontend/cart-full_x32.png' %>); }
+
+// ----------------------- Summary page before RomanCart ------------------------
+div#bsc-subtotal {
+  margin-top: 5px;
+  margin-right: 150px;
+  float: right;
+}
+
+#product-properties {
+  .bsc-spec-category {
+    width: 350px;
+  }
+}
+
+// ----------------------- 'GET /orders/:id' Summary page ------------------------
+div#order {
+  //margin-left: -15px;
+  margin-right: 50px;
+}
+
+//div#order_summary .steps-data div.columns.four {
+//  padding-right: -20px;
+//}
+
+#order_summary h1 {
+  //margin-left: -10px;
+}
