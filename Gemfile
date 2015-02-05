@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.2'
+#gem 'rails', '4.0.2'
+gem 'rails', '~> 4.0.6'
 
 gem 'pg'
 
@@ -66,9 +67,9 @@ end
 
 # 18/12/13 DH: https://github.com/spree/spree/issues/4101 - "undefined method `content_tag' for Spree:Module" error
 #gem 'spree', '2.1.3'
-gem 'spree', github: 'spree/spree', branch: '2-1-stable'
+gem 'spree', github: 'spree/spree', branch: '2-2-stable'
 
-gem 'spree_gateway', :git => 'https://github.com/spree/spree_gateway.git', :branch => '2-1-stable'
-gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '2-1-stable'
+gem 'spree_gateway', :git => 'https://github.com/spree/spree_gateway.git', :branch => '2-2-stable'
+gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '2-2-stable'
 
 gem 'rmagick', '2.13.2', :require => false

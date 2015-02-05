@@ -8,6 +8,11 @@ namespace :spree_bsc do
   task :load => :environment do
     
     #SpreeSample::Engine.load_samples
+    
+    # 2/2/15 DH: Adding/Checking necessary taxons for a bare populate
+    unless checkAndAddTaxons and checkAndAddOptionTypes
+      abort("Well something fucked up there!!!")
+    end
 
     puts "\nCurrent Spree Products"
     puts "----------------------"
@@ -17,7 +22,7 @@ namespace :spree_bsc do
     end
     puts
     
-    #abort("\nWTF???\n\n")
+    abort("\nWTF???\n\n")
     # ----------------------------------------
     
     domain = "www.pongees.co.uk"
@@ -96,10 +101,100 @@ namespace :spree_bsc do
 
       puts "=== END OF PAGE ===\n\n"      
       
-    end while !(next_page = page.css('div.item-list ul.pager li.pager-next a')).empty?
+    end while !(next_page = page.css('div.item-list ul.pager li.pager-next a')).empty? # END: begin
     
     puts "TOTAL: " + total.to_s
 
+  end # END: task :load => :environment
+  
+  def checkAndAddTaxons
+    # -------------------- COLOUR ---------------------
+    colours = ["Green","Blue","Red","Yellow","Cyan","Magenta","Dark","Light"]
+    puts "\n--- Colour ---"
+    if (colourTaxonomy = Spree::Taxonomy.find_by_name("Colour"))
+      puts "Found 'Colour' taxonomy"
+      puts colourTaxonomy.inspect
+
+      # Check that all the colours have also been added
+      parentTaxon = Spree::Taxon.find_by_name("Colour")
+      checkChildTaxons(colourTaxonomy,parentTaxon,colours)
+      
+    else
+      puts "Creating 'Colour' taxonomy"
+      newTaxonomy = Spree::Taxonomy.create!({:name => "Colour"})
+      puts newTaxonomy.inspect
+      
+      parentTaxon = Spree::Taxon.find_by_name("Colour")
+      checkChildTaxons(newTaxonomy,parentTaxon,colours)
+      
+    end
+    
+    # -------------------- TYPE ---------------------
+    types = ["Indian Douppion"]
+    puts "\n--- Type ---"
+    if (typeTaxonomy = Spree::Taxonomy.find_by_name("Type"))
+      puts "Found 'Type' taxonomy"
+      puts typeTaxonomy.inspect
+      
+      parentTaxon = Spree::Taxon.find_by_name("Type")
+      checkChildTaxons(typeTaxonomy,parentTaxon,types)
+      
+    else
+      puts "Creating 'Type' taxonomy"
+      newTaxonomy = Spree::Taxonomy.create!({:name => "Type"})
+      puts newTaxonomy.inspect
+      
+      parentTaxon = Spree::Taxon.find_by_name("Type")
+      checkChildTaxons(newTaxonomy,parentTaxon,types)
+      
+    end
+
+    true
+  end
+  
+  def checkChildTaxons(taxonomy,parentTaxon,taxonList)
+    taxonList.each do |taxon|
+      unless Spree::Taxon.find_by_name(taxon)
+        Spree::Taxon.create!({:parent => parentTaxon, :taxonomy => taxonomy, :name => taxon })
+      end
+    end
+  end
+  
+  def checkAndAddOptionTypes
+    # -------------------- HEADING ---------------------
+    headings = [{:name => "pencil pleat",     :presentation => "Pencil Pleat"},
+                {:name => "deep pencil pleat",:presentation => "Deep Pencil Pleat"},
+                {:name => "double pleat",     :presentation => "Double Pleat"},
+                {:name => "triple pleat",     :presentation => "Triple Pleat"},
+                {:name => "eyelet pleat",     :presentation => "Eyelet Pleat"}]
+    puts "\n--- Heading ---"
+    if (optionType = Spree::OptionType.find_by_name("heading"))
+      puts "Found 'heading' option type"
+      puts optionType.inspect
+      
+      checkOptionValues(optionType,headings)
+    else
+      puts "Creating 'heading' option type"
+      newOptionType = Spree::OptionType.create!({:name => "heading", :presentation => "Heading"})
+      puts newOptionType.inspect
+      
+      checkOptionValues(newOptionType,headings)
+      
+      return false
+    end
+    
+    # -------------------- SILK ---------------------
+    Spree::OptionType.find_by_name("silk")
+  end
+  
+  def checkOptionValues(optionType,valuesList)
+    valuesList.each do |value|
+      puts "Checking for '#{value[:name]}'"
+      unless Spree::OptionValue.find_by_name(value[:name])
+        value[:option_type] = optionType
+        Spree::OptionValue.create!(value)
+      end
+    end
   end
   
   # Green
@@ -200,8 +295,19 @@ namespace :spree_bsc do
     product = Spree::Product.create!(product_attrs)
 
     taxons = Array.new
-    taxons << Spree::Taxon.find_by_name!(img_colour)
-    taxons << Spree::Taxon.find_by_name!("Indian Douppion")
+    
+    # 26/1/15 DH: Auto populating during Spree upgrade
+    if (colour = Spree::Taxon.find_by_name(img_colour))
+      taxons << colour
+    else
+      puts "#{img_colour} taxon not found!"
+    end
+    
+    if(type = Spree::Taxon.find_by_name("Indian Douppion"))
+      taxons << type
+    else
+      puts "Indian Douppion type not found!"
+    end
 
     product.taxons << taxons
     
