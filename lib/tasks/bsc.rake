@@ -13,6 +13,11 @@ namespace :spree_bsc do
     unless checkAndAddTaxons and checkAndAddOptionTypes
       abort("Well something fucked up there!!!")
     end
+    
+    # 8/2/15 DH: The BSC website was designed to have a hierarchical layout so need to add top-level items here 
+    #            (which match the type taxon list)
+    categories = [{:name => "Indian Douppion", :sku => "845"}]
+    checkAndAddToplevelCategories(categories)
 
     puts "\nCurrent Spree Products"
     puts "----------------------"
@@ -180,11 +185,27 @@ namespace :spree_bsc do
       
       checkOptionValues(newOptionType,headings)
       
-      return false
+      #return false
+
     end
     
     # -------------------- SILK ---------------------
-    Spree::OptionType.find_by_name("silk")
+    silkTypes = [{:name => "sample", :presentation => "Sample"}]
+    puts "\n--- Silk Types ---"    
+    if(optionType = Spree::OptionType.find_by_name("silk"))
+      puts "Found 'silk' option type"
+      puts optionType.inspect
+      
+      checkOptionValues(optionType,silkTypes)
+    else
+      puts "Creating 'silk' option type"
+      newOptionType = Spree::OptionType.create!({:name => "silk", :presentation => "Silk"})
+      puts newOptionType.inspect
+      
+      checkOptionValues(newOptionType,silkTypes)
+    end
+
+    true
   end
   
   def checkOptionValues(optionType,valuesList)
@@ -194,6 +215,39 @@ namespace :spree_bsc do
         value[:option_type] = optionType
         Spree::OptionValue.create!(value)
       end
+    end
+  end
+  
+  def checkAndAddToplevelCategories(categories)
+    puts "\n--- Top level categories ---"
+    if (typeTaxonomy = Spree::Taxonomy.find_by_name("Type"))
+            
+      Spree::Taxon.where(parent_id: typeTaxonomy.id).each do |taxon| 
+        puts taxon.name
+        
+        if not (Spree::Product.find_by_name(taxon.name))
+          puts "Yup, '#{taxon.name}' not entered yet"
+          
+          category = categories.detect {|item| item[:name].eql?(taxon.name)}
+#debugger
+          product_attrs = {
+            :name              => taxon.name,
+            :sku               => category[:sku],
+            :price             => 0,
+            :available_on      => Time.zone.now,
+            :shipping_category => Spree::ShippingCategory.find_by_name!("Default")
+          }
+        
+          product = Spree::Product.create!(product_attrs)
+          
+          variant = product.master    
+          variant.images.create!( :attachment => open(Rails.root.join("app/assets/images/spree/frontend/store/Indian Douppion/845_0060.jpg")) )
+          
+        end
+      end
+      
+    else
+      puts "D'oh, this shouldn't happen!"
     end
   end
   
@@ -271,7 +325,7 @@ namespace :spree_bsc do
     puts img_colour
     puts
 
-=begin
+# =begin
     if $first_time
       puts "--- DOING THIS ONE TIME ONLY... ---"
       $first_time = false
@@ -279,7 +333,7 @@ namespace :spree_bsc do
       puts "Not adding product"
       return
     end
-=end
+# =end
     product_attrs = {
       :name              => name,
       :sku               => sku,

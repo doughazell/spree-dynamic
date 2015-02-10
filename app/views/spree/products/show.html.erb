@@ -148,7 +148,7 @@ pattern_repeat: patternRepeat
           <% width_help = Spree::Config[:width_help] %>
           <%# --- <img ... Title=" %= width_help % " onClick='alert( %= width_help.dump % )' /> --- %>
           
-          <%= link_to image_tag("store/help-icon.png", :Title => width_help), image_path("store/MeasuringAdvice.pdf") %>
+          <%= link_to image_tag("spree/frontend/store/help-icon.png", :Title => width_help), image_path("spree/frontend/store/MeasuringAdvice.pdf") %>
           
         </div>
         <%= number_field_tag 'width', nil, :id => 'width' %>
@@ -157,7 +157,7 @@ pattern_repeat: patternRepeat
           <h4 style="display: inline;">Curtain drop</h4>
           <% drop_help = Spree::Config[:drop_help] %>
           
-          <%= link_to image_tag("store/help-icon.png", :Title => drop_help), image_path("store/MeasuringAdvice.pdf") %>
+          <%= link_to image_tag("spree/frontend/store/help-icon.png", :Title => drop_help), image_path("spree/frontend/store/MeasuringAdvice.pdf") %>
           
         </div>
         <%= number_field_tag 'drop', nil, :id => 'drop' %>
@@ -167,7 +167,7 @@ pattern_repeat: patternRepeat
           <h4 style="display: inline;">Lining</h4>
           <% lining_help = Spree::Config[:lining_help] %>
           
-          <%= link_to image_tag("store/help-icon.png", :Title => lining_help), image_path("store/MeasuringAdvice.pdf") %>
+          <%= link_to image_tag("spree/frontend/store/help-icon.png", :Title => lining_help), image_path("spree/frontend/store/MeasuringAdvice.pdf") %>
           
         </div>
         
@@ -185,7 +185,7 @@ pattern_repeat: patternRepeat
               <h4 style="display: inline;">Pleat Variants</h4>
               <% pleat_help = Spree::Config[:pleat_help] %>
           
-              <%= link_to image_tag("store/help-icon.png", :Title => pleat_help), image_path("store/MeasuringAdvice.pdf") %>
+              <%= link_to image_tag("spree/frontend/store/help-icon.png", :Title => pleat_help), image_path("spree/frontend/store/MeasuringAdvice.pdf") %>
               
             </div>
             <ul>
@@ -197,7 +197,7 @@ pattern_repeat: patternRepeat
                     
                     <label for="<%= ['products', @product.id, variant.id].join('_') %>">
 
-                      <img src="<%= image_path("store/pleats/#{heading.downcase}.jpg") %>" />
+                      <img src="<%= image_path("spree/frontend/store/pleats/#{heading.downcase}.jpg") %>" />
 
                       <span class="variant-description">
                         <%= variant_options variant %>
