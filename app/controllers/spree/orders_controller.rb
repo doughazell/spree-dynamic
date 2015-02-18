@@ -49,23 +49,32 @@ module Spree
 
     # Shows the current incomplete order from the session
     def edit
-      @order = current_order(true)
+      # 16/2/15 DH: Alteration necessary for upgrade from Spree-1.1 to Spree-2.2
+      #@order = current_order(true)
+      @order = current_order || Order.new
       associate_user
     end
 
     # Adds a new item to the order (creating a new order if none already exists)
     def populate
-      populator = Spree::OrderPopulator.new(current_order(true), current_currency)
+      # 16/2/15 DH: Alteration necessary for upgrade from Spree-1.1 to Spree-2.2
+      #populator = Spree::OrderPopulator.new(current_order(true), current_currency)
+       populator = Spree::OrderPopulator.new(current_order(create_order_if_necessary: true), current_currency)
 
       # 28/12/13 DH: Allow LineItem.bsc_spec to be populated with Rails 4 'strong_parameters'
       params.permit(:bsc_spec)
       
       # 28/12/13 DH: Retrieve the BSC spec and dynamic price sent from 'views/spree/products/show.html.erb'
+      
+      # Spree-2.2 version
+      #if populator.populate(params[:variant_id], params[:quantity])
+      
       if populator.populate(params.slice(:products, :variants, :quantity, :price, :spec))
-        current_order.ensure_updated_shipments
-
-        fire_event('spree.cart.add')
-        fire_event('spree.order.contents_changed')
+        # 16/2/15 DH: Alteration necessary for upgrade from Spree-1.1 to Spree-2.2
+        #current_order.ensure_updated_shipments
+        #fire_event('spree.cart.add')
+        #fire_event('spree.order.contents_changed')
+        
         respond_with(@order) do |format|
           format.html { redirect_to cart_path }
         end
@@ -86,6 +95,7 @@ module Spree
           format.js
         end
       end
+
     end
 
     # ------------------------- BSC additions ---------------------------

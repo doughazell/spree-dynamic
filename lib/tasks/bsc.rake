@@ -241,7 +241,7 @@ namespace :spree_bsc do
           product = Spree::Product.create!(product_attrs)
           
           variant = product.master    
-          variant.images.create!( :attachment => open(Rails.root.join("app/assets/images/spree/frontend/store/Indian Douppion/845_0060.jpg")) )
+          variant.images.create!( :attachment => open(Rails.root.join("app/assets/images/spree/frontend/store/Indian Douppion/845_0060.jpg")))
           
         end
       end
@@ -345,6 +345,9 @@ namespace :spree_bsc do
     # **********************************************************************************
     # *** Found mechanism from 'spree_core:spec/models/spree/classification_spec.rb' ***
     # **********************************************************************************
+    
+    # 15/2/15 DH: Auto Spree upgrade script needs currency set otherwise 'product.js' gives NaN since only removing "£" not default "$"
+    Spree::Config[:currency] = "GBP"
     
     product = Spree::Product.create!(product_attrs)
 

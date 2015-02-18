@@ -98,13 +98,19 @@ $ ->
 
   Spree.recalcPriceOnLining = (lining) ->
     lining_costing        = ($ '#bsc-pricing').data(lining+'-lining')
+    console.log("Lining costing:" + lining_costing)
     lining_labour_costing = ($ '#bsc-pricing').data(lining+'-lining-labour')
+    console.log("Lining labour costing:" + lining_labour_costing)
     
     lining_cost        = required_fabric_len * lining_costing
     lining_labour_cost = required_fabric_len * lining_labour_costing
+    console.log("Lining labour cost:" + lining_labour_cost)
     
+    console.log("Price: " + price)
     total_price = price + lining_cost + lining_labour_cost
+    console.log("Total price (before rounding): " + total_price)
     total_price = ((Math.round(total_price * 100)) / 100).toFixed(2)
+    console.log("Total price: " + total_price)
     
     ($ '#price-text').text("£" + total_price)
         
@@ -112,6 +118,7 @@ $ ->
   
   Spree.calcPrice = (drop) ->
     cutting_len = drop + turnings_addition
+    console.log("Cutting len: " + cutting_len)
     
     # -----------------------------
     # *** PATTERN REPEAT FABRIC ***
@@ -133,14 +140,18 @@ $ ->
     
     # Convert to meters to calc price based on "£/m"
     required_fabric_len = cutting_len * number_of_widths / 100
+    console.log("Req fabric len: " + required_fabric_len)
 
     price_string = ($ '#product-variants input[type="radio"]:checked').data('price')
+    console.log("Price string: " + price_string)
     # Remove the preceding '£' sign
     price_per_meter = price_string.replace(/£/g, ' ')
+    console.log("Price per meter: " + price_per_meter)
 
     # Multiply by 100 to convert to pence, round to nearest penny, then convert back to pounds by dividing by 100, simples...
     price = (Math.round(required_fabric_len * price_per_meter * 100)) / 100
     total_price = price
+    console.log("Price (in 'calcPrice'): " + price)
     
     lining = ($ '#lining option:selected').data('type')
     Spree.recalcPriceOnLining (lining)
@@ -164,6 +175,7 @@ $ ->
 
   # ------------------ Width ------------------
   $(document).on('blur', '#width', ( ->
+    console.log("Handling 'onBlur' for #width")
     curtain_width = width = (Number) @value
     Spree.calcNumberOfWidths (width)
     drop  = (Number) ($ '#drop').val()
