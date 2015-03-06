@@ -18,6 +18,8 @@ module Spree
       @order = Order.find_by_number!(params[:id])
     end
 
+=begin
+--------------------------------------- Spree-2.1 -----------------------------------------------
     def update
       @order = current_order
       unless @order
@@ -46,6 +48,35 @@ module Spree
         respond_with(@order)
       end
     end
+--------------------------------------- END: Spree-2.1 ------------------------------------------
+=end
+
+    # 24/2/15 DH: Spree-2.4 upgrade
+    def update
+    
+      # 24/2/15 DH: Spree-2.4 additions for spree-dynamic sample checkout
+      @order = current_order
+      unless @order
+        flash[:error] = Spree.t(:order_not_found)
+        redirect_to root_path and return
+      end
+
+      if @order.contents.update_cart(order_params)
+        respond_with(@order) do |format|
+          format.html do
+            if params.has_key?(:checkout)
+              @order.next if @order.cart?
+              redirect_to checkout_state_path(@order.checkout_steps.first)
+            else
+              redirect_to cart_path
+            end
+          end
+        end
+      else
+        respond_with(@order)
+      end
+    end
+
 
     # Shows the current incomplete order from the session
     def edit
@@ -62,14 +93,20 @@ module Spree
        populator = Spree::OrderPopulator.new(current_order(create_order_if_necessary: true), current_currency)
 
       # 28/12/13 DH: Allow LineItem.bsc_spec to be populated with Rails 4 'strong_parameters'
-      params.permit(:bsc_spec)
+      #params.permit(:bsc_spec)
       
       # 28/12/13 DH: Retrieve the BSC spec and dynamic price sent from 'views/spree/products/show.html.erb'
       
       # Spree-2.2 version
       #if populator.populate(params[:variant_id], params[:quantity])
       
-      if populator.populate(params.slice(:products, :variants, :quantity, :price, :spec))
+      # Spree-2.4 version
+      #if populator.populate(params[:variant_id], params[:quantity], params[:options])
+      
+      # 'spree-dynamic' based on Spree-2.1
+      #if populator.populate(params.slice(:products, :variants, :quantity, :price, :spec))
+      
+      if populator.populate(params[:variant_id], params[:quantity], params[:options], params[:price], params[:spec])
         # 16/2/15 DH: Alteration necessary for upgrade from Spree-1.1 to Spree-2.2
         #current_order.ensure_updated_shipments
         #fire_event('spree.cart.add')

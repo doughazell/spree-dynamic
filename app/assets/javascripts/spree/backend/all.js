@@ -7,6 +7,8 @@
 //= require jquery
 //= require jquery_ujs
 
-//= require admin/spree_backend
+// 2/3/15 DH: Upgrade to Spree 2.2
+// require admin/spree_backend
+//= require spree/backend
 
 //= require_tree .

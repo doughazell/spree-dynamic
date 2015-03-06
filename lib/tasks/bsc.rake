@@ -9,6 +9,8 @@ namespace :spree_bsc do
     
     #SpreeSample::Engine.load_samples
     
+    checkAndAddMisc
+    
     # 2/2/15 DH: Adding/Checking necessary taxons for a bare populate
     unless checkAndAddTaxons and checkAndAddOptionTypes
       abort("Well something fucked up there!!!")
@@ -21,7 +23,7 @@ namespace :spree_bsc do
 
     puts "\nCurrent Spree Products"
     puts "----------------------"
-    products = Spree::Product.find(:all)
+    products = Spree::Product.all
     products.each do |product|
       puts product.name
     end
@@ -111,6 +113,63 @@ namespace :spree_bsc do
     puts "TOTAL: " + total.to_s
 
   end # END: task :load => :environment
+  
+  def checkAndAddMisc
+    puts "\n--- Admin ---"
+=begin
+    unless country = Spree::Country.find_by_name("UK")
+      puts "Creating Country UK"
+      Spree::Country.create({ name: "UK", iso_name: "GBR", states_required: false })
+    else
+      puts country.inspect
+    end
+=end
+
+    country = Spree::Country.find_or_create_by({ name: "UK", iso_name: "GBR", states_required: false })
+    puts country.inspect
+    
+    default_zone = Spree::Zone.find_or_create_by(name: "Default")
+    default_zone.zone_members.create!(zoneable: country)
+    puts default_zone.inspect
+    
+    shipping_category = Spree::ShippingCategory.find_or_create_by(name: "Default")
+    puts shipping_category.inspect
+    
+    unless shipping_method = Spree::ShippingMethod.find_by_name("Standard Shipping")
+      puts "Creating shipping method"
+      
+      # See '2-4-stable/sample/db/samples/shipping_methods.rb' + 'core/db/default/spree/zones.rb' seed
+      
+      shipping_method = Spree::ShippingMethod.create!({name: "Standard Shipping", zones: [default_zone],
+                                    shipping_categories: [shipping_category],
+                                    calculator: Spree::Calculator::Shipping::FlatRate.create! })
+                                    
+      #shipping_method = Spree::ShippingMethod.find_by_name!("Standard Shipping")
+      
+      shipping_method.calculator.preferences = {
+        amount: 0,
+        currency: "GBP"
+      }
+      shipping_method.calculator.save!
+      shipping_method.save!
+    else
+      puts shipping_method.inspect
+    end
+    
+    location = Spree::StockLocation.first_or_create! ({name: "Default", country: country})
+    location.active = true
+    location.save!
+    puts location.inspect
+    
+    payment_method = Spree::PaymentMethod::Check.find_or_create_by(
+    {
+      :name => "Check",
+      :description => "Pay by check.",
+      :active => true
+    })
+    puts payment_method.inspect
+    
+  end
   
   def checkAndAddTaxons
     # -------------------- COLOUR ---------------------

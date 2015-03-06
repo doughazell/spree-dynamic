@@ -1,153 +1,131 @@
+# 23/2/15 DH: Added during port to Spree-2.4 for spree-dynamic 'add_to_line_item' additions
+include Spree::DynamicHelper
+
 module Spree
   class OrderContents
-    attr_accessor :order, :currency, :bscDynamicPrice, :bscSpec
+    attr_accessor :order, :currency
+    # 23/2/15 DH: spree-dynamic additions
+    attr_accessor :bscDynamicPrice, :bscSpec
 
     def initialize(order)
       @order = order
     end
 
-    # Get current line item for variant if exists
-    # Add variant qty to line_item
-    def add(variant, quantity = 1, currency = nil, shipment = nil)
-      line_item = order.find_line_item_by_variant(variant)
-     
-      # 29/12/13 DH: Only allow 1 variant sample per order
-      #unless variant.option_value("silk") == "Sample" and line_item
-      #  line_item = add_to_line_item(line_item, variant, quantity, currency, shipment)
-      #end
-      
-      # 3/3/14 DH: Previously only allowing 1 sample variant per order but since the BSC spec is per variant
-      #            line_item then can only allow 1 variant per order 
-      #            (diff variants, eg pencil pleat and deep pencil pleat, of same silk still allowed)
-      if line_item
-        return line_item
-      else
-        line_item = add_to_line_item(line_item, variant, quantity, currency, shipment)
-      end
-      
-      line_item
-      
+    def add(variant, quantity = 1, options = {})
+      line_item = add_to_line_item(variant, quantity, options)
+      after_add_or_remove(line_item, options)
     end
 
-    # Get current line item for variant
-    # Remove variant qty from line_item
-    def remove(variant, quantity = 1, shipment = nil)
-      line_item = order.find_line_item_by_variant(variant)
+    def remove(variant, quantity = 1, options = {})
+      line_item = remove_from_line_item(variant, quantity, options)
+      after_add_or_remove(line_item, options)
+    end
 
-      unless line_item
-        raise ActiveRecord::RecordNotFound, "Line item not found for variant #{variant.sku}"
+    def update_cart(params)
+      if order.update_attributes(filter_order_items(params))
+        order.line_items = order.line_items.select { |li| li.quantity > 0 }
+        # Update totals, then check if the order is eligible for any cart promotions.
+        # If we do not update first, then the item total will be wrong and ItemTotal
+        # promotion rules would not be triggered.
+        reload_totals
+        PromotionHandler::Cart.new(order).activate
+        order.ensure_updated_shipments
+        reload_totals
+        true
+      else
+        false
       end
-
-      remove_from_line_item(line_item, variant, quantity, shipment)
     end
 
     private
+      def after_add_or_remove(line_item, options = {})
+        reload_totals
+        shipment = options[:shipment]
+        shipment.present? ? shipment.update_amounts : order.ensure_updated_shipments
+        PromotionHandler::Cart.new(order, line_item).activate
+        ItemAdjustments.new(line_item).update
+        reload_totals
+        line_item
+      end
 
-    def add_to_line_item(line_item, variant, quantity, currency=nil, shipment=nil)
-      if line_item
-        line_item.target_shipment = shipment
-        line_item.quantity += quantity.to_i
-        line_item.currency = currency unless currency.nil?
-      else
-        line_item = order.line_items.new(quantity: quantity, variant: variant)
-        line_item.target_shipment = shipment
-        if currency
-          line_item.currency = currency unless currency.nil?
-          line_item.price    = variant.price_in(currency).amount
-        else
-          line_item.price    = variant.price
+      def filter_order_items(params)
+        filtered_params = params.symbolize_keys
+        return filtered_params if filtered_params[:line_items_attributes].nil? || filtered_params[:line_items_attributes][:id]
+
+        line_item_ids = order.line_items.pluck(:id)
+
+        params[:line_items_attributes].each_pair do |id, value|
+          unless line_item_ids.include?(value[:id].to_i) || value[:variant_id].present?
+            filtered_params[:line_items_attributes].delete(id)
+          end
         end
+        filtered_params
       end
-      
-      catch(:sample) {
-        # 29/12/13 DH: If a dynamic price was returned from the Products Show then use it to populate the line item
-        if @bscDynamicPrice
-          line_item.price    = @bscDynamicPrice
-          line_item.bsc_spec = @bscSpec
+
+      def order_updater
+        @updater ||= OrderUpdater.new(order)
+      end
+
+      def reload_totals
+        order_updater.update_item_count
+        order_updater.update
+        order.reload
+      end
+
+      def add_to_line_item(variant, quantity, options = {})
+        line_item = grab_line_item_by_variant(variant, false, options)
+
+        if line_item
+          # 23/2/15 DH: Commented out orig Spree-2.4 code during upgrade to Spree-2.4
+          #
+          # 3/3/14 DH: Previously only allowing 1 sample variant per order but since the BSC spec is per variant
+          #            line_item then can only allow 1 variant per order 
+          #            (diff variants, eg pencil pleat and deep pencil pleat, of same silk still allowed)
           
-          # 29/4/14 DH: Checkout the date diff from the old spec population doode!
-          #             Anyway, now populating a separate table rather than just storing an unparsed string
-          #             The string is used for the RomanCart integration until the order has "Status Complete",
-          #             otherwise it would lead to "data redundancy" and risk "data anomalies"!
+          # Orig Spree-2.4 code
+          #line_item.quantity += quantity.to_i
+          #line_item.currency = currency unless currency.nil?
+        else
+          opts = { currency: order.currency }.merge ActionController::Parameters.new(options).
+                                              permit(PermittedAttributes.line_item_attributes)
+          line_item = order.line_items.new(quantity: quantity,
+                                            variant: variant,
+                                            options: opts)
           
-          #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
+          # 23/2/15 DH: Now add BSC spec stuff (if the bsc_spec is not populated here it doesn't get saved in the DB spree_line_items)
+          line_item.price    = bscDynamicPrice
+          line_item.bsc_spec = bscSpec
+          addDynamicPriceReq(line_item)
           
-          if line_item.bsc_spec
-            begin
-              line_item.create_bsc_req(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
-            rescue ActiveRecord::UnknownAttributeError # To catch the default "spec"=>"N/A" for samples
-              if line_item.bsc_spec.eql?("N/A")
-                throw :sample # Which is caught above to allow adding a sample without later inevitable errors
-              else
-                raise "Unknown BSC spec of: #{line_item.bsc_spec}"
-              end
-            end
-
-            if line_item.bsc_req.invalid?
-              #raise "The BSC requirement set is missing a value"
-              
-              message = "The BSC requirement set is missing a value"
-              line_item.errors.add(:base,message)
-              Rails.logger.error "\n*** #{message} ***\n\n"
-              
-              line_item.bsc_req_id = -1 # ie Error
-              return line_item
-            end
-
-            # 22/7/14 DH: Adding in mechanism to simulate a "hacked" dynamic price in RSpec features test
-            if ENV['RAILS_ENV'] == 'test' && line_item.bsc_req.respond_to?(:price_alteration)
-              line_item.price += line_item.bsc_req.price_alteration
-            end
-            
-            # 17/7/14 DH: Now check that the price is valid for the spec and that we haven't been hacked!
-            
-            # 17/7/14 DH: Need to save the line item to be able to access it via the Active Record association 
-            #             (via the inverse of the FK entry in 'spree_line_items')
-            line_item.save
-            if line_item.bsc_req.dynamic_price_invalid?
-              #raise "The dynamic price is incorrect"
-              
-              message = "The dynamic price is incorrect"
-              line_item.errors.add(:base,message)
-              Rails.logger.error "\n*** #{message} ***\n\n"
-              
-              line_item.bsc_req_id = -1 # ie Error
-              return line_item
-            end
-
-=begin
-            reqs = Hash.new
-            line_item.bsc_spec.split(',').each do |req|
-              category, value = req.split('=')
-              reqs[category] = value
-            end
-            line_item.create_bsc_req!(width: reqs["width"], drop: reqs["drop"], lining: reqs["lining"], heading: reqs["heading"])
-=end
-          end # END: 'if line_item.bsc_spec'
-        
-        end # END: 'if @bscDynamicPrice'
-      } # END: 'catch(:sample)'
-
-      line_item.save
-      
-      order.reload
-      line_item
-    end
-
-    def remove_from_line_item(line_item, variant, quantity, shipment=nil)
-      line_item.quantity += -quantity
-      line_item.target_shipment= shipment
-
-      if line_item.quantity == 0
-        Spree::OrderInventory.new(order).verify(line_item, shipment)
-        line_item.destroy
-      else
+        end
+          
+        line_item.target_shipment = options[:shipment] if options.has_key? :shipment
         line_item.save!
+        line_item
       end
 
-      order.reload
-      line_item
-    end
+      def remove_from_line_item(variant, quantity, options = {})
+        line_item = grab_line_item_by_variant(variant, true, options)
+        line_item.quantity -= quantity
+        line_item.target_shipment= options[:shipment]
 
+        if line_item.quantity == 0
+          line_item.destroy
+        else
+          line_item.save!
+        end
+
+        line_item
+      end
+
+      def grab_line_item_by_variant(variant, raise_error = false, options = {})
+        line_item = order.find_line_item_by_variant(variant, options)
+
+        if !line_item.present? && raise_error
+          raise ActiveRecord::RecordNotFound, "Line item not found for variant #{variant.sku}"
+        end
+
+        line_item
+      end
   end
 end

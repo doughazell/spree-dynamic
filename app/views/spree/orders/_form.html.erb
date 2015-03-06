@@ -18,8 +18,9 @@
               <%# ----------------------------------------------------- %>
               <%# @order.special_instructions.split(',').each do |spec| %>
               <%# ----------------------------------------------------- %>
-              
+<%# debugger %>              
               <% if item_form.object.bsc_spec %>
+
                 <% item_form.object.bsc_spec.split(',').each do |spec| %>
                   <% category, value = spec.split('=') %>
                   
@@ -42,6 +43,12 @@
                   </tr>
                   
                 <% end %>
+              
+              <% else %>
+                <%# 24/2/15 DH: Upgrade to Spree-2.4 gave the 'bsc_spec' 'nil' rather than "N/A" for a sample %>
+                <tr>
+                  <td class="bsc-spec-category"><strong><%= item_form.object.variant.option_value("silk") %></strong></td>
+                </tr>
               <% end %>
           
               <%= product_image(item_form.object.variant.product, :itemprop => "image") %>

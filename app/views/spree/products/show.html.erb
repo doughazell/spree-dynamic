@@ -120,11 +120,17 @@ pattern_repeat: patternRepeat
         <% end %>
         
         <% if @product.variants_and_option_values(current_currency).any? %>
+        
           <% @product.variants_and_option_values(current_currency).each_with_index do |variant, index| %>
+
             <% if variant.option_value("silk") %>
-              <%= hidden_field_tag "products[#{@product.id}]", variant.id, :id => 'sample-variant' %>
+              <%# --- 24/2/15 DH: Upgrade to Spree-2.4 required using only 'variant_id' since Spree-2.2 "Simplified OrderPopulator..." --- %>
+              <%# --- "...to take only a variant_id and a quantity,rather than a confusing hash of product/variant ids."               --- %>
+              <%# hidden_field_tag "products[#{@product.id}]", variant.id, :id => 'sample-variant' %>
+              <%= hidden_field_tag "variant_id", variant.id, :id => 'sample-variant' %>
             <% end %>
           <% end %>
+        
         <% end %>
         
         <%# --- Quantity of product or variant --- %>
@@ -193,9 +199,14 @@ pattern_repeat: patternRepeat
                 <li>
                 
                   <% if heading = variant.option_value("heading") %>
-                    <%= radio_button_tag "products[#{@product.id}]", variant.id, index == 0, 'data-price' => variant.price_in(current_currency).display_price, 'data-heading' => heading.downcase %>
+                    <%# --- 24/2/15 DH: Upgrade to Spree-2.4 required using only 'variant_id' since Spree-2.2 "Simplified OrderPopulator..." --- %>
+                    <%# --- "...to take only a variant_id and a quantity,rather than a confusing hash of product/variant ids."               --- %>
+                    <%# radio_button_tag "products[#{@product.id}]", variant.id, index == 0, 'data-price' => variant.price_in(current_currency).display_price, 'data-heading' => heading.downcase %>
                     
-                    <label for="<%= ['products', @product.id, variant.id].join('_') %>">
+                    <%= radio_button_tag "variant_id", variant.id, index == 0, 'data-price' => variant.price_in(current_currency).display_price, 'data-heading' => heading.downcase %>
+                    
+                    <%# label for="<%= ['products', @product.id, variant.id].join('_') %>
+                    <label for="<%= ['variant_id', variant.id].join('_') %>">
 
                       <img src="<%= image_path("spree/frontend/store/pleats/#{heading.downcase}.jpg") %>" />
 

@@ -14,5 +14,8 @@
 <!--[if lt IE 9]>
   <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6/html5shiv.min.js"></script>
 <![endif]-->
-<%= render "spree/shared/routes" %>
+
+<%# 22/2/15 DH: Upgrading from Spree-2.2 to Spree-2.3 needed to remove 'Spree.routes' %>
+<%# render "spree/shared/routes" %>
+
 <%= yield :head %>

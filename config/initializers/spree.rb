@@ -9,7 +9,7 @@ Spree.config do |config|
   # Example:
   # Uncomment to override the default site name.
   # config.site_name = "Spree Demo Site"
-  config.site_name = "Bespoke Silk Curtains Company"
+  #config.site_name = "Bespoke Silk Curtains Company"
   config.logo = "store/BSCCoy-logo.jpg"
   config.products_per_page = 200
   
