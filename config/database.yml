@@ -3,7 +3,8 @@ development:
   encoding: utf8
   reconnect: false
   #database: spreeBSC_v2-1-3dev
-  database: spree_dynamic_upgrade
+  #database: spree_dynamic_upgrade
+  database: spree_dynamic_2-4
   pool: 5
   username: postgres
   host: localhost

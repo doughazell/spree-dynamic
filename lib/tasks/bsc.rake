@@ -29,7 +29,7 @@ namespace :spree_bsc do
     end
     puts
     
-    abort("\nWTF???\n\n")
+    #abort("\nWTF???\n\n")
     # ----------------------------------------
     
     domain = "www.pongees.co.uk"
@@ -279,8 +279,8 @@ namespace :spree_bsc do
   
   def checkAndAddToplevelCategories(categories)
     puts "\n--- Top level categories ---"
-    if (typeTaxonomy = Spree::Taxonomy.find_by_name("Type"))
-            
+    if (typeTaxonomy = Spree::Taxon.find_by_name("Type"))
+#debugger            
       Spree::Taxon.where(parent_id: typeTaxonomy.id).each do |taxon| 
         puts taxon.name
         
@@ -288,7 +288,7 @@ namespace :spree_bsc do
           puts "Yup, '#{taxon.name}' not entered yet"
           
           category = categories.detect {|item| item[:name].eql?(taxon.name)}
-#debugger
+
           product_attrs = {
             :name              => taxon.name,
             :sku               => category[:sku],
@@ -300,8 +300,10 @@ namespace :spree_bsc do
           product = Spree::Product.create!(product_attrs)
           
           variant = product.master    
-          variant.images.create!( :attachment => open(Rails.root.join("app/assets/images/spree/frontend/store/Indian Douppion/845_0060.jpg")))
-          
+          variant.images.create( :attachment => open(Rails.root.join("app/assets/images/spree/frontend/store/Indian Douppion/845_0060.jpg")))
+        
+        else  
+          puts "'#{taxon.name}' already entered so not re-adding it..."
         end
       end
       
@@ -483,9 +485,9 @@ namespace :spree_bsc do
     Spree::Variant.create!(variants)
     
     variants.each do |variant|
-      product.master.update_attributes!(variant)
+      product.master.update_attributes(variant)
     end
-    product.master.update_attributes!(:sku => sku)
+    product.master.update_attributes(:sku => sku)
     
     addDetails(product,silk_url)
     
