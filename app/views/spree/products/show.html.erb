@@ -49,8 +49,8 @@ pattern_repeat: patternRepeat
 <div data-hook="product_show" itemscope itemtype="http://schema.org/Product">
   <% @body_id = 'product-details' %>
 
-  <div class="columns sixteen alpha" data-hook="product_left_part">
-    <div class="row" data-hook="product_left_part_wrap">
+  <div class="col-md-4" data-hook="product_left_part">
+    <div data-hook="product_left_part_wrap">
 
       <div id="product-images" data-hook="product_images">
         <div id="main-image" data-hook>
@@ -72,8 +72,8 @@ pattern_repeat: patternRepeat
     </div>
   </div>
 
-  <div class="columns ten clearfix" data-hook="product_right_part">
-    <div class="row" data-hook="product_right_part_wrap">
+  <div class="col-md-6" data-hook="product_right_part">
+    <div data-hook="product_right_part_wrap">
 
       <div id="product-description" data-hook="product_description">
 
@@ -85,28 +85,55 @@ pattern_repeat: patternRepeat
 
       </div>
 
-      <%# --- render :partial => 'taxons' --- %>
-
     </div>
   </div> <%# END - data-hook="product_right_part" %>
   
-  <br class="clear">
-  
-  <%# --- Price --- %>
-  <div id="price-box">
-    <table>
-      <tr>
-        <td><h3 class="product-section-title" id="price-title">Price:</h3></td>
-        <td>
-          <span id="price-text">
-<%# "product ID: #{@product.master.id} = #{ @product.price }"  %>
-          </span>
-        </td>
-      </tr>
-    </table>
+  <div class="col-md-2" >
+    <div class="col-md-2" data-spy="affix">
+    
+      <div id="price-box">
+        <table>
+          <tr>
+            <td><h3 class="product-section-title" id="price-title">Price:</h3></td>
+            <td><span id="price-text"/></td>
+          </tr>
+        </table>
+      </div>      
+          
+    </div>
   </div>
 
-  <div class="columns sixteen alpha" data-hook="bsc-form-cols">
+<%
+=begin %>
+---------------------------------------------- COMMENTS ---------------------------------------------------
+
+  <%# --- Price --- %>  
+  <%# <div class="row"> %>
+    <div class="col-md-9"></div> 
+    
+    <div class="col-md-3" >
+      <div class="col-md-3" data-spy="affix">
+      
+        <div id="price-box">
+          <table>
+            <tr>
+              <td><h3 class="product-section-title" id="price-title">Price:</h3></td>
+              <td><span id="price-text"/></td>
+            </tr>
+          </table>
+        </div>      
+            
+      </div>
+    </div>
+    
+  <%# </div> %>
+
+--------------------------------------------- END: COMMENTS ------------------------------------------------
+<%
+=end %>
+
+  
+  <div class="col-md-12" data-hook="bsc-form-cols">
 
     <%# --- 14/1/14 DH: This doesn't use Skeleton correctly since each should be in a separate "row" <div> --- %>
     <%# ---                        (it was inherited from Spree)                                           --- %>
@@ -256,5 +283,6 @@ pattern_repeat: patternRepeat
     </div> <%# END: data-hook="bsc-form-row" %>
 
   </div> <%# END: data-hook="bsc-form-cols" %>
+
 
 </div>

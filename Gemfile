@@ -4,7 +4,8 @@ source 'https://rubygems.org'
 #gem 'rails', '4.0.2'
 #gem 'rails', '~> 4.0.6'
 #gem 'rails', '~> 4.1.2'
-gem 'rails', '~> 4.1.8'
+#gem 'rails', '~> 4.1.8'
+gem 'rails', '~> 4.2.0'
 
 gem 'pg'
 
@@ -59,7 +60,7 @@ group :development, :test do
   gem 'factory_girl'
   
   #gem 'debugger', group: [:development, :test]
-  gem 'debugger'
+  gem 'byebug'
   
   # 22/4/14 DH: Attempting to visualise Spree DB
   gem 'railroady'
@@ -71,9 +72,10 @@ end
 #gem 'spree', '2.1.3'
 #gem 'spree', github: 'spree/spree', branch: '2-2-stable'
 #gem 'spree', :github => 'spree/spree', :branch => '2-3-stable'
-gem 'spree', github: 'spree/spree', branch: '2-4-stable'
+#gem 'spree', github: 'spree/spree', branch: '2-4-stable'
+gem 'spree', github: 'spree/spree', branch: '3-0-stable'
 
-gem 'spree_gateway', :git => 'https://github.com/spree/spree_gateway.git', :branch => '2-4-stable'
-gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '2-4-stable'
+gem 'spree_gateway', :git => 'https://github.com/spree/spree_gateway.git', :branch => '3-0-stable'
+gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '3-0-stable'
 
 gem 'rmagick', '2.13.2', :require => false

@@ -14,14 +14,24 @@ $bsc_yellow: #CBCB67 !default;  /* Bespoke Silk Curtains Company yellow */
 
 body {
   margin-top: 0px;
-  //background: url(/assets/store/luxury-kashmiri-silk-shawlsDARKER.jpg) top no-repeat;
+  
+/* 
+-----------------------------
+When using the asset pipeline, paths to assets must be re-written and sass-rails provides -url and -path helpers 
+(hyphenated in Sass, underscored in Ruby)
+----------------------------- 
+*/
+  //background: url("/assets/store/luxury-kashmiri-silk-shawlsDARKER.jpg") top no-repeat;
   
   // 5/2/15 DH: Upgrade to Spree 2-2
   //background: image-url("store/luxury-kashmiri-silk-shawlsDARKER.jpg") top no-repeat;
-  background: image-url("spree/frontend/store/luxury-kashmiri-silk-shawlsDARKER.jpg") top no-repeat;
   
+  // 30/5/15 DH: Upgrade to Spree 3-0
+  background: image-url("spree/frontend/store/luxury-kashmiri-silk-shawlsDARKER.jpg") top no-repeat;
+    
   background-size: 100% 300px;
 }
+
 
 #bsc-main-nav-bar {
   a {
@@ -33,7 +43,7 @@ body {
   a:hover {
     text-decoration: underline;
   }
-  
+
   //width: 750px;
   //margin-top: 30px;
   //float: right;
@@ -149,6 +159,7 @@ nav#taxonomies {
   // ie No 'spread' and not "inset"
   box-shadow: 0 0 10px #000;
   margin-left: 2%;
+  // 29/5/15 DH: Migration to Spree-3.0 with Bootstrap
   width: 96%;
 
   #nav ul li {
@@ -219,9 +230,12 @@ nav#taxonomies {
 }
 
 #price-box {
-  margin-top: -100px;
-  margin-left: 670px;
-  position: fixed;
+  // 1/6/15 DH: Upgrade to Spree-3.0 using Bootstrap lost 'price-box' when fixing its posn
+  //position: fixed;
+  //margin-left: 670px;
+  //margin-top: -200px;
+  
+  margin-top: 110px;
   
   border: 1px solid;
   float: left;

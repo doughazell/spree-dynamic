@@ -1,10 +1,10 @@
-# 23/2/15 DH: Added during port to Spree-2.4 for spree-dynamic 'add_to_line_item' additions
+# 2/6/15 DH: Added during port to Spree-3.0 for spree-dynamic 'add_to_line_item' additions
 include Spree::DynamicHelper
 
 module Spree
   class OrderContents
     attr_accessor :order, :currency
-    # 23/2/15 DH: spree-dynamic additions
+    # 2/6/15 DH: spree-dynamic additions
     attr_accessor :bscDynamicPrice, :bscSpec
 
     def initialize(order)
@@ -43,7 +43,7 @@ module Spree
         shipment = options[:shipment]
         shipment.present? ? shipment.update_amounts : order.ensure_updated_shipments
         PromotionHandler::Cart.new(order, line_item).activate
-        ItemAdjustments.new(line_item).update
+        Adjustable::AdjustmentsUpdater.update(line_item)
         reload_totals
         line_item
       end
@@ -76,13 +76,13 @@ module Spree
         line_item = grab_line_item_by_variant(variant, false, options)
 
         if line_item
-          # 23/2/15 DH: Commented out orig Spree-2.4 code during upgrade to Spree-2.4
+          # 2/6/15 DH: Commented out during upgrade to Spree-3.0
           #
           # 3/3/14 DH: Previously only allowing 1 sample variant per order but since the BSC spec is per variant
           #            line_item then can only allow 1 variant per order 
           #            (diff variants, eg pencil pleat and deep pencil pleat, of same silk still allowed)
           
-          # Orig Spree-2.4 code
+          # Orig Spree-3.0 code
           #line_item.quantity += quantity.to_i
           #line_item.currency = currency unless currency.nil?
         else
@@ -92,13 +92,12 @@ module Spree
                                             variant: variant,
                                             options: opts)
           
-          # 23/2/15 DH: Now add BSC spec stuff (if the bsc_spec is not populated here it doesn't get saved in the DB spree_line_items)
+          # 2/6/15 DH: Now add BSC spec stuff (if the bsc_spec is not populated here it doesn't get saved in the DB spree_line_items)
           line_item.price    = bscDynamicPrice
           line_item.bsc_spec = bscSpec
           addDynamicPriceReq(line_item)
-          
+
         end
-          
         line_item.target_shipment = options[:shipment] if options.has_key? :shipment
         line_item.save!
         line_item

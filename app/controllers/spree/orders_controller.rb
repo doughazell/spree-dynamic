@@ -3,7 +3,8 @@ include Spree::DynamicHelper
 
 module Spree
   class OrdersController < Spree::StoreController
-    ssl_required :show
+    # 28/4/15 DH: Removed during upgrade to Spree-3.0
+    #ssl_required :show
 
     before_filter :check_authorization
     rescue_from ActiveRecord::RecordNotFound, :with => :render_404
