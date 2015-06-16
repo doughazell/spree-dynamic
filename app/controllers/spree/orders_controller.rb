@@ -83,6 +83,7 @@ module Spree
     def edit
       # 16/2/15 DH: Alteration necessary for upgrade from Spree-1.1 to Spree-2.2
       #@order = current_order(true)
+
       @order = current_order || Order.new
       associate_user
     end

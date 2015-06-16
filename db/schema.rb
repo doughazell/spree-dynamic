@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150428124348) do
+ActiveRecord::Schema.define(version: 20150607134900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,11 +93,16 @@ ActiveRecord::Schema.define(version: 20150428124348) do
   add_index "spree_assets", ["viewable_type", "type"], name: "index_assets_on_viewable_type_and_type", using: :btree
 
   create_table "spree_bsc_reqs", force: :cascade do |t|
-    t.integer "width",               null: false
-    t.integer "drop",                null: false
-    t.string  "lining",  limit: 255, null: false
-    t.string  "heading", limit: 255, null: false
+    t.integer "width",                          null: false
+    t.integer "drop",                           null: false
+    t.string  "lining",             limit: 255, null: false
+    t.string  "heading",            limit: 255, null: false
+    t.integer "line_item_id"
+    t.integer "spree_line_item_id"
   end
+
+  add_index "spree_bsc_reqs", ["line_item_id"], name: "index_spree_bsc_reqs_on_line_item_id", using: :btree
+  add_index "spree_bsc_reqs", ["spree_line_item_id"], name: "index_spree_bsc_reqs_on_spree_line_item_id", using: :btree
 
   create_table "spree_calculators", force: :cascade do |t|
     t.string   "type",            limit: 255
@@ -1003,4 +1008,5 @@ ActiveRecord::Schema.define(version: 20150428124348) do
   add_index "spree_zones", ["default_tax"], name: "index_spree_zones_on_default_tax", using: :btree
   add_index "spree_zones", ["kind"], name: "index_spree_zones_on_kind", using: :btree
 
+  add_foreign_key "spree_bsc_reqs", "spree_line_items"
 end

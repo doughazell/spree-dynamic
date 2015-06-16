@@ -467,6 +467,7 @@ a { outline: none; }
 body.two-col #wrapper { 
   background: no-repeat;
   background-image: url(<%= asset_path 'spree/frontend/wrapper-back-2.png' %>);
+  background-size: 100%;
 }
 
 .container {
@@ -508,7 +509,9 @@ body.one-col #content {
 body.two-col #content {
   display: inline;
   float: left;
-  width: 730px;
+  // 4/6/15 DH: Removed during upgrade to Spree-3.0 that uses Bootstrap cf Skeleton
+  //width: 730px;
+  
   margin-left: 0;
 }
 #header {
@@ -625,7 +628,9 @@ ul#main-nav-bar {
   clear: both;
   font-size: 1.2em;
   list-style: none;
+  // 4/6/15 DH: Upgrade to Spree-3.0 that uses Bootstrap cf Skeleton
   margin: 0;
+  //margin-left: 0px;
   padding: 0;  
 }
 ul#main-nav-bar li {
@@ -636,7 +641,7 @@ ul#main-nav-bar li {
 }
 ul#main-nav-bar li.cart-indicator a {
   padding-right: 40px;
-  //background: transparent url(<%= asset_path 'spree/frontend/cart-empty_x32.png' %>) center right no-repeat;
+  background: transparent url(<%= asset_path 'spree/frontend/cart-empty_x32.png' %>) center right no-repeat;
   display: block;
 }
 ul#main-nav-bar li.cart-indicator a.full { background-image: url(<%= asset_path 'spree/frontend/cart-full_x32.png' %>); }
