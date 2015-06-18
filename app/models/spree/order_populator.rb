@@ -43,6 +43,12 @@ module Spree
       rescue ActiveRecord::RecordInvalid => e
         errors.add(:base, e.record.errors.messages.values.join(" "))
       end
+      
+      # 18/6/15 DH: Passing BSC Req errors back to the web after Spree-2.4 changed the mechanism it used.
+      line_item = @order.line_item
+      if line_item && line_item.bsc_req_id == -1
+        errors.add(:base, line_item.bsc_req.errors.messages.values.join(" "))
+      end
     end
   end
 end

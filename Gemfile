@@ -59,7 +59,8 @@ group :development, :test do
   gem 'factory_girl'
   
   #gem 'debugger', group: [:development, :test]
-  gem 'debugger'
+  #gem 'debugger'
+  gem 'byebug'
   
   # 22/4/14 DH: Attempting to visualise Spree DB
   gem 'railroady'

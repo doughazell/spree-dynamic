@@ -95,10 +95,11 @@ module Spree
           # 23/2/15 DH: Now add BSC spec stuff (if the bsc_spec is not populated here it doesn't get saved in the DB spree_line_items)
           line_item.price    = bscDynamicPrice
           line_item.bsc_spec = bscSpec
+
           addDynamicPriceReq(line_item)
           
         end
-          
+#debugger          
         line_item.target_shipment = options[:shipment] if options.has_key? :shipment
         line_item.save!
         line_item

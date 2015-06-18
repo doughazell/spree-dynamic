@@ -5,6 +5,8 @@ require 'rspec/rails'
 require 'ffaker'
 require 'rspec/autorun'
 require 'capybara/rails'
+# 17/6/15 DH: Adding debug support for RSpec tests
+require 'byebug'
 
 # 27/5/14 DH: Atempting to get Spree FactoryGirl++ working
 #require 'spree/testing_support/authorization_helpers'

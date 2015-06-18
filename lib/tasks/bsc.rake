@@ -158,6 +158,10 @@ namespace :spree_bsc do
     
     location = Spree::StockLocation.first_or_create! ({name: "Default", country: country})
     location.active = true
+    
+    # 30/4/15 DH: Another sweet Rails one-liner to allow the FK of the line item to be saved via ActiveRecord association
+    location.backorderable_default = true
+    
     location.save!
     puts location.inspect
     
@@ -395,6 +399,10 @@ namespace :spree_bsc do
       return
     end
 # =end
+
+    # 30/4/15 DH: Auto populated script for blank DB needs to also set 'backorderable' otherwise saving the 'line item'
+    #             in 'Spree::DynamicHelper.addDynamicPriceReq' causes a Rollback and error for accessing FK in 'Spree::BscReq'
+
     product_attrs = {
       :name              => name,
       :sku               => sku,
