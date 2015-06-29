@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe Spree::OrderContents do
+#describe Spree::OrderContents do
+describe Spree::OrderContents, :type => :model do
   let(:order) { Spree::Order.create }
   
   subject { described_class.new(order) }
@@ -8,13 +9,13 @@ describe Spree::OrderContents do
   context "#add" do
     #let(:variant) { create(:variant) }
     #let(:variant) { double('Variant', :name => "T-Shirt", :options_text => "Size: M") }
-    let(:variant) { Spree::Variant.find_by_sku("845-0167-1") }
+    let(:variant) { Spree::Variant.find_by_sku("845-0180-1") }
 
     # 3/5/14 DH: Starting BDD by creating a test for an aspect that doesn't work as I want
     # 4/5/14 DH: This works by testing the ActiveRecord association 'create_bsc_req' method with an incomplete record hash
 
     # [BSC spec Unit/Functional Testing]
-
+=begin
     it "should reject an incomplete BSC req set but not raise error" do
       line_item = subject.add(variant)
       line_item.bsc_spec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
@@ -34,7 +35,7 @@ describe Spree::OrderContents do
       #line_item.bsc_req.should_not be_valid
       expect(line_item.bsc_req).to_not be_valid
     end
-    
+
     # 4/5/14 DH: This simulates 'orders#populate' being called with an incomplete BSC Spec string
     # 4/5/14 DH: It is a more abstract level than the validity checking done in 'Spree::OrderContents#add_to_line_item'
     #            ie "should reject an incomplete BSC req set but not raise error"
@@ -74,7 +75,7 @@ describe Spree::OrderContents do
 
       expect { subject.add(line_item.variant) }.to_not raise_error
     end
-    
+=end    
     it "should not update line item if one exists due to BSC spec per line item" do
       subject.add(variant, 1)
       line_item = subject.add(variant, 1)

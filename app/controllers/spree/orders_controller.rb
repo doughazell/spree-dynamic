@@ -108,8 +108,8 @@ module Spree
       # 'spree-dynamic' based on Spree-2.1
       #if populator.populate(params.slice(:products, :variants, :quantity, :price, :spec))
       
-      if populator.populate(params[:variant_id], params[:quantity], params[:options], params[:price], params[:spec])
-        # 16/2/15 DH: Alteration necessary for upgrade from Spree-1.1 to Spree-2.2
+      if populator.populate(params[:variant_id], params[:quantity], params[:price], params[:spec], params[:options] )
+        # 16/2/15 DH: Alteration necessary for upgrade from Spree-2.1 to Spree-2.2
         #current_order.ensure_updated_shipments
         #fire_event('spree.cart.add')
         #fire_event('spree.order.contents_changed')

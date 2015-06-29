@@ -11,6 +11,7 @@ module Spree
     end
     
     def addDynamicPriceReq(line_item)
+
       catch(:sample) {
         # 29/12/13 DH: If a dynamic price was returned from the Products Show then use it to populate the line item
         
@@ -21,7 +22,7 @@ module Spree
         #             otherwise it would lead to "data redundancy" and risk "data anomalies"!
         
         #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
-          
+         
         if line_item.bsc_spec
           begin
             line_item.create_bsc_req(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
@@ -37,7 +38,13 @@ module Spree
             #raise "The BSC requirement set is missing a value"
             
             message = "The BSC requirement set is missing a value"
-            line_item.errors.add(:base,message)
+            # 18/6/15 DH: With Spree-2.3 to Spree-2.4 upgrade 'line_item.errors' is not used any more
+            #         (prob because it gets cleared during the validations after an 'ActiveRecord.save')
+            #         Likewise with 'bsc_req.errors' so now using a separate array in 'bsc_req' for extra messages.
+            #line_item.bsc_req.errors.add(:base,message)
+            
+            line_item.bsc_req.msgs = [message]
+            
             Rails.logger.error "\n*** #{message} ***\n\n"
             
             line_item.bsc_req_id = -1 # ie Error
@@ -52,16 +59,24 @@ module Spree
           # 17/7/14 DH: Now check that the price is valid for the spec and that we haven't been hacked!
           
           # 17/7/14 DH: Need to save the line item to be able to access it via the Active Record association 
-          #             (via the inverse of the FK entry in 'spree_line_items')
+          #
+          # 30/4/15 DH: The variant needs to be in stock or back-orderable to prevent this being rolled-back!
           line_item.save
+                    
           if line_item.bsc_req.dynamic_price_invalid?
             #raise "The dynamic price is incorrect"
-            
+debugger
             message = "The dynamic price is incorrect"
-            line_item.errors.add(:base,message)
+            # 18/6/15 DH: With Spree-2.3 to Spree-2.4 upgrade 'line_item.errors' is not used any more
+            #         (prob because it gets cleared during the validations after an 'ActiveRecord.save')
+            #         Likewise with 'bsc_req.errors' so now using a separate array in 'bsc_req' for extra messages.
+            #line_item.bsc_req.errors.add(:base,message)
+            line_item.bsc_req.msgs = [message]
+            
             Rails.logger.error "\n*** #{message} ***\n\n"
             
-            line_item.bsc_req_id = -1 # ie Error
+            line_item.bsc_req.price_error = true
+            
             return line_item
           end
 

@@ -88,6 +88,7 @@ module Spree
         else
           opts = { currency: order.currency }.merge ActionController::Parameters.new(options).
                                               permit(PermittedAttributes.line_item_attributes)
+
           line_item = order.line_items.new(quantity: quantity,
                                             variant: variant,
                                             options: opts)
@@ -95,9 +96,11 @@ module Spree
           # 2/6/15 DH: Now add BSC spec stuff (if the bsc_spec is not populated here it doesn't get saved in the DB spree_line_items)
           line_item.price    = bscDynamicPrice
           line_item.bsc_spec = bscSpec
+
           addDynamicPriceReq(line_item)
 
         end
+
         line_item.target_shipment = options[:shipment] if options.has_key? :shipment
         line_item.save!
         line_item

@@ -7,7 +7,13 @@ module Spree
     belongs_to :line_item, class_name: "Spree::LineItem"
     
     validates_presence_of :width, :drop, :lining, :heading
-  
+    
+    # 18/6/15 DH: Creating an array for any BSC Req errors since using 'errors' gets wiped before ActiveRecord validations
+    class_attribute :msgs
+    
+    # 19/6/15 DH: Now not using 'bsc_req_id = -1' to indicate error since FK now in BscReq
+    class_attribute :price_error
+   
     def self.createBscReqHash(bsc_spec)
       reqs = Hash.new
       bsc_spec.split(',').each do |req|

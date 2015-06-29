@@ -9,7 +9,7 @@ module Spree
       @errors = ActiveModel::Errors.new(self)
     end
 
-    def populate(variant_id, quantity, options = {}, price, spec)
+    def populate(variant_id, quantity, price, spec, options = {})
 
       # 23/2/15 DH: Passing dynamic price and spec from web page
       @order.contents.bscDynamicPrice = BigDecimal.new(price)
@@ -43,6 +43,14 @@ module Spree
       rescue ActiveRecord::RecordInvalid => e
         errors.add(:base, e.record.errors.messages.values.join(" "))
       end
+debugger
+      # 18/6/15 DH: Passing BSC Req errors back to the web after Spree-2.4 changed the mechanism it used.
+      # 19/6/15 DH: Passing BSC Req dynamic price hacks back to web after upgrade to Spree-3.0
+      line_item = @order.line_items.first
+      if line_item && (line_item.bsc_req_id == -1 || line_item.bsc_req.price_error == true)
+        errors.add(:base, line_item.bsc_req.errors.messages.values.join(" "))
+      end
+      
     end
   end
 end
