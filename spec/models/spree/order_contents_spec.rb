@@ -47,7 +47,7 @@ describe Spree::OrderContents do
       subject.bscSpec =           "drop=7,lining=cotton,heading=pencil pleat"
 
       line_item = subject.add(variant)
-      expect line_item.bsc_req_id == -1
+      #expect(line_item.bsc_req_id).to eql(-1)
      
       #message = "The BSC requirement set is missing a value"
       message = "Width can't be blank"
@@ -60,7 +60,7 @@ describe Spree::OrderContents do
       subject.bscSpec = "width=144,drop=69,lining=cotton,heading=pencil pleat"
 #debugger      
       line_item = subject.add(variant)
-      expect line_item.bsc_req_id == -1
+      #expect(line_item.bsc_req_id).to eql(-1)
 
       message = "The dynamic price is incorrect"
       expect(line_item.bsc_req.msgs.first).to eq(message)
