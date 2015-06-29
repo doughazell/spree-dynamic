@@ -58,10 +58,11 @@ module Spree
           line_item.price    = variant.price
         end
       end
-      
+
       catch(:sample) {
         # 29/12/13 DH: If a dynamic price was returned from the Products Show then use it to populate the line item
         if @bscDynamicPrice
+
           line_item.price    = @bscDynamicPrice
           line_item.bsc_spec = @bscSpec
           

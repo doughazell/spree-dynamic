@@ -55,12 +55,14 @@ module Spree
 
     # Adds a new item to the order (creating a new order if none already exists)
     def populate
+
       populator = Spree::OrderPopulator.new(current_order(true), current_currency)
 
       # 28/12/13 DH: Allow LineItem.bsc_spec to be populated with Rails 4 'strong_parameters'
-      params.permit(:bsc_spec)
+      #params.permit(:bsc_spec)
       
       # 28/12/13 DH: Retrieve the BSC spec and dynamic price sent from 'views/spree/products/show.html.erb'
+      # 24/2/15 DH: Well it looks like we never needed this since we pass params via method args!
       if populator.populate(params.slice(:products, :variants, :quantity, :price, :spec))
         current_order.ensure_updated_shipments
 
@@ -196,6 +198,10 @@ module Spree
             reduceStock(@order)
             
             Rails.logger.info "Order number '#{@order.number}' is in state:#{@order.state}"
+            
+            # 11/1/15 DH: Just playin...
+            flash.now.alert = "Yea baby!"
+            
           end # END: if ... "/romancart-transaction-data/paid-flag" is "True" ["False" for dev chq payments!]
         end
 

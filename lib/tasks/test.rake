@@ -1,4 +1,7 @@
 # Do not drop database for tests
+
+# 16/10/14 DH: This is used for '$ rake test:integration' (see 'devlogeD/2014/may14')
+
 if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'
 
   Rake::TaskManager.class_eval do
