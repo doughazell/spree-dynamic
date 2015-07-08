@@ -29,7 +29,7 @@ namespace :spree_bsc do
     end
     puts
     
-    abort("\nWTF???\n\n")
+    #abort("\nWTF???\n\n")
     # ----------------------------------------
     
     domain = "www.pongees.co.uk"
@@ -279,16 +279,16 @@ namespace :spree_bsc do
   
   def checkAndAddToplevelCategories(categories)
     puts "\n--- Top level categories ---"
-    if (typeTaxonomy = Spree::Taxonomy.find_by_name("Type"))
-            
-      Spree::Taxon.where(parent_id: typeTaxonomy.id).each do |taxon| 
+    if (typeTaxon = Spree::Taxon.find_by_name("Type"))
+          
+      Spree::Taxon.where(parent_id: typeTaxon.id).each do |taxon| 
         puts taxon.name
         
         if not (Spree::Product.find_by_name(taxon.name))
           puts "Yup, '#{taxon.name}' not entered yet"
           
           category = categories.detect {|item| item[:name].eql?(taxon.name)}
-#debugger
+
           product_attrs = {
             :name              => taxon.name,
             :sku               => category[:sku],
@@ -483,9 +483,9 @@ namespace :spree_bsc do
     Spree::Variant.create!(variants)
     
     variants.each do |variant|
-      product.master.update_attributes!(variant)
+      product.master.update_attributes(variant)
     end
-    product.master.update_attributes!(:sku => sku)
+    product.master.update_attributes(:sku => sku)
     
     addDetails(product,silk_url)
     

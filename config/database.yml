@@ -5,7 +5,8 @@ development:
   #database: spreeBSC_v2-1-3dev
   database: spree_dynamic_upgrade
   pool: 5
-  username: postgres
+  #username: postgres
+  username: doug
   host: localhost
 
 test:
@@ -17,7 +18,8 @@ test:
   #database: spreeBSC_test
   
   pool: 5
-  username: postgres
+  #username: postgres
+  username: doug
   host: localhost
 
 production:
@@ -29,6 +31,7 @@ production:
   #database: spreeBSC_production
   
   pool: 5
-  username: postgres
+  #username: postgres
+  username: doug
   host: localhost
   
