@@ -96,7 +96,7 @@ module Spree
           # 2/6/15 DH: Now add BSC spec stuff (if the bsc_spec is not populated here it doesn't get saved in the DB spree_line_items)
           line_item.price    = bscDynamicPrice
           line_item.bsc_spec = bscSpec
-
+#debugger
           addDynamicPriceReq(line_item)
 
         end
