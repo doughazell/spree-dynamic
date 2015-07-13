@@ -158,10 +158,6 @@ namespace :spree_bsc do
     
     location = Spree::StockLocation.first_or_create! ({name: "Default", country: country})
     location.active = true
-    
-    # 30/4/15 DH: Another sweet Rails one-liner to allow the FK of the line item to be saved via ActiveRecord association
-    location.backorderable_default = true
-    
     location.save!
     puts location.inspect
     
@@ -283,9 +279,9 @@ namespace :spree_bsc do
   
   def checkAndAddToplevelCategories(categories)
     puts "\n--- Top level categories ---"
-    if (typeTaxonomy = Spree::Taxon.find_by_name("Type"))
-#debugger            
-      Spree::Taxon.where(parent_id: typeTaxonomy.id).each do |taxon| 
+    if (typeTaxon = Spree::Taxon.find_by_name("Type"))
+          
+      Spree::Taxon.where(parent_id: typeTaxon.id).each do |taxon| 
         puts taxon.name
         
         if not (Spree::Product.find_by_name(taxon.name))
@@ -304,10 +300,8 @@ namespace :spree_bsc do
           product = Spree::Product.create!(product_attrs)
           
           variant = product.master    
-          variant.images.create( :attachment => open(Rails.root.join("app/assets/images/spree/frontend/store/Indian Douppion/845_0060.jpg")))
-        
-        else  
-          puts "'#{taxon.name}' already entered so not re-adding it..."
+          variant.images.create!( :attachment => open(Rails.root.join("app/assets/images/spree/frontend/store/Indian Douppion/845_0060.jpg")))
+          
         end
       end
       
@@ -399,10 +393,6 @@ namespace :spree_bsc do
       return
     end
 # =end
-
-    # 30/4/15 DH: Auto populated script for blank DB needs to also set 'backorderable' otherwise saving the 'line item'
-    #             in 'Spree::DynamicHelper.addDynamicPriceReq' causes a Rollback and error for accessing FK in 'Spree::BscReq'
-
     product_attrs = {
       :name              => name,
       :sku               => sku,
