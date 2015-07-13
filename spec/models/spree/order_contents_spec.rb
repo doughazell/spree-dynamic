@@ -9,24 +9,36 @@ describe Spree::OrderContents, :type => :model do
   context "#add" do
     #let(:variant) { create(:variant) }
     #let(:variant) { double('Variant', :name => "T-Shirt", :options_text => "Size: M") }
-    let(:variant) { Spree::Variant.find_by_sku("845-0180-1") }
+    let(:variant) { Spree::Variant.find_by_sku("745-0299-1") }
 
     # 3/5/14 DH: Starting BDD by creating a test for an aspect that doesn't work as I want
     # 4/5/14 DH: This works by testing the ActiveRecord association 'create_bsc_req' method with an incomplete record hash
 
     # [BSC spec Unit/Functional Testing]
+
+    it "should accept a complete BSC req set" do
+      subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
+      line_item = subject.add(variant)
+      
+      reqs = Spree::BscReq.createBscReqHash(line_item.bsc_spec)
+      
+      expect { line_item.create_bsc_req(reqs) }.to_not raise_error
+      
+      expect(line_item.bsc_req).to be_valid
+    end
+
 =begin
     it "should reject an incomplete BSC req set but not raise error" do
       line_item = subject.add(variant)
       line_item.bsc_spec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
       
       reqs = Spree::BscReq.createBscReqHash(line_item.bsc_spec)
-      
+
       reqs.delete("width")
       
       # 16/7/14 DH: "PG::NotNullViolation: ERROR:  null value in column "width" violates not-null constraint" due to 'AddNotNullToSpreeBscReq'
       #             if not have 'validates_presence_of :width, :drop, :lining, :heading' in 'Spree::BscReq'
-      expect { line_item.create_bsc_req(reqs) }.to_not raise_error
+      expect { line_item.create_bsc_req(reqs) }.to raise_error
       
       # 16/7/14 DH: "Does the same as create_association above, but raises ActiveRecord::RecordInvalid if the record is invalid."
       #expect { line_item.create_bsc_req!(reqs) }.to raise_error
@@ -75,7 +87,7 @@ describe Spree::OrderContents, :type => :model do
 
       expect { subject.add(line_item.variant) }.to_not raise_error
     end
-=end    
+
     it "should not update line item if one exists due to BSC spec per line item" do
       subject.add(variant, 1)
       line_item = subject.add(variant, 1)
@@ -87,7 +99,7 @@ describe Spree::OrderContents, :type => :model do
       expect order.line_items.size == 1
 
     end
-
+=end
   end
 
 end

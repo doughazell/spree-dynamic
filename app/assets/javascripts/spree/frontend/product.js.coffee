@@ -111,8 +111,10 @@ $ ->
     console.log("Total price (before rounding): " + total_price)
     total_price = ((Math.round(total_price * 100)) / 100).toFixed(2)
     console.log("Total price: " + total_price)
+    price_text = String.fromCharCode('163') + total_price
+    console.log("Price text: " + price_text)
     
-    ($ '#price-text').text("£" + total_price)
+    ($ '#price-text').text(price_text)
         
     # ---
   
@@ -144,8 +146,11 @@ $ ->
 
     price_string = ($ '#product-variants input[type="radio"]:checked').data('price')
     console.log("Price string: " + price_string)
+    
     # Remove the preceding '£' sign
-    price_per_meter = price_string.replace(/£/g, ' ')
+    #price_string.replace(/&pound;/g, ' ')
+    price_per_meter = price_string.substring(1)
+    
     console.log("Price per meter: " + price_per_meter)
 
     # Multiply by 100 to convert to pence, round to nearest penny, then convert back to pounds by dividing by 100, simples...

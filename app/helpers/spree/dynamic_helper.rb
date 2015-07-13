@@ -22,7 +22,7 @@ module Spree
         #             otherwise it would lead to "data redundancy" and risk "data anomalies"!
         
         #line_item.create_bsc_req!(width: 20, drop: 20, lining: "You", heading: "Beauty")
-         
+
         if line_item.bsc_spec
           begin
             line_item.create_bsc_req(Spree::BscReq.createBscReqHash(line_item.bsc_spec))
@@ -65,7 +65,7 @@ module Spree
                     
           if line_item.bsc_req.dynamic_price_invalid?
             #raise "The dynamic price is incorrect"
-debugger
+
             message = "The dynamic price is incorrect"
             # 18/6/15 DH: With Spree-2.3 to Spree-2.4 upgrade 'line_item.errors' is not used any more
             #         (prob because it gets cleared during the validations after an 'ActiveRecord.save')

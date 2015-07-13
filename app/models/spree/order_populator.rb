@@ -43,7 +43,7 @@ module Spree
       rescue ActiveRecord::RecordInvalid => e
         errors.add(:base, e.record.errors.messages.values.join(" "))
       end
-debugger
+
       # 18/6/15 DH: Passing BSC Req errors back to the web after Spree-2.4 changed the mechanism it used.
       # 19/6/15 DH: Passing BSC Req dynamic price hacks back to web after upgrade to Spree-3.0
       line_item = @order.line_items.first
