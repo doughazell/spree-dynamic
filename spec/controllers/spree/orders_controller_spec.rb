@@ -35,12 +35,11 @@ describe Spree::OrdersController, :type => :controller do
   end
 
   context "POST #completed" do
-=begin
+
     it "receives the ROMANCARTXML parameter" do
       #romancartxml = IO.read("romancart-delivery-address.xml")
       romancartxml = File.read("romancart-delivery-address.xml")
             
-      #post :completed, :ROMANCARTXML => @romancartxml, :content_type => 'application/xml'
       post :completed, :ROMANCARTXML => romancartxml
       
       # "Using `should` from rspec-expectations' old ... is deprecated. Use the new `:expect` syntax..."
@@ -66,40 +65,38 @@ describe Spree::OrdersController, :type => :controller do
       #Spree::OrdersController.logger.should_receive(:tagged).with("BSC:WRONG-STOREID")
 
       post :completed, :ROMANCARTXML => romancartxml
-
     end
-=end
+
     it "rejects ROMANCARTXML with the wrong number of items" do
       puts "\nLoading ROMANCARTXML with 2 items in \"#{the_description}\"."
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-2-items.xml", __FILE__))
-
-      xml = romancartxml.sub("<?xml version='1.0' encoding='UTF-8'?>", "")
-      xml_doc  = Nokogiri::XML(xml)   
-      total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
-      puts "Total Price (in file): " + total_price
-      xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content = order.total.to_s      
-      total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
-      puts "Total Price (from order #{order.number}, ID: #{order.id}): " + total_price
+      xml_doc = chgTotalPrice(romancartxml, order)
 
       expect(Rails.logger).to receive(:tagged).with("BSC:INCORRECT-ITEM-NUMBER")
 
-      #post :completed, :ROMANCARTXML => romancartxml
       post :completed, :ROMANCARTXML => xml_doc
     end
-=begin    
+    
     it "rejects ROMANCARTXML with the wrong item" do
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-1-item.xml", __FILE__))
+      xml_doc = chgTotalPrice(romancartxml, order)
       
       expect(Rails.logger).to receive(:tagged).with("BSC:INCORRECT-ITEM")
       
-      post :completed, :ROMANCARTXML => romancartxml
-
+      post :completed, :ROMANCARTXML => xml_doc
     end
 
     it "accepts valid ROMANCARTXML and completes order from cheque payment" do
-      romancartxml = File.read(File.expand_path("../../../fixtures/romancart-burgundy-bsc_req_id-5.xml", __FILE__))
+      #romancartxml = File.read(File.expand_path("../../../fixtures/romancart-burgundy-bsc_req_id-5.xml", __FILE__))
+      #post :completed, :ROMANCARTXML => romancartxml
       
-      post :completed, :ROMANCARTXML => romancartxml
+      romancartxml = File.read(File.expand_path("../../../fixtures/romancart-1-item.xml", __FILE__))
+      xml_doc = chgTotalPrice(romancartxml, order)
+      xml_doc = chgItems(xml_doc, order)
+      xml_doc = chgItems(xml_doc, order)
+      
+      expect(Rails.logger).to_not receive(:tagged).with("BSC:INCORRECT-ITEM")
+      post :completed, :ROMANCARTXML => xml_doc
 
       # 23/5/14 DH: Order should have state "complete" and payment state "paid"
       order.reload
@@ -119,7 +116,6 @@ describe Spree::OrdersController, :type => :controller do
       #expect(Rails.logger).to receive(:tagged).with("BSC:WRONG-PRICE")
 
     end
-=end
 
   end # END: 'context "POST #completed"'
 

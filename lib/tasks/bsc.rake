@@ -168,6 +168,16 @@ namespace :spree_bsc do
       :active => true
     })
     puts payment_method.inspect
+
+    # 15/7/15 DH: Getting 'Spree::OrdersController::it "accepts valid ROMANCARTXML and completes order from cheque payment"' to work for bare-bones install
+    payment_method = Spree::PaymentMethod::Check.find_or_create_by(
+    {
+      :name => "RomanCart",
+      :description => "Pay by RomanCart offsite payment gateway.",
+      :active => true
+    })
+    puts payment_method.inspect
+
     
   end
   

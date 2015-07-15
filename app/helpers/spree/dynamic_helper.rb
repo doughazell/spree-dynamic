@@ -80,7 +80,7 @@ module Spree
               #@order.payments.create!(:amount => @order.total)
               #@order.payments.last.payment_method = Spree::PaymentMethod.find_by_name("RomanCart")
               #@order.payments.last.complete
-	      
+
               # 5/3/14 DH: Taken this from 'spree/2-1-stable/api/app/models/spree/order_decorator.rb'              
               payment = @order.payments.build
               payment.amount = @order.total
