@@ -16,7 +16,7 @@ module Spree
       xml = posted_xml.sub("<?xml version='1.0' encoding='UTF-8'?>", "")
       
       xml_doc  = Nokogiri::XML(xml)   
-     
+#debugger
       total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
       orders = Spree::Order.where("state = ? AND total = ?", "cart",total_price)
       Rails.logger.info "#{orders.count} orders in 'cart' state with a price of #{total_price}"
@@ -149,6 +149,7 @@ module Spree
     end
     
     def feedbackValid(xml_doc, order)
+#debugger
       # --- STORE ID ---
       storeid = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/storeid").first.content
       if storeid.to_i != Spree::Config[:romancart_storeid]
@@ -211,7 +212,7 @@ module Spree
         
         num += 1
       end
-#debugger      
+
       return true
     end
     
@@ -288,13 +289,13 @@ module Spree
             line_item.bsc_req.msgs = [message]
             
             Rails.logger.error "\n*** #{message} ***\n\n"
-            
-            line_item.bsc_req_id = -1 # ie Error
+
+            #line_item.bsc_req_id = -1 # ie Error
             return line_item
           end
 
           # 22/7/14 DH: Adding in mechanism to simulate a "hacked" dynamic price in RSpec features test
-          if ENV['RAILS_ENV'] == 'test' && line_item.bsc_req.respond_to?(:price_alteration)
+          if (ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development') && line_item.bsc_req.respond_to?(:price_alteration)
             line_item.price += line_item.bsc_req.price_alteration
           end
           
@@ -307,7 +308,7 @@ module Spree
                     
           if line_item.bsc_req.dynamic_price_invalid?
             #raise "The dynamic price is incorrect"
-
+#debugger
             message = "The dynamic price is incorrect"
             # 18/6/15 DH: With Spree-2.3 to Spree-2.4 upgrade 'line_item.errors' is not used any more
             #         (prob because it gets cleared during the validations after an 'ActiveRecord.save')

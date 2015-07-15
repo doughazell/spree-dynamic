@@ -25,14 +25,14 @@ module Spree
     
     # 22/7/14 DH: Created to simulate a "hacked" dynamic price in an RSpec features test
     def self.alterDynamicPrice(alteration)
-      if ENV['RAILS_ENV'] == 'test'
+      if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'
         cattr_accessor :price_alteration
         @@price_alteration = alteration
       end
     end
     
     def self.clearDynamicPriceAlteration
-      if ENV['RAILS_ENV'] == 'test'
+      if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'
         # 30/9/14 DH: Use a Ruby method to make Ruby method 'bsc_req.respond_to?(:price_alteration)' return false
         undef :price_alteration
         

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'order_content' do
+describe 'order_content', :type => :feature do
 
   it "can NOT add curtain spec of 'width=144,drop=69,lining=cotton,heading=pencil pleat' with hacked price" do |example|
     puts "\n\n--TEST--\n\"#{example.description}\" <<."
@@ -8,10 +8,13 @@ describe 'order_content' do
     Capybara.current_driver = :webkit
     #Capybara.current_driver = :selenium
 
-    visit "/products/oasis"
+    #visit "/products/oasis"
+    #string = "oasis"
+    visit "/products/willow"
+    string = "willow"
     
     #expect(page).to have_content "OASIS"
-    string = "Oasis"
+
     
     # "%r{...}" creates a regular expression (normally specified by "/.../")
     # The "i" after the closing delimiter is used to ignore the case when matching text
@@ -37,7 +40,7 @@ describe 'order_content' do
     end
     expect(message).to eq("You need to accept that measurements are 'cm'")
 =end
-    
+
     check('cm_measurements')
     
     # Alter the correct dynamic price
@@ -70,10 +73,13 @@ describe 'order_content' do
     Capybara.current_driver = :webkit
     Capybara.javascript_driver = :webkit
 
-    visit "/products/oasis"
+    #visit "/products/oasis"
+    #string = "oasis"
+    visit "/products/willow"
+    string = "willow"
     
     #expect(page).to have_content "OASIS"
-    string = "oasis"
+    
     expect(page.body).to match(%r{#{string}}i)
     
     fill_in('width', :with => '144')

@@ -62,17 +62,32 @@ module Spree
       # 2,147,483,647 is crazy. See issue #2695.
       if quantity.between?(1, 2_147_483_647)
         begin
-          order.contents.add(variant, quantity, options)
+          # 14/7/15 DH: Passing back BSC error msgs
+          line_item = order.contents.add(variant, quantity, options)
         rescue ActiveRecord::RecordInvalid => e
           error = e.record.errors.full_messages.join(", ")
         end
       else
         error = Spree.t(:please_enter_reasonable_quantity)
       end
+#debugger
+      # 14/7/15 DH: Passing BSC Req dynamic price hacks back to web
+      if line_item && (line_item.bsc_req.price_error == true)
+        error = line_item.bsc_req.msgs.join(" ")
+      end
 
       if error
         flash[:error] = error
-        redirect_back_or_default(spree.root_path)
+
+        # 22/7/14 DH: Displaying flash message after BSC error when submit via AJAX
+        respond_with(order) do |format|
+          format.html { redirect_back_or_default(spree.root_path) }
+          
+          # 23/7/14 DH: Since 'format.js' has no overriding block then it uses the default for the 
+          #             'Controller#Action' of 'views/spree/orders/populate.js.coffee'
+          # 15/7/15 DH: And doesn't even need to be specified... :)
+          #format.js
+        end
       else
         respond_with(order) do |format|
           format.html { redirect_to cart_path }

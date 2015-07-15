@@ -1,11 +1,16 @@
 require 'spec_helper'
 
-describe Spree::OrdersController do
+# 14/7/15 DH: See comment re auto adding metadata to specs based on location in filesystem in 'spec_helper'
+describe Spree::OrdersController, :type => :controller do
+#describe Spree::OrdersController do
+
   user = Spree::User.find_by_email("spree@example.com")
   #let(:user) { user }
   
-  order = Spree::Order.find_by_user_id(user.id)
+  #order = Spree::Order.find_by_user_id(user.id)
   #let(:order) { order }
+  
+  order = Spree::Order.find(1)
   
   let(:the_description) do |example|
     example.description
@@ -16,7 +21,7 @@ describe Spree::OrdersController do
   puts
   order.line_items.each do |item|
     itemNum += 1
-    puts "Order: #{order.number} - (#{itemNum}/#{itemTotal} items) #{Spree::Variant.find_by_id(item.variant_id).name}, bsc_req_id: #{item.bsc_req_id}"
+    puts "Order: #{order.number} - (#{itemNum}/#{itemTotal} items) #{Spree::Variant.find_by_id(item.variant_id).name}, bsc_req.id: #{item.bsc_req.id}"
   end
 
   before do
@@ -30,7 +35,7 @@ describe Spree::OrdersController do
   end
 
   context "POST #completed" do
-
+=begin
     it "receives the ROMANCARTXML parameter" do
       #romancartxml = IO.read("romancart-delivery-address.xml")
       romancartxml = File.read("romancart-delivery-address.xml")
@@ -44,7 +49,6 @@ describe Spree::OrdersController do
       
       #expect(controller.params[:ROMANCARTXML]).to have_content "<storeid>"
     end
-
 
     it "rejects ROMANCARTXML with the wrong store id" do
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-wrong-storeid.xml", __FILE__))
@@ -64,17 +68,25 @@ describe Spree::OrdersController do
       post :completed, :ROMANCARTXML => romancartxml
 
     end
-    
+=end
     it "rejects ROMANCARTXML with the wrong number of items" do
       puts "\nLoading ROMANCARTXML with 2 items in \"#{the_description}\"."
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-2-items.xml", __FILE__))
-      
-      expect(Rails.logger).to receive(:tagged).with("BSC:INCORRECT-ITEM-NUMBER")
-      
-      post :completed, :ROMANCARTXML => romancartxml
 
+      xml = romancartxml.sub("<?xml version='1.0' encoding='UTF-8'?>", "")
+      xml_doc  = Nokogiri::XML(xml)   
+      total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
+      puts "Total Price (in file): " + total_price
+      xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content = order.total.to_s      
+      total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
+      puts "Total Price (from order #{order.number}, ID: #{order.id}): " + total_price
+
+      expect(Rails.logger).to receive(:tagged).with("BSC:INCORRECT-ITEM-NUMBER")
+
+      #post :completed, :ROMANCARTXML => romancartxml
+      post :completed, :ROMANCARTXML => xml_doc
     end
-    
+=begin    
     it "rejects ROMANCARTXML with the wrong item" do
       romancartxml = File.read(File.expand_path("../../../fixtures/romancart-1-item.xml", __FILE__))
       
@@ -107,6 +119,7 @@ describe Spree::OrdersController do
       #expect(Rails.logger).to receive(:tagged).with("BSC:WRONG-PRICE")
 
     end
+=end
 
   end # END: 'context "POST #completed"'
 

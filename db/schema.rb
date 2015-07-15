@@ -194,7 +194,6 @@ ActiveRecord::Schema.define(version: 20150607134900) do
     t.decimal  "cost_price",           precision: 10, scale: 2
     t.integer  "tax_category_id"
     t.string   "bsc_spec"
-    t.integer  "bsc_req_id"
     t.decimal  "adjustment_total",     precision: 10, scale: 2, default: 0.0
     t.decimal  "additional_tax_total", precision: 10, scale: 2, default: 0.0
     t.decimal  "promo_total",          precision: 10, scale: 2, default: 0.0
@@ -202,7 +201,6 @@ ActiveRecord::Schema.define(version: 20150607134900) do
     t.decimal  "pre_tax_amount",       precision: 8,  scale: 2, default: 0.0
   end
 
-  add_index "spree_line_items", ["bsc_req_id"], name: "index_spree_line_items_on_bsc_req_id", using: :btree
   add_index "spree_line_items", ["order_id"], name: "index_spree_line_items_on_order_id", using: :btree
   add_index "spree_line_items", ["tax_category_id"], name: "index_spree_line_items_on_tax_category_id", using: :btree
   add_index "spree_line_items", ["variant_id"], name: "index_spree_line_items_on_variant_id", using: :btree
