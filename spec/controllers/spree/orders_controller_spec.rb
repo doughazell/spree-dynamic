@@ -10,7 +10,17 @@ describe Spree::OrdersController, :type => :controller do
   #order = Spree::Order.find_by_user_id(user.id)
   #let(:order) { order }
   
-  order = Spree::Order.find(1)
+  begin
+    order = Spree::Order.find(1)
+  rescue ActiveRecord::RecordNotFound => e
+    puts "\nPlease run 'RAILS_ENV=development rspec spec/features/dynamic_price_spec.rb' first on a bare-bones DB"
+    puts "After:"
+    puts "      rake db:create"
+    puts "      rake db:migrate"
+    puts "      rake spree_bsc:load"
+    puts "      rake spree_auth:admin:create"
+    abort("\n")
+  end
   
   let(:the_description) do |example|
     example.description

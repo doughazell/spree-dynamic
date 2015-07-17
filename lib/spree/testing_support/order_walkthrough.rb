@@ -60,6 +60,7 @@ class OrderWalkthrough
 
   def self.complete(order)
     #noop?
+    puts "Woop woop!"
   end
 
   def self.states
