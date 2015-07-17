@@ -17,6 +17,7 @@ describe 'orders', :type => :feature do
     end
   end # END: after
 =end
+
   it "can visit a FactoryGirl order" do |example|
     puts "\n--- TEST: #{example.description} ---"
     order = OrderWalkthrough.up_to(:complete)
@@ -29,11 +30,6 @@ describe 'orders', :type => :feature do
     
     visit spree.order_path(order)
     expect(current_path).to eq(spree.order_path(order))
-    
-    # 16/7/15 DH: 'page.current_url' adds 'http://www.example.com' or whatever domain is specified by ...
-    #expect(page.current_url).to eq("/login")
-    #expect(current_path).to eq("/login")
-    
   end
 
   it "gets redirected to login when visiting an order" do |example|  
@@ -68,6 +64,25 @@ describe 'orders', :type => :feature do
     # Needs ':type => :controller'
     #expect(response).to redirect_to '/unauthorized'
 
+  end
+
+  it "gets redirected to login prior to visiting an order" do |example|  
+    puts "\n--- TEST: #{example.description} ---"
+    order = OrderWalkthrough.up_to(:complete)
+
+    puts "\n#{self.class.description} - \"#{example.description}\": '#{spree.order_path(order)}'"
+    
+    visit spree.order_path(order)
+    
+    expect(current_path).to eq("/login")
+
+    fill_in('spree_user_email', :with => 'spree@example.com')
+    fill_in('spree_user_password', :with => 'spree123')
+    
+    find(:class, 'input.btn').click
+    
+    expect(current_path).to eq(spree.order_path(order))
+    
   end
 
 end
