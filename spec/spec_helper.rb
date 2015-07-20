@@ -46,8 +46,8 @@ RSpec.configure do |config|
   # instead of true.
   
   # 29/5/14 DH: DB transactions prevent DB permanent row creation (and roll-back after a test)
-  config.use_transactional_fixtures = true
-  #config.use_transactional_fixtures = false
+  #config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -63,7 +63,11 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  config.order = "random"
+  #config.order = "random"
+  # 20/7/15 DH: Spree::OrdersController needs to have the comletion order at the end which is at the end of the file.
+  config.order = "default"
+  # 20/7/15 DH: Stop after first test fail
+  config.fail_fast = true
   
   # 27/5/14 DH: Atempting to get Spree FactoryGirl++ working
   config.include FactoryGirl::Syntax::Methods

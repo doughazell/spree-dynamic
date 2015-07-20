@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'order_content', :type => :feature do
 
   it "can NOT add curtain spec of 'width=144,drop=69,lining=cotton,heading=pencil pleat' with hacked price" do |example|
-    puts "\n\n--TEST--\n\"#{example.description}\" <<."
+    puts "\n--TEST--: #{example.description}"
 
     Capybara.current_driver = :webkit
     #Capybara.current_driver = :selenium
@@ -67,7 +67,7 @@ describe 'order_content', :type => :feature do
 
   #it "can add curtain spec of 'width=144,drop=69,lining=cotton,heading=pencil pleat'", :js => true do |example|
   it "can add curtain spec of 'width=144,drop=69,lining=cotton,heading=pencil pleat'" do |example|
-    puts "\n\n--TEST--\n\"#{example.description}\" <<."
+    puts "\n--TEST--: #{example.description}"
 
     #Capybara.default_driver = :selenium
     Capybara.current_driver = :webkit

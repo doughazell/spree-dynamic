@@ -20,13 +20,17 @@ module Spree
       total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
       orders = Spree::Order.where("state = ? AND total = ?", "cart",total_price)
       Rails.logger.info "#{orders.count} orders in 'cart' state with a price of #{total_price}"
-      
+
+# 19/7/15 DH: Now checking 'feedbackValid' so price has to match.
+=begin
       if orders.count == 0
         # 5/3/14 DH: Testing ROMANCARTXML feedback locally so price is something...
         orders = Spree::Order.where("state = ? AND total > ?", "cart","0.00")
       end
-
-      @order = orders.last
+=end
+      if orders
+        @order = orders.last
+      end
       
       # 6/3/14 DH: Since CSRF checking is removed for ROMANCARTXML feedback then need to check 'storeid' + items match
       if @order and feedbackValid(xml_doc,@order)
@@ -122,7 +126,7 @@ module Spree
         
         #logger.tagged("BSC:ERROR") { logger.error "No matching order found for ROMANCARTXML" }
         logger.warn "No matching order found for ROMANCARTXML"
-        
+
         # "now" "Sets a flash that will not be available to the next action, only to the current."
         flash.now.alert = "No matching order found for ROMANCARTXML"
       end
@@ -159,7 +163,7 @@ module Spree
         flash.now[:BscWrongStoreid] = "Wrong stored id! #{storeid} does not match that configured as #{Spree::Config[:romancart_storeid]}"
         return false
       end
-      
+     
       # --- PRICE ---
       total_price = xml_doc.xpath("/romancart-transaction-data/sales-record-fields/total-price").first.content
       if total_price.to_f != order.total.to_f

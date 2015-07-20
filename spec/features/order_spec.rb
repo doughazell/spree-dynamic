@@ -1,6 +1,11 @@
 # 16/7/15 DH: Refactor of earlier order spec for bare-bones DB on Spree-3.0
 require 'spec_helper'
 
+RSpec.configure do |config|
+  # 29/5/14 DH: DB transactions prevent DB permanent row creation (and roll-back after a test)
+  config.use_transactional_fixtures = true
+end
+
 describe 'orders', :type => :feature do
 =begin
   # 17/7/15 DH: Cann't do an OrderWalkthrough here since all the DB state of product, variants, options is not cleared by

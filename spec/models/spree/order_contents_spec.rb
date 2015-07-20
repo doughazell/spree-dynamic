@@ -69,9 +69,9 @@ describe Spree::OrderContents, :type => :model do
       subject.bscDynamicPrice = 69
       #subject.bscSpec = "width=14,drop=7,lining=cotton,heading=pencil pleat"
       subject.bscSpec =           "drop=7,lining=cotton,heading=pencil pleat"
-      
+
       line_item = subject.add(variant)
-      expect line_item.bsc_req_id == -1
+      expect line_item.bsc_req.id.nil?
       
       message = "The BSC requirement set is missing a value"
       expect(line_item.bsc_req.msgs.join).to eq(message)
@@ -83,7 +83,7 @@ describe Spree::OrderContents, :type => :model do
       subject.bscSpec = "width=144,drop=69,lining=cotton,heading=pencil pleat"
       
       line_item = subject.add(variant)
-      expect line_item.bsc_req_id == -1
+      expect line_item.bsc_req.id.nil?
       
       message = "The dynamic price is incorrect"
       expect(line_item.bsc_req.msgs.join).to eq(message)
