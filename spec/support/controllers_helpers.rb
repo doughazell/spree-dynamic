@@ -9,20 +9,6 @@ def getOrder
   
     # 18/7/15 DH: Don't know ID since it's just a sequence table and want 'ActiveRecord::RecordNotFound' error
     order = Spree::Order.first
-    
-=begin
-    Spree::Order.all.each do |tmp_order|
-
-      #puts tmp_order.number
-      tmp_order.line_items.each do |line_item|
-        #puts line_item
-
-        if line_item.bsc_req
-          order = tmp_order
-        end
-      end
-    end
-=end
 
   rescue ActiveRecord::RecordNotFound => e
     puts "\nPlease run 'RAILS_ENV=development rspec spec/features/dynamic_price_spec.rb' first on a bare-bones DB"
@@ -88,6 +74,7 @@ module Helpers
       puts "============================================================================="
       puts "You probably don't have any cart orders"
       puts "Try running 'RAILS_ENV=development rspec spec/features/dynamic_price_spec.rb'"
+      puts "          + 'config.use_transactional_fixtures = false'"
       puts "============================================================================="
     end
     

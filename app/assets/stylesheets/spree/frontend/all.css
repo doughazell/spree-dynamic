@@ -7,6 +7,7 @@
 
  * 5/2/15 DH: Upgrade to Spree 2.2
  * require store/spree_frontend
+ 
  *= require spree/frontend
  
  *  require store/screen
@@ -17,7 +18,8 @@
  * 30/5/15 DH: The Spree-3.0 uses 'bootstrap-sass' which includes the files alphabetically,
  *             which means that styles overwritten in 'bsc.css' get reverted in 'screen.css'.
  *             Explicity requiring the files here after the 'require_tree' ensure the overwrites don't get reverted!
+
  *= require spree/frontend/screen 
- *= require spree/frontend/bsc
- * 
+ *= require spree/frontend/bsc 
+
 */

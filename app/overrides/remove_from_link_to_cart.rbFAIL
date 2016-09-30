@@ -1,0 +1,28 @@
+# 23/9/16 DH: Removing "<span class='glyphicon glyphicon-shopping-cart'></span>"
+#
+# 'link_to_cart' := link_to text.html_safe, spree.cart_path, :class => "cart-info #{css_class}
+#
+Deface::Override.new(:virtual_path => 'spree/shared/_main_nav_bar',
+                     :name => 'remove_class_from_link_to_cart',
+
+#                     :original => "<span class='glyphicon glyphicon-shopping-cart'></span>",
+
+                     # But 'link_to_cart' is a helper method which now adds the '<span ...> BUT THIS DOES DO SOMETHING!'
+#                     :remove => "erb[loud]:contains('link_to_cart')",
+
+                     # From debugger 'link_to_cart' call: 'class=\"cart-info'
+                     # But that output is not 'erb[loud]'!
+#                     :remove => "erb[loud]:contains('a class=\"cart-info empty\"')",
+
+#                     :remove => 'li#link-to-cart.cart-indicator a.cart-info',
+#                     :remove => 'ul#main-nav-bar li#link-to-cart a',
+#                     :cut => {:start => 'span', :end => 'span'}
+
+#                     :remove => 'span.glyphicon.glyphicon-shopping-cart'
+
+#                     :remove_from_attributes => 'li#link-to-cart a.cart-info span',
+#                     :remove_from_attributes => 'li#link-to-cart',
+#                     :attributes => { :class => 'glyphicon glyphicon-shopping-cart' } 
+                     
+                     )
+

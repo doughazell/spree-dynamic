@@ -104,13 +104,17 @@ describe Spree::OrdersController, :type => :controller do
       xml_doc, order = chgOrderID(romancartxml, order)
       xml_doc = chgTotalPrice(xml_doc, order)
       xml_doc = chgItems(xml_doc, order)
+      # 30/9/16 DH: Repeated to check now OK
       xml_doc = chgItems(xml_doc, order)
-      
+
       expect(Rails.logger).to_not receive(:tagged).with("BSC:INCORRECT-ITEM")
       post :completed, :ROMANCARTXML => xml_doc
 
+      # 30/9/16 DH: Need to allow time for DB to be updated after "post :completed"
+      sleep 1
       # 23/5/14 DH: Order should have state "complete" and payment state "paid"
       order.reload
+
       expect(order.state).to eq("complete")
       expect(order.payment_state).to eq("paid")
       

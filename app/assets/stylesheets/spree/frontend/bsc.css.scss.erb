@@ -61,6 +61,8 @@ When using the asset pipeline, paths to assets must be re-written and sass-rails
     //margin-bottom: 0px;
     //padding-bottom: 20px;
     min-height: 30px;
+    // 26/9/16 DH: After upgrade to Spree-3.0 + Bootstrap
+    width: 100%;
   }
 }
 
@@ -68,14 +70,23 @@ When using the asset pipeline, paths to assets must be re-written and sass-rails
 // --------------------- Layout for product + summary pages --------------------
 
 // Currently used for both the listing pages and the dynamic price page
-#content {
-  margin-left: 80px;
-  margin-top: 50px;
-  width: 82%;
+// 26/9/16 DH: ...not any more...
+body.two-col #content {
+  margin-left: 40px;
+  margin-top: 40px;
+  
+  // 26/9/16 DH: Removed after upgrade to Spree-3.0 + Bootstrap to keep alignment on 3-D 'wrapper-back-2.png'
+  //width: 82%;
   
   //.columns.twelve.omega {
   //  margin-top: 100px;
   //}
+}
+
+// 26/9/16 DH: Used for dynamic price page after upgrade to Spree-3.0 + Bootstrap
+body.one-col #content {
+  padding-top:  60px;
+  padding-left: 120px;
 }
 
 #order_summary {
@@ -140,6 +151,7 @@ nav#taxonomies {
 // Slight change from setting in 'screen.css.erb'
 #sidebar {
   width: 152px;
+  margin-left: 45px;
 }
 
 #bsc-spree-link {
@@ -181,13 +193,14 @@ nav#taxonomies {
   }
   
   #footer-one {
-    width: 250px;
+    // 27/9/16 DH: Adjusting footer after upgrading to Spree-3.0 + Bootstrap last year...
+    //width: 250px;
   }
   #footer-two {
-    width: 320px;
+    //width: 320px;
   }
   #footer-three {
-    width: 250px;
+    //width: 250px;
   }
   h4 {
     text-align:center;
@@ -216,6 +229,7 @@ nav#taxonomies {
 // ------------------------ Curtain dynamic pricing page -------------------------
 #product-description {
   border-right: none;
+  margin-left: 50px;
 }
 
 [data-hook="product_show"] {
@@ -232,15 +246,19 @@ nav#taxonomies {
 
 #price-box {
   // 1/6/15 DH: Upgrade to Spree-3.0 using Bootstrap lost 'price-box' when fixing its posn
+  // 27/9/16 DH: Now done with 'data-spy="affix"' in 'views/spree/products/show.html.erb' which uses Bootstrap Affix Plugin
   //position: fixed;
   //margin-left: 670px;
   //margin-top: -200px;
   
-  margin-top: 110px;
+  margin-top: 5px;
   
   border: 1px solid;
   float: left;
-  padding: 5px;
+  // 27/9/16 DH: Removed 'padding' when adding text to 'Add spec for price'
+  //padding: 5px;
+  padding-left: 3px;
+  
   box-shadow: 0 0 10px #000;
   //background: url(/assets/store/luxury-kashmiri-silk-shawlsDARKER.jpg);
   background: $bsc_yellow;
@@ -262,7 +280,8 @@ nav#taxonomies {
 
 #price-title {
   //position: fixed;
-  margin-bottom: -3px;
+  // 27/9/16 DH: Overriding '.product-section-title' set in 'screen.css.erb'
+  margin-bottom: -2px;
 }
 
 #inside-product-cart-form {

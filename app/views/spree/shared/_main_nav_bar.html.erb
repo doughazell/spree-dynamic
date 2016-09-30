@@ -5,6 +5,15 @@
   <ul id="main-nav-bar" class="inline" data-hook>
     <li id="home-link" data-hook><%= link_to Spree.t(:home), spree.root_path %></li>
 <%# debugger %>
+
+<%
+=begin %>
+23/9/16 DH: 'link_to_cart' helper:= [link_to text.html_safe, spree.cart_path, :class => "cart-info #{css_class}"] %>
+24/9/16 DH: debugger result:= 
+  "<a class=\"cart-info empty\" href=\"/cart\"><span class='glyphicon glyphicon-shopping-cart'></span> Cart: (Empty)</a>"
+<%
+=end %>
+
     <li id="link-to-cart" data-hook><%= link_to_cart %></li>
 
 

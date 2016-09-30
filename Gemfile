@@ -10,7 +10,12 @@ gem 'rails', '~> 4.2.0'
 gem 'pg'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+# 24/9/16 DH: Upgrading to Spree-3.0.10 needed 'sass (>= 3.3.0)' and 'sass-rails (~> 4.0.0)' needed 'sass (~> 3.2.2)'
+#             $ bundle update spree
+#             $ bundle exec rake railties:install:migrations
+#             $ rake db:migrate
+#gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'

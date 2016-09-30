@@ -37,7 +37,14 @@
           <%= product.name %>
           <% end %>
           <%= link_to small_image(product), product %>
+<%
+=begin %>
+# -----------------------------------------------------------------------------------------------
+# 26/9/16 DH: Removing the price that was previously just covered with the img border + info bar
+# -----------------------------------------------------------------------------------------------
           <span class="price selling" itemprop="price"><%= display_price(product) %></span>        
+<%
+=end %>
         </li>
               
       <% end %>

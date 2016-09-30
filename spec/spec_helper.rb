@@ -47,6 +47,8 @@ RSpec.configure do |config|
   
   # 29/5/14 DH: DB transactions prevent DB permanent row creation (and roll-back after a test)
   #config.use_transactional_fixtures = true
+  
+  # 29/9/16 DH: Needed for prev created orders necessary for 'context "POST #completed"' in 'orders_controller_spec.rb'
   config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
