@@ -102,4 +102,38 @@ describe 'order_content', :type => :feature do
 
   end
 
+  it "can add curtain spec of 'width=200,drop=100,lining=cotton,heading=eyelet pleat'" do |example|
+    puts "\n--TEST--: #{example.description}"
+
+    Capybara.current_driver = :webkit
+    Capybara.javascript_driver = :webkit
+
+    visit "/products/willow"
+    string = "willow"
+    
+    expect(page.body).to match(%r{#{string}}i)
+    
+    fill_in('width', :with => '200')
+    fill_in('drop', :with => '100')
+    
+    # Select it and then another field to active 'onBlur'
+    find(:id, 'drop').click
+    find_field('lining').click
+    
+    choose('variant_id_7')
+    
+    showSpecPrice
+    
+    check_alert("You need to accept that measurements are 'cm'") {find(:id, 'add-to-cart-button').click}
+    check('cm_measurements')
+    
+    find(:id, 'add-to-cart-button').click
+    
+    # 21/7/14 DH: Need to sleep for 3 secs to allow AJAX to alter link text
+    sleep 3
+    expect(find(:id, 'page-link-to-cart').text).to_not eq("The dynamic price is incorrect")
+
+  end
+
+
 end

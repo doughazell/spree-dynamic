@@ -41,6 +41,7 @@ module Spree
         @order.user_id = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
         
         @order.number = xml_doc.xpath("/romancart-transaction-data/orderid").first.content
+        Rails.logger.info "Altering Order number with one assigned by RomanCart"
         #Rails.logger.info "Keeping Spree Order number rather than taking RomanCart one"
         
         #flash[:message] = "Order number taken from current time!"
@@ -106,7 +107,7 @@ module Spree
             #@order.payment_state = "paid"
             updater = Spree::OrderUpdater.new(@order)
             updater.update_payment_state
-            
+#debugger            
             @order.state = "complete"
             @order.completed_at = Time.now
             @order.save!

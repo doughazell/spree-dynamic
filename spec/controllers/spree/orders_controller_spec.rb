@@ -31,7 +31,7 @@ describe Spree::OrdersController, :type => :controller do
   end
 
   context "POST #completed" do
-
+=begin
     it "receives the ROMANCARTXML parameter" do |example|
       puts "\n--- TEST: #{example.description} ---"
       #romancartxml = IO.read("romancart-delivery-address.xml")
@@ -94,7 +94,7 @@ describe Spree::OrdersController, :type => :controller do
       post :completed, :ROMANCARTXML => xml_doc
       expect(flash.now[:alert]).to include("No matching order found for ROMANCARTXML")
     end
-
+=end
     it "accepts valid ROMANCARTXML and completes order from cheque payment" do |example|
       puts "\n--- TEST: #{example.description} ---"
       #romancartxml = File.read(File.expand_path("../../../fixtures/romancart-burgundy-bsc_req_id-5.xml", __FILE__))
@@ -106,12 +106,12 @@ describe Spree::OrdersController, :type => :controller do
       xml_doc = chgItems(xml_doc, order)
       # 30/9/16 DH: Repeated to check now OK
       xml_doc = chgItems(xml_doc, order)
-
+#debugger
       expect(Rails.logger).to_not receive(:tagged).with("BSC:INCORRECT-ITEM")
       post :completed, :ROMANCARTXML => xml_doc
 
       # 30/9/16 DH: Need to allow time for DB to be updated after "post :completed"
-      sleep 1
+      sleep 5
       # 23/5/14 DH: Order should have state "complete" and payment state "paid"
       order.reload
 

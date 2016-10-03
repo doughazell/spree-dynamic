@@ -65,11 +65,11 @@ module Spree
       
       calc_width *= multiple
       calc_width += params[:side_hems_addition]
-      number_of_widths = (calc_width / params[:fabric_width]).ceil
+      number_of_widths = (calc_width.to_f / params[:fabric_width]).ceil
       
       cutting_len = drop + params[:turnings_addition]
       if (params[:pattern_repeat] > 0)
-        repeat_len_multiple = (cutting_len / params[:pattern_repeat]).ceil
+        repeat_len_multiple = (cutting_len.to_f / params[:pattern_repeat]).ceil
         cutting_len = params[:pattern_repeat] * repeat_len_multiple
       end
       
@@ -97,7 +97,6 @@ module Spree
           return true # ie don't fink so...boooard's don't fight back...
         end
       end # END: if ENV['RAILS_ENV'] == 'development'
-
 
       # 21/7/14 DH: Match the prices to the nearest pound
       

@@ -48,16 +48,19 @@ module Helpers
   
     rc_orderid = xml_doc.xpath("/romancart-transaction-data/orderid")
     puts "ROMANCARXML orderid: #{rc_orderid.text}"
-    
+
+    # 3/10/16 DH: 'Spree::DynamicHelper::completed_mechanism' updates Order.number with one assigned by RomanCart...
     tmp_order = Spree::Order.find_by(number: rc_orderid.text)
     if (tmp_order && tmp_order.complete?)
       puts "orderid: #{rc_orderid.text} has already been taken to completion"
       
+      # 3/10/16 DH: ...therefore for testing, a new "RomanCart assigned" number is required to match with the Order below.
       new_num = Spree::Order.new.generate_number(prefix: "RC")
       puts "New num: #{new_num}"
       
       # 20/7/15 DH: Now need to find another order that is not complete
-      order = Spree::Order.where("state != ? AND total > ?", "complete",0).first
+      # 3/10/16 DH: and matching code in 'Spree::DynamicHelper::completed_mechanism'
+      order = Spree::Order.where("state != ? AND total > ?", "complete",0).last
       
       xml_doc.xpath("/romancart-transaction-data/orderid").first.content = new_num
     end

@@ -232,7 +232,13 @@ pattern_repeat: patternRepeat
                     <%# radio_button_tag "products[#{@product.id}]", variant.id, index == 0, 'data-price' => variant.price_in(current_currency).display_price, 'data-heading' => heading.downcase %>
                     
                     <%= radio_button_tag "variant_id", variant.id, index == 0, 'data-price' => variant.price_in(current_currency).display_price, 'data-heading' => heading.downcase %>
-                    
+
+
+<%
+=begin %>   
+                    <%= "#{heading.downcase}" %>
+<%
+=end %>                 
                     <%# label for="<%= ['products', @product.id, variant.id].join('_') %>
                     <label for="<%= ['variant_id', variant.id].join('_') %>">
 
@@ -245,6 +251,7 @@ pattern_repeat: patternRepeat
                         <span class="price diff"><%= variant_price variant %></span>
                       <% end %>
                     </label>
+                    
                   <% end %>
 
                 </li>

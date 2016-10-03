@@ -2,16 +2,9 @@ module Helpers
   def showSpecPrice
     width = find(:id, 'width').value
     drop  = find(:id, 'drop').value
-    
-    #lining = find_field('lining').find('option[selected]').text
     lining = find_field('lining').find('option[selected]')['data-type']
-    
-    # CoffeeScript + jQuery:
-    #current_heading = ($ '#product-variants input[type="radio"]:checked').data('heading')
-    heading = find(:id, 'product-variants').find('input[checked]')['data-heading']
-        
+    heading = getHeading
     price = find(:id, 'price-text').text
-    #price = find(:id, 'price-box').find(:id, 'price-text').text
     
     puts "Width: #{width}"
     puts "Drop: #{drop}"
@@ -22,6 +15,18 @@ module Helpers
     
     puts "Capybara.current_driver: #{Capybara.current_driver}"
 
+  end
+
+  def getHeading    
+    ids = (3..7)
+    selector = ids.each do |id|
+      sel = "#variant_id_#{id}"
+      if find(sel.to_s).checked?
+        break sel
+      end
+    end
+    
+    find(selector.to_s)['data-heading']
   end
 
   def check_alert(text)
