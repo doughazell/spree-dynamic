@@ -31,7 +31,7 @@ describe Spree::OrdersController, :type => :controller do
   end
 
   context "POST #completed" do
-=begin
+
     it "receives the ROMANCARTXML parameter" do |example|
       puts "\n--- TEST: #{example.description} ---"
       #romancartxml = IO.read("romancart-delivery-address.xml")
@@ -94,7 +94,7 @@ describe Spree::OrdersController, :type => :controller do
       post :completed, :ROMANCARTXML => xml_doc
       expect(flash.now[:alert]).to include("No matching order found for ROMANCARTXML")
     end
-=end
+
     it "accepts valid ROMANCARTXML and completes order from cheque payment" do |example|
       puts "\n--- TEST: #{example.description} ---"
       #romancartxml = File.read(File.expand_path("../../../fixtures/romancart-burgundy-bsc_req_id-5.xml", __FILE__))
