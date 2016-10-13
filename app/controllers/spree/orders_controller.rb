@@ -58,6 +58,23 @@ module Spree
       # 13/7/15 DH: Passing dynamic price and spec from web page
       order.contents.bscDynamicPrice = BigDecimal.new(params[:price])
       order.contents.bscSpec = params[:spec]
+      
+if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'      
+      # 11/10/16 DH: Solving why Flash msg not cleared in 'dynamic_price_spec.rb' on hacked price
+      if params[:sim_price_hack]
+        puts "\n----------- YIPPEE - Simulated price hack (via POST args) ------------\n\n"
+        unless Spree::BscReq.respond_to?(:price_alteration)
+          Spree::BscReq.alterDynamicPrice(-0.41)
+        end
+      else
+        puts "\n-------------- NO Simulated price hack THIS TIME (via POST args) --------------\n\n"
+
+        unless Spree::BscReq.respond_to?(:rspec_alteration)
+          puts "\nClearing price alteration set by browser (not RSpec test)...\n\n"          
+          Spree::BscReq.clearDynamicPriceAlteration
+        end
+      end
+end
 
       # 2,147,483,647 is crazy. See issue #2695.
       if quantity.between?(1, 2_147_483_647)
@@ -70,14 +87,25 @@ module Spree
       else
         error = Spree.t(:please_enter_reasonable_quantity)
       end
-#debugger
+
       # 14/7/15 DH: Passing BSC Req dynamic price hacks back to web
-      if line_item && (line_item.bsc_req.price_error == true)
+      if line_item && (line_item.bsc_req.price_error)
         error = line_item.bsc_req.msgs.join(" ")
+        #puts line_item.bsc_req.inspect
+        
+        # 11/10/16 DH: Need to clear class attribs after use (or maybe not...)
+        #Spree::BscReq.msgs = []
+        #Spree::BscReq.price_error = false
+        
+        # 11/10/16 DH: Also need to remove the line_item from the cart since invalid
+        order.contents.remove(variant, quantity, options)
       end
 
       if error
-        flash[:error] = error
+        #flash[:error] = error
+
+        # 11/10/16 DH: Getting 'Spree::BscReq.clearDynamicPriceAlteration' to work in 'dynamic_price_spec.rb'
+        flash.now[:error] = error
 
         # 22/7/14 DH: Displaying flash message after BSC error when submit via AJAX
         respond_with(order) do |format|

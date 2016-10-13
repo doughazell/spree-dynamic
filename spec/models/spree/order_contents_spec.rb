@@ -72,7 +72,7 @@ describe Spree::OrderContents, :type => :model do
 
       line_item = subject.add(variant)
       expect line_item.bsc_req.id.nil?
-      
+
       message = "The BSC requirement set is missing a value"
       expect(line_item.bsc_req.msgs.join).to eq(message)
     end
@@ -82,11 +82,18 @@ describe Spree::OrderContents, :type => :model do
       subject.bscDynamicPrice = 53.40
       subject.bscSpec = "width=144,drop=69,lining=cotton,heading=pencil pleat"
       
-      line_item = subject.add(variant)
-      expect line_item.bsc_req.id.nil?
+      # 13/10/16 DH: Previously there was a hard coded section in 'Spree::BscReq.dynamic_price_invalid?' to make 53.40 invalid
+      #   in 'Development' mode (which has now been removed to make other RSpec tests pass when run in 'RAILS_ENV=development' 
+      #   due to needing 'cart' state orders) 
+      Spree::BscReq.alterDynamicPrice(-0.41)
       
+      line_item = subject.add(variant)
+      
+      expect line_item.bsc_req.id.nil?
+
       message = "The dynamic price is incorrect"
       expect(line_item.bsc_req.msgs.join).to eq(message)
+      
     end
 
 =begin

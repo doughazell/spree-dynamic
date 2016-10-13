@@ -28,15 +28,27 @@ module Spree
       if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'
         cattr_accessor :price_alteration
         @@price_alteration = alteration
+
+        # 12/10/16 DH: Checking to see whether this was called from an auto RSpec test (Ruby Kernel::caller)
+        if (caller.grep(/rspec/).size > 0)
+          cattr_accessor :rspec_alteration
+          @@rspec_alteration = true
+        end
       end
     end
     
     def self.clearDynamicPriceAlteration
       if ENV['RAILS_ENV'] == 'test' || ENV['RAILS_ENV'] == 'development'
         # 30/9/14 DH: Use a Ruby method to make Ruby method 'bsc_req.respond_to?(:price_alteration)' return false
-        undef :price_alteration
-        
-        #@@price_alteration = 0
+        if self.respond_to?(:price_alteration)
+          undef :price_alteration
+          #@@price_alteration = 0
+        end
+                
+        if self.respond_to?(:rspec_alteration)
+          undef :rspec_alteration
+        end
+
       end
     end
     
@@ -65,10 +77,12 @@ module Spree
       
       calc_width *= multiple
       calc_width += params[:side_hems_addition]
+      # 3/10/16 DH: Needed to explicitly cast to Float via 'to_f' with ruby-2.2.2 before calling 'ceil'
       number_of_widths = (calc_width.to_f / params[:fabric_width]).ceil
       
       cutting_len = drop + params[:turnings_addition]
       if (params[:pattern_repeat] > 0)
+        # 3/10/16 DH: Needed to explicitly cast to Float via 'to_f' with ruby-2.2.2 before calling 'ceil'
         repeat_len_multiple = (cutting_len.to_f / params[:pattern_repeat]).ceil
         cutting_len = params[:pattern_repeat] * repeat_len_multiple
       end
@@ -92,11 +106,19 @@ module Spree
       
       # 8/8/14 DH: The RSpec 'features/dynamic_price_spec.rb' uses 'self.alterDynamicPrice(alteration)'
       #            and runs under the 'test' env so doesn't need this "trap"
+      #
+      # 11/10/16 DH: Not if run with 'RAILS_ENV=development rspec spec/features/dynamic_price_spec.rb' !!!
+      #
+      # ...yup that's just taken me most of the day doing the Rails thing or narrowing down the search space of:
+      #    RSpec + Ruby-2.2.2 undef + ActiveRecord Associations + Debugger issues missing Javascript response + 
+      #    Class vs Object values
+=begin
       if ENV['RAILS_ENV'] == 'development'
         if line_item.price == 53.40
-          return true # ie don't fink so...boooard's don't fight back...
+          return true # ie DELIBERATELY INVALID...!!!
         end
       end # END: if ENV['RAILS_ENV'] == 'development'
+=end
 
       # 21/7/14 DH: Match the prices to the nearest pound
       

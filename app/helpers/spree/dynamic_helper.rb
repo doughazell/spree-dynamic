@@ -310,11 +310,12 @@ module Spree
           #
           # 30/4/15 DH: The variant needs to be in stock or back-orderable to prevent this being rolled-back!
           line_item.save
-                    
+
           if line_item.bsc_req.dynamic_price_invalid?
             #raise "The dynamic price is incorrect"
-#debugger
+
             message = "The dynamic price is incorrect"
+
             # 18/6/15 DH: With Spree-2.3 to Spree-2.4 upgrade 'line_item.errors' is not used any more
             #         (prob because it gets cleared during the validations after an 'ActiveRecord.save')
             #         Likewise with 'bsc_req.errors' so now using a separate array in 'bsc_req' for extra messages.

@@ -51,16 +51,23 @@ describe 'order_content', :type => :feature do
     find(:id, 'add-to-cart-button').click
   
     # 21/7/14 DH: Need to sleep for 3 secs to allow AJAX to alter link text
-    sleep 3
+    sleep 2
       
     #expect(find(:id, 'page-link-to-cart').text).to eq("Cart: (Empty)")
     expect(find(:id, 'page-link-to-cart').text).to eq("The dynamic price is incorrect")
-  
+
+    # 10/10/16 DH: Need to check mechanism for not adding incorrect price to orig spree cart
+    expect(find(:id, 'link-to-cart').text).to eq("Cart: (Empty)")
+#debugger
     Spree::BscReq.clearDynamicPriceAlteration
+
+    # 12/10/16 DH: Well it wasn't the state of Capybara that needed to be changed prior to resubmitting
+    #find(:id, 'drop').click
+    #find_field('lining').click
 
     # 30/9/14 DH: Checking the 'Spree::BscReq.clearDynamicPriceAlteration' works
     find(:id, 'add-to-cart-button').click
-    sleep 3
+    sleep 2
     expect(find(:id, 'page-link-to-cart').text).to_not eq("The dynamic price is incorrect")
 
   end

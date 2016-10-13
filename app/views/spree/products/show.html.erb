@@ -286,6 +286,12 @@ pattern_repeat: patternRepeat
 
         <span id="page-link-to-cart" data-hook class="cart-indicator"><%= link_to_cart %></span>
 
+<%
+=begin %>   
+<%
+=end %> 
+        <%= check_box_tag 'sim_price_hack', 'true'%> Simulate Price Hack
+
       <% end %> <%# END: 'form_for :order, ...' %>
 
     </div> <%# END: data-hook="bsc-form-row" %>

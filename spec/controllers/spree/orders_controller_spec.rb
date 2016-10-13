@@ -111,7 +111,7 @@ describe Spree::OrdersController, :type => :controller do
       post :completed, :ROMANCARTXML => xml_doc
 
       # 30/9/16 DH: Need to allow time for DB to be updated after "post :completed"
-      sleep 5
+      sleep 1
       # 23/5/14 DH: Order should have state "complete" and payment state "paid"
       order.reload
 

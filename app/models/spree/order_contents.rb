@@ -98,9 +98,8 @@ module Spree
           line_item.bsc_spec = bscSpec
 
           addDynamicPriceReq(line_item)
-
         end
-#debugger
+
         line_item.target_shipment = options[:shipment] if options.has_key? :shipment
         line_item.save!
         line_item

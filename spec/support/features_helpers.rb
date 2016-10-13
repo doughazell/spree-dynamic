@@ -17,6 +17,7 @@ module Helpers
 
   end
 
+  # 3/10/16 DH: A sweeeet bit of ruby and capybara...poetry in code...never achieved from tech support work.
   def getHeading    
     ids = (3..7)
     selector = ids.each do |id|
