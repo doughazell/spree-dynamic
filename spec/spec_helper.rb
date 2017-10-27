@@ -50,6 +50,7 @@ RSpec.configure do |config|
   
   # 29/9/16 DH: Needed for prev created orders necessary for 'context "POST #completed"' in 'orders_controller_spec.rb'
   config.use_transactional_fixtures = false
+  # 14/10/16 DH: See 'RSpec.configure' block in '~/spec/features/order_spec.rb' for local override
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of

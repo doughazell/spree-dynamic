@@ -4,7 +4,7 @@ Spree::LineItem.class_eval do
   #belongs_to :bsc_req, class_name: "Spree::BscReq"
   
   # 11/10/16 DH: http://guides.rubyonrails.org/association_basics.html#has-one-association-reference
-  # but 'validate: true' prob won't work due to 
+  # but 'validate: true' won't work for dynamic price error msg propagation, due to 
   # 'validates_presence_of :width, :drop, :lining, :heading' in 'Spree::BscReq'
   has_one :bsc_req, class_name: "Spree::BscReq", dependent: :destroy
 end

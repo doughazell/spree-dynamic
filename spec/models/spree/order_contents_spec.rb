@@ -71,7 +71,9 @@ describe Spree::OrderContents, :type => :model do
       subject.bscSpec =           "drop=7,lining=cotton,heading=pencil pleat"
 
       line_item = subject.add(variant)
-      expect line_item.bsc_req.id.nil?
+
+      #expect(line_item.bsc_req.id).to be_nil
+      expect(line_item.bsc_req.valid?).to be false
 
       message = "The BSC requirement set is missing a value"
       expect(line_item.bsc_req.msgs.join).to eq(message)
@@ -88,8 +90,10 @@ describe Spree::OrderContents, :type => :model do
       Spree::BscReq.alterDynamicPrice(-0.41)
       
       line_item = subject.add(variant)
-      
-      expect line_item.bsc_req.id.nil?
+
+      # 16/10/16 DH: Spree::BscReq contains 'validates_presence_of :width, :drop, :lining, :heading' so invalid price is valid.
+      #expect(line_item.bsc_req.id).not_to be_nil
+      expect(line_item.bsc_req.valid?).to be true
 
       message = "The dynamic price is incorrect"
       expect(line_item.bsc_req.msgs.join).to eq(message)

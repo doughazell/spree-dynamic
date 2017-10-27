@@ -91,12 +91,7 @@ end
       # 14/7/15 DH: Passing BSC Req dynamic price hacks back to web
       if line_item && (line_item.bsc_req.price_error)
         error = line_item.bsc_req.msgs.join(" ")
-        #puts line_item.bsc_req.inspect
-        
-        # 11/10/16 DH: Need to clear class attribs after use (or maybe not...)
-        #Spree::BscReq.msgs = []
-        #Spree::BscReq.price_error = false
-        
+                
         # 11/10/16 DH: Also need to remove the line_item from the cart since invalid
         order.contents.remove(variant, quantity, options)
       end

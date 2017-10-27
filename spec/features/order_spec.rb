@@ -58,7 +58,10 @@ describe 'orders', :type => :feature do
     
     #order.update_attribute(:user_id, user.id)
     #order.shipments.destroy_all
+    
+    # 14/10/16 DH: Simulate random user logged on to force "Authorization Failure" rather than just a login
     allow_any_instance_of(Spree::OrdersController).to receive_messages(:try_spree_current_user => user)
+    
     puts "\n#{self.class.description} - \"#{example.description}\": '#{spree.order_path(order)}' for '#{user.email}'"
     
     expect { visit spree.order_path(order) }.not_to raise_error
@@ -81,6 +84,7 @@ describe 'orders', :type => :feature do
     
     expect(current_path).to eq("/login")
 
+    # 15/10/16 DH: This is the default user created with admin privileges by 'rake spree_auth:admin:create'
     fill_in('spree_user_email', :with => 'spree@example.com')
     fill_in('spree_user_password', :with => 'spree123')
     

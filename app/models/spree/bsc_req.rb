@@ -3,6 +3,7 @@ module Spree
     # 7/6/15 DH: Altered FK place of LineItem<->BscReq + Need migration to add FK to BscReq:
     #            $ rails g migration AddLineItemIDToSpreeBscReqs spree_line_item:references
     #has_one :line_item, class_name: "Spree::LineItem"
+    
     #belongs_to :line_item, class_name: "Spree::LineItem", foreign_key: "spree_line_item_id"
     belongs_to :line_item, class_name: "Spree::LineItem"
     
