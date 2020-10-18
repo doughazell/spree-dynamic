@@ -6,8 +6,11 @@ source 'https://rubygems.org'
 #gem 'rails', '~> 4.1.2'
 #gem 'rails', '~> 4.1.8'
 gem 'rails', '~> 4.2.0'
+# 24/9/20 DH: Checkout the date on Upgrade to Spree-3.0.10...:)
+#             Getting around Bundler 2 default issue
+#  $ gem install bundler -v 1.17.3 ; bundle _1.17.3_ install
 
-gem 'pg'
+gem 'pg', '0.18.1'
 
 # Use SCSS for stylesheets
 # 24/9/16 DH: Upgrading to Spree-3.0.10 needed 'sass (>= 3.3.0)' and 'sass-rails (~> 4.0.0)' needed 'sass (~> 3.2.2)'
@@ -51,13 +54,22 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
-  gem 'capybara', '2.2.0'
+  #gem 'capybara', '2.2.0'
   
   # 23/7/14 DH: 'capybara-webkit' depends on 'capybara (< 2.4.0, >= 2.0.2)' (but 'accept_alert' in '2.4.0'...hmmm!)
   #gem 'capybara', '2.4.0'
+
+  # 25/9/20 DH: Getting 'bundle _1.17.3_ install' to work on High Sierra
+  gem 'capybara'
   
   gem 'selenium-webdriver'
-  gem 'capybara-webkit'
+  #gem 'capybara-webkit'
+
+  # 26/9/20 DH: qt@5.5/5.5.1_1/lib/QtCore.framework/Headers/qglobal.h:39:12: fatal error: 'cstddef' file not found
+  #             capybara-webkit (= 1.15.1) was resolved to 1.15.1, which depends on
+  #               capybara (>= 2.3, < 4.0) was resolved to 3.33.0, which depends on
+  #               Ruby (>= 2.5.0)
+  gem 'capybara-webkit', '1.15.1'
   
   # 27/5/14 DH: Getting spree 'frontend/spec/features/order_spec.rb' working locally
   # 6/7/14 DH: gem 'ffaker' is included from 'spree_core' so not need to be included here to be "require"d in 
@@ -81,6 +93,25 @@ end
 gem 'spree', github: 'spree/spree', branch: '3-0-stable'
 
 gem 'spree_gateway', :git => 'https://github.com/spree/spree_gateway.git', :branch => '3-0-stable'
-gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '3-0-stable'
+
+# 16/10/20 DH: Getting devise error with Ruby-2.5 on login (solved by deleting '{...}' end of line in
+#              'devise-3.5.10/app/controllers/devise/sessions_controller.rb:5')
+#gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '3-0-stable'
+gem 'spree_auth_devise'
 
 gem 'rmagick', '2.13.2', :require => false
+
+# 25/9/20 DH: activesupport-4.2.11.3/.../duplicable.rb:111:undefined method `new' for BigDecimal:Class
+gem 'bigdecimal', '1.4.2'
+
+# 25/9/20 DH: https://github.com/rails/sprockets/blob/070fc01947c111d35bb4c836e9bb71962a8e0595/UPGRADING.md#manifestjs
+#             Regress from v4 via: $ bundle update sprockets
+gem 'sprockets', '3.7.0'
+
+# 25/9/20 DH: 'undefined method `last_comment' for #<Rake::Application' on '$ bundle exec rake db:create'
+gem 'rake', '11.3.0'
+
+# 26/9/20 DH: Now trying with Ruby-2.4 (which is oldest version that will compile on High Sierra due to SSL 1.1)
+#             json-1.8.3/ext/json/ext/generator.c:861:25: error: use of undeclared identifier 'rb_cFixnum'
+gem 'json', '1.8.6'
+

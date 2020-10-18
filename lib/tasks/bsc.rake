@@ -32,8 +32,14 @@ namespace :spree_bsc do
     #abort("\nWTF???\n\n")
     # ----------------------------------------
     
-    domain = "www.pongees.co.uk"
-    path = "/fabrics/interiors/productcatalogue/690"
+
+    # 1/10/20 DH: Getting DB for RSpec/Capybara tests
+    #domain = "www.pongees.co.uk"
+    #path = "/fabrics/interiors/productcatalogue/690"
+
+    domain = "https://butterfly-conservation.org"
+    path = "/butterflies/identify-a-butterfly"
+
     
     total = 0
     next_page = nil
@@ -44,37 +50,46 @@ namespace :spree_bsc do
     
     begin
       unless next_page.nil?
-        #puts "Nokogiri next_page class: " + next_page.class.to_s 
+        puts "Nokogiri next_page class: " + next_page.class.to_s
         path = next_page[0]["href"]
       end
       
-      page = Nokogiri::HTML(open("http://#{domain}#{path}"))
-    
-      silk_names = page.css('div.views-field-field-product-colour a')
-      silk_codes = page.css('div.views-field-field-product-code a')
-      silk_images = page.css('div.views-field-field-product-image a img')
-      
+      page = Nokogiri::HTML(open("#{domain}#{path}"))
+
+      # 1/10/20 DH: Getting DB for RSpec/Capybara tests
+      #silk_names = page.css('div.views-field-field-product-colour a')
+      #silk_codes = page.css('div.views-field-field-product-code a')
+      #silk_images = page.css('div.views-field-field-product-image a img')
+
+      # 13/10/20 DH: Getting DB for RSpec/Capybara tests...next step...
+
+      # 14/10/20 DH: (byebug) silk_names = page.css('div.a h2 a')
+      #              (byebug) silk_names.each do | silk | puts silk.text end
+      silk_names = page.css('div.a h2 a').map { |node| node.text }
+      silk_urls = page.css('div.a h2 a').map { |node| node["href"] }
+
+      # "page.css('div.a').first.attributes['data-history-node-id'].value", "83"
+      silk_codes = page.css('div.a').map { |node| node["data-history-node-id"] }
+
+      silk_images = page.css('div.a img').map {|node| node.attributes["src"].value }
+#debugger
       puts "--- START OF PAGE ---"
       # The number of products is the size of the 'silk_names' array
       puts silk_names.length
       total += silk_names.length
       
       # --- Find products already in the DB ---
+      puts "--- REMOVING PRODUCTS ALREADY IN DB ---"
       products.each do |product|
-      
+
         # Uses 'find' from the Ruby Enumerable mixin (since 'silk_names' is a 'Nokogiri::XML::NodeSet' which is an array)
         #if index = silk_names.find_index { |node| node.text =~ /#{product.name.upcase}/ }
-        if index = silk_names.find_index { |node| node.text.eql?(product.name.upcase) }
+        if index = silk_names.find_index { |node| node.upcase.eql?(product.name.upcase) }
 
           #puts "Found " + product.name + " at index: " + index.to_s + " of the downloaded silks"
           
           # If we already have it then don't add it again.
-          puts "Silk already populated: #{silk_names[index].text}, #{silk_codes[index].text}"
-#debugger
-          # *** While testing the description + properties then use products ALREADY PRESENT ***
-          #silk_path = silk_names[index].attr("href")
-          #url = domain + silk_path
-          #addDetails(product,url)
+          puts "Silk already populated: #{silk_names[index]}, #{silk_codes[index]}"
           
           silk_names.delete(silk_names[index])
           silk_codes.delete(silk_codes[index])
@@ -82,9 +97,11 @@ namespace :spree_bsc do
           
         end
       end
+      puts "---------------------------------------"
 
       # --- Now add the unadded silks into our system ---
       puts "\nAdding: #{silk_names.length.to_s} names, #{silk_codes.length.to_s} sku's\n\n"
+      puts "-------------------------------------------------------------------------"
 
       # --- Dev: Taking first element of each page  ---
       
@@ -97,13 +114,16 @@ namespace :spree_bsc do
       while !silk_names.empty?
         silk  = silk_names.shift
         sku   = silk_codes.shift
-        img_url = silk_images.shift.attr("src")
+
+        # 15/10/20 DH: Update for specifics of chosen web page
+        img_url = domain + silk_images.shift
+        #silk_url = domain + silk.attr("href")
+        silk_url = domain + silk_urls.shift
         
         img_colour = getImageColour(img_url)
-        
-        silk_url = domain + silk.attr("href")
-        addProduct(silk.text, sku.text, img_url, img_colour, silk_url)
-        
+#debugger
+        addProduct(silk, sku, img_url, img_colour, silk_url)
+        puts "-------------------------------------------------------------------------"
       end
 
       puts "=== END OF PAGE ===\n\n"      
@@ -346,8 +366,8 @@ namespace :spree_bsc do
     green = rgbHex[3,2].hex
     blue  = rgbHex[5,2].hex
 
-    #puts "RGB:" + rgbHex
-    #puts "Red:" + red.to_s + ",Green:" + green.to_s + ",Blue:" + blue.to_s
+    puts "RGB:" + rgbHex
+    puts "Red:" + red.to_s + ",Green:" + green.to_s + ",Blue:" + blue.to_s
 
     if red < 128 
       colour1 = ["Dark","Green","Blue","Cyan"]
@@ -386,7 +406,7 @@ namespace :spree_bsc do
     puts
     puts name
     puts sku
-    
+
     # Change the img URL from the list pages to the main page to get a bigger image
     img_url.gsub!("taxonomy_and_product_thumbnail_view","product_image")
     puts img_url
@@ -497,7 +517,7 @@ namespace :spree_bsc do
     end
     product.master.update_attributes(:sku => sku)
     
-    addDetails(product,silk_url)
+    #addDetails(product,silk_url)
     
   end
   

@@ -19,15 +19,32 @@ module Helpers
 
   # 3/10/16 DH: A sweeeet bit of ruby and capybara...poetry in code...never achieved from tech support work.
   def getHeading    
-    ids = (3..7)
-    selector = ids.each do |id|
-      sel = "#variant_id_#{id}"
-      if find(sel.to_s).checked?
-        break sel
+    # 17/10/20 DH: The variant id's for the first product may vary based on prior deletions affected id
+    #ids = (3..7)
+    
+    #vars = find_all("label").each do |elem| puts elem["for"] end
+    vars = find_all("label").map { |elem| elem["for"] }
+    
+    selector = vars.each do |var|
+      #sel = "#variant_id_#{id}"
+      var = "##{var}"
+      if find(var).checked?
+        break var
       end
     end
     
-    find(selector.to_s)['data-heading']
+    find(selector)['data-heading']
+  end
+  
+  # 18/10/20 DH: Reducing hard-coded variant ID when selecting non-default heading option
+  def getVariantID(pleatStr)
+
+    varID = find_all("label").each do |elem|
+      if %r{#{pleatStr}}i.match?(elem.text)
+        break elem["for"]
+      end
+    end
+
   end
 
   def check_alert(text)

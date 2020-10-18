@@ -10,8 +10,8 @@ describe 'order_content', :type => :feature do
 
     #visit "/products/oasis"
     #string = "oasis"
-    visit "/products/willow"
-    string = "willow"
+    visit "/products/adonis-blue"
+    string = "adonis-blue"
     
     #expect(page).to have_content "OASIS"
 
@@ -82,8 +82,8 @@ describe 'order_content', :type => :feature do
 
     #visit "/products/oasis"
     #string = "oasis"
-    visit "/products/willow"
-    string = "willow"
+    visit "/products/adonis-blue"
+    string = "adonis-blue"
     
     #expect(page).to have_content "OASIS"
     
@@ -115,8 +115,10 @@ describe 'order_content', :type => :feature do
     Capybara.current_driver = :webkit
     Capybara.javascript_driver = :webkit
 
-    visit "/products/willow"
-    string = "willow"
+    #visit "/products/willow"
+    #string = "willow"
+    visit "/products/adonis-blue"
+    string = "adonis-blue"
     
     expect(page.body).to match(%r{#{string}}i)
     
@@ -127,7 +129,9 @@ describe 'order_content', :type => :feature do
     find(:id, 'drop').click
     find_field('lining').click
     
-    choose('variant_id_7')
+    #puts "# Need to obtain variant_id from page (rather than hard-coded in: #{example.file_path})...!!!"
+    #choose('variant_id_14')
+    choose(getVariantID("Eyelet Pleat"))
     
     showSpecPrice
     
