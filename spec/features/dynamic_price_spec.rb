@@ -105,7 +105,8 @@ describe 'order_content', :type => :feature do
     
     # 21/7/14 DH: Need to sleep for 3 secs to allow AJAX to alter link text
     sleep 3
-    expect(find(:id, 'page-link-to-cart').text).to_not eq("Cart: (Empty)")
+    #expect(find(:id, 'page-link-to-cart').text).to_not eq("Cart: (Empty)")
+    expect(find(:id, 'page-link-to-cart').text).to have_text /Cart: \(1\)/
 
   end
 
@@ -119,6 +120,7 @@ describe 'order_content', :type => :feature do
     #string = "willow"
     visit "/products/adonis-blue"
     string = "adonis-blue"
+    variant = "Eyelet Pleat"
     
     expect(page.body).to match(%r{#{string}}i)
     
@@ -131,7 +133,7 @@ describe 'order_content', :type => :feature do
     
     #puts "# Need to obtain variant_id from page (rather than hard-coded in: #{example.file_path})...!!!"
     #choose('variant_id_14')
-    choose(getVariantID("Eyelet Pleat"))
+    choose(getVariantID(variant))
     
     showSpecPrice
     
@@ -142,8 +144,21 @@ describe 'order_content', :type => :feature do
     
     # 21/7/14 DH: Need to sleep for 3 secs to allow AJAX to alter link text
     sleep 3
-    expect(find(:id, 'page-link-to-cart').text).to_not eq("The dynamic price is incorrect")
+    
+    # 20/10/20 DH: No longer multiple tests but left in for future reference...
+    aggregate_failures "stock message" do
 
+      if find(:id, 'page-link-to-cart').text =~ /not available/
+        puts
+        puts "           ============================================================"
+        puts "           # You probably need to add some stock to #{variant} !!!"
+        puts "           ============================================================"
+        puts
+      end
+
+      expect(find(:id, 'page-link-to-cart').text).to have_text /Cart: \(1\)/
+    end
+    
   end
 
 

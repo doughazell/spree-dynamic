@@ -53,13 +53,14 @@ end
 # gem 'capistrano', group: :development
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0.beta'
+  #gem 'rspec-rails', '~> 3.0.0.beta'
   #gem 'capybara', '2.2.0'
   
   # 23/7/14 DH: 'capybara-webkit' depends on 'capybara (< 2.4.0, >= 2.0.2)' (but 'accept_alert' in '2.4.0'...hmmm!)
   #gem 'capybara', '2.4.0'
 
-  # 25/9/20 DH: Getting 'bundle _1.17.3_ install' to work on High Sierra
+  # 25/9/20 DH: Getting RSpec/Capybara working on on High Sierra
+  gem 'rspec-rails'
   gem 'capybara'
   
   gem 'selenium-webdriver'
