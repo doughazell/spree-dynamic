@@ -18,7 +18,10 @@ gem 'pg', '0.18.1'
 #             $ bundle exec rake railties:install:migrations
 #             $ rake db:migrate
 #gem 'sass-rails', '~> 4.0.0'
-gem 'sass-rails'
+
+# 25/10/20 DH: FAILED attempt to solve: "Failure/Error: FactoryGirl.create(:payment_method)...undefined method `environment='"
+#              'sass-rails' >= 6 uses 'sassc-rails'
+gem 'sass-rails', '5.0.6'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'

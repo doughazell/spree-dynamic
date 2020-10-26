@@ -151,7 +151,7 @@ describe 'order_content', :type => :feature do
       if find(:id, 'page-link-to-cart').text =~ /not available/
         puts
         puts "           ============================================================"
-        puts "           # You probably need to add some stock to #{variant} !!!"
+        puts "           # You probably need to add some stock to #{variant}"
         puts "           ============================================================"
         puts
       end

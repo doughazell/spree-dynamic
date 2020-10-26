@@ -9,7 +9,8 @@ describe Spree::OrderContents, :type => :model do
   context "#add" do
     #let(:variant) { create(:variant) }
     #let(:variant) { double('Variant', :name => "T-Shirt", :options_text => "Size: M") }
-    let(:variant) { Spree::Variant.find_by_sku("745-0299-1") }
+    #let(:variant) { Spree::Variant.find_by_sku("745-0299-1") }
+    let(:variant) { Spree::Variant.find_by_sku("83-1") }
 
     # ================= [BSC spec Unit/Functional Testing] =============
 

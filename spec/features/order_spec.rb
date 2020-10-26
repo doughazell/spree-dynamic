@@ -4,8 +4,10 @@ require 'spec_helper'
 RSpec.configure do |config|
   # 29/5/14 DH: DB transactions prevent DB permanent row creation (and roll-back after a test)
   config.use_transactional_fixtures = true
+  #config.use_transactional_fixtures = false
 end
 
+# 24/10/20 DH: RSpec ':feature' test = Capybara (https://github.com/teamcapybara/capybara#using-capybara-with-rspec)
 describe 'orders', :type => :feature do
 =begin
   # 17/7/15 DH: Cann't do an OrderWalkthrough here since all the DB state of product, variants, options is not cleared by
@@ -25,6 +27,7 @@ describe 'orders', :type => :feature do
 
   it "can visit a FactoryGirl order" do |example|
     puts "\n--- TEST: #{example.description} ---"
+
     order = OrderWalkthrough.up_to(:complete)
     
     user = Spree::User.find_by_email("spree@example.com")
@@ -88,7 +91,7 @@ describe 'orders', :type => :feature do
     fill_in('spree_user_email', :with => 'spree@example.com')
     fill_in('spree_user_password', :with => 'spree123')
     
-    find(:class, 'input.btn').click
+    find('input.btn').click
     
     expect(current_path).to eq(spree.order_path(order))
     
